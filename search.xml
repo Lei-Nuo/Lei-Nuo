@@ -1,222 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>2.用户行为数仓搭建</title>
-    <url>/2020/07/07/2.%E7%94%A8%E6%88%B7%E8%A1%8C%E4%B8%BA%E6%95%B0%E4%BB%93%E6%90%AD%E5%BB%BA/</url>
-    <content><![CDATA[<h2 id="第-5-章-用户行为数仓搭建"><a href="#第-5-章-用户行为数仓搭建" class="headerlink" title="第 5 章 用户行为数仓搭建"></a>第 5 章 用户行为数仓搭建</h2><h3 id="5-1-数仓分层概念"><a href="#5-1-数仓分层概念" class="headerlink" title="5.1 数仓分层概念"></a>5.1 数仓分层概念</h3><h4 id="5-1-1-数仓分层"><a href="#5-1-1-数仓分层" class="headerlink" title="5.1.1 数仓分层"></a>5.1.1 数仓分层</h4><p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023504588.png" alt="1594023504588"></p>
-<p>1）ODS 层<br>原始数据层，存放原始数据，直接加载原始日志、数据，数据保持原貌不做处理。<br>2）DWD 层<br>对 ODS 层数据进行清洗（去除空值，脏数据，超过极限范围的数据）<br>3）DWS 层<br>以 DWD 为基础，进行轻度汇总。<br>4）ADS 层<br>为各种统计报表提供数据</p>
-<h4 id="5-1-2-数仓分层优点"><a href="#5-1-2-数仓分层优点" class="headerlink" title="5.1.2 数仓分层优点"></a>5.1.2 数仓分层优点</h4><p>1）把复杂问题简单化<br>将一个复杂的任务分解成多个步骤来完成，每一层只处理单一的步骤，比较简单、并且<br>方便定位问题。<br>2）减少重复开发<br>规范数据分层，通过的中间层数据，能够减少极大的重复计算，增加一次计算结果的复<br>用性。<br>3）隔离原始数据<br>不论是数据的异常还是数据的敏感性，使真实数据与统计数据解耦开。</p>
-<h4 id="5-1-3-数仓命名"><a href="#5-1-3-数仓命名" class="headerlink" title="5.1.3 数仓命名"></a>5.1.3 数仓命名</h4><p> ODS层命名为ods前缀<br> DWD层命名为dwd前缀</p>
-<p> DWS层命名为dws前缀<br> ADS层命名为ads前缀<br> 维度表命名为dim前缀<br> 每日全量导入命名为df（day full）后缀<br> 每日增量导入命名为di（day increase）后缀</p>
-<h4 id="5-2-数仓分层配置"><a href="#5-2-数仓分层配置" class="headerlink" title="5.2 数仓分层配置"></a>5.2 数仓分层配置</h4><h4 id="5-2-1-建立业务流程"><a href="#5-2-1-建立业务流程" class="headerlink" title="5.2.1 建立业务流程"></a>5.2.1 建立业务流程</h4><p>1）点击数据开发-&gt;业务流程-&gt;新建业务流程-&gt;输入业务名称</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023571084.png" alt="1594023571084"></p>
-<p>2）再业务流程下面就可以看到业务 1</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023583660.png" alt="1594023583660"></p>
-<h4 id="5-2-2-配置表主题"><a href="#5-2-2-配置表主题" class="headerlink" title="5.2.2 配置表主题"></a>5.2.2 配置表主题</h4><p>1）进入配置中心<br>点击最下方的齿轮，进入配置中心</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023600022.png" alt="1594023600022"></p>
-<p>2）配置主题管理，这里主要是划分表的主题<br>主题一般是表的对应的业务主题，比如：基础表、用户、商品、广告等对应的业务线。</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023611879.png" alt="1594023611879"></p>
-<h4 id="5-2-3-配置表层级"><a href="#5-2-3-配置表层级" class="headerlink" title="5.2.3 配置表层级"></a>5.2.3 配置表层级</h4><p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023635420.png" alt="1594023635420">在同一页面中，DataWorks 还提供了一个物理分类的划分维度，用户可以根据情况自行<br>决定划分方式。<br>本案例中，对数据表按照数据来源划分为，日志、数据库和综合。</p>
-<h3 id="5-3-原始数据层-（ODS-层）"><a href="#5-3-原始数据层-（ODS-层）" class="headerlink" title="5.3 原始数据层 （ODS 层）"></a>5.3 原始数据层 （ODS 层）</h3><p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023695464.png" alt="1594023695464"></p>
-<h3 id="5-3-1-建表语句"><a href="#5-3-1-建表语句" class="headerlink" title="5.3.1 建表语句"></a>5.3.1 建表语句</h3><p>1）回到数据开发的界面，按下图开始创建数据表</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023709003.png" alt="1594023709003"></p>
-<p>2）输入表名-&gt;提交</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023717362.png" alt="1594023717362"></p>
-<p>开始建立的表要和原始数据最基本的结构一致。</p>
-<h3 id="5-3-2-配置基本属性"><a href="#5-3-2-配置基本属性" class="headerlink" title="5.3.2 配置基本属性"></a>5.3.2 配置基本属性</h3><p>配置新创建的表的主题。</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023740749.png" alt="1594023740749"></p>
-<h3 id="5-3-3-配置物理模型"><a href="#5-3-3-配置物理模型" class="headerlink" title="5.3.3 配置物理模型"></a>5.3.3 配置物理模型</h3><p>注意选择层级和物理分类，由于建立的原始日志表，所以此处选择 ODS 层。分类是日志。</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023761360.png" alt="1594023761360"></p>
-<p>​    从 DataHub 过来的数据必须选择分区表。如果手工文件导入的表可以选择非分区。<br>​    为了减少再购买存储服务器，所以选择内部表。真实企业开发时，大部分情况都是创建外部表，需要在 OSS 服务中申请存储空间。</p>
-<h3 id="5-3-4-配置字段"><a href="#5-3-4-配置字段" class="headerlink" title="5.3.4 配置字段"></a>5.3.4 配置字段</h3><p>发送过来的日志包含两部分：服务器时间和日志详情。这里面设计了两个字段对应接收。</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023854289.png" alt="1594023854289"></p>
-<p>注意：这里的主键，是指一个标志而已，本身不提供索引和唯一性约束。</p>
-<h3 id="5-3-5-配置分区"><a href="#5-3-5-配置分区" class="headerlink" title="5.3.5 配置分区"></a>5.3.5 配置分区</h3><p>表示数据按如下字段进行分区</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023878123.png" alt="1594023878123"></p>
-<p>​     由于目前 DataHub 至 MaxCompute 的接口，只支持按年月日+小时+分钟方式分区，所以这三个字段是必须有的，且字段类型必须是 String。</p>
-<h3 id="5-3-6-查看建表语句"><a href="#5-3-6-查看建表语句" class="headerlink" title="5.3.6 查看建表语句"></a>5.3.6 查看建表语句</h3><p>点击 DDL 模式，可以查看自动生成的建表语句。和普通的创建表语句一样。</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023947054.png" alt="1594023947054"></p>
-<h3 id="5-3-7-提交到生产环境"><a href="#5-3-7-提交到生产环境" class="headerlink" title="5.3.7 提交到生产环境"></a>5.3.7 提交到生产环境</h3><p>点击提交到生产环境，表就创建完成了。</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023967700.png" alt="1594023967700"></p>
-<h3 id="5-4-表的基本操作"><a href="#5-4-表的基本操作" class="headerlink" title="5.4 表的基本操作"></a>5.4 表的基本操作</h3><h4 id="5-4-1-查看表结构"><a href="#5-4-1-查看表结构" class="headerlink" title="5.4.1 查看表结构"></a>5.4.1 查看表结构</h4><p>在最左侧菜单中选择【表管理】，可以在右侧查看表的结构信息。但是不可以修改。</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023991126.png" alt="1594023991126"></p>
-<h4 id="5-4-2-在业务流程中导入表"><a href="#5-4-2-在业务流程中导入表" class="headerlink" title="5.4.2 在业务流程中导入表"></a>5.4.2 在业务流程中导入表</h4><p>1）在业务 1 中建 ods、dwd、dws、ads，4 个文件夹</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024055393.png" alt="1594024055393"></p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024059753.png" alt="1594024059753"></p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024063816.png" alt="1594024063816"></p>
-<p>2）向 ods 文件夹中导入表</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024073580.png" alt="1594024073580"></p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024080431.png" alt="1594024080431"></p>
-<h3 id="5-4-3-临时查询"><a href="#5-4-3-临时查询" class="headerlink" title="5.4.3 临时查询"></a>5.4.3 临时查询</h3><p>1）点击临时查询-&gt;新建-&gt;ODPS SQL</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024097393.png" alt="1594024097393"></p>
-<p>2）创建临时查询节点</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024104537.png" alt="1594024104537"></p>
-<p>3）可以执行 SQL 命令</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024126755.png" alt="1594024126755"></p>
-<h3 id="5-5-DataHub-到-推送数据到-MaxCompute"><a href="#5-5-DataHub-到-推送数据到-MaxCompute" class="headerlink" title="5.5 DataHub 到 推送数据到 MaxCompute"></a>5.5 DataHub 到 推送数据到 MaxCompute</h3><p>​    如下图，之前 Flume 中的数据利用 DataHub Sink 把数据写入到了 DataHub 中，DataHub中提供了很多的其他第三方的 DataConnector 可以连接各种例如：MaxCompute，ElasticSearch，ADB，RDS 等数据库。</p>
-<p>所以下面就要建立 DataConnector 把数据推送到 MaxCompute 中。</p>
-<h4 id="5-5-1-建-创建-DataConnector"><a href="#5-5-1-建-创建-DataConnector" class="headerlink" title="5.5.1 建 创建 DataConnector"></a>5.5.1 建 创建 DataConnector</h4><p>1）在 DataHub 中找到 Topic，在某个 Topic 下，点击右上角的 DataConnector</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024190452.png" alt="1594024190452"></p>
-<p>2）点击同步到 MaxCompute 离线表</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024231024.png" alt="1594024231024"></p>
-<p>3） 创建 DataConnector</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024263855.png" alt="1594024263855"></p>
-<p>（1）MaxCompute Project：名称要和 MaxCompute 创建的工作空间名称一致<br>（2）MaxCompute Table：数据导入到 MaxCompute 中的表名<br>（3）AccessKey ID：LTAI4FiU71dZAL17SdLBa6Nt<br>（4）AccessKey Secret：63YzSmqMOSjDR5A2ZXEzFLM2tREY6m<br>注意：AccessKey ID 和 AccessKey Secret 要和自己的阿里云账号一一对应<br>（5）分区选项：system、event_time<br>通常采用 system 时间分区。<br>如果是 event_time 方式分区，就要在 topic 中包含一个 event_time 的字段。不过这个字段与以往的timestamp 不同的是，必须精确到微秒级。而且这个字段一旦用于分区，则不会再写入到实体表中。<br>（6）分区范围：15 分钟起</p>
-<h3 id="5-5-2-发送数据"><a href="#5-5-2-发送数据" class="headerlink" title="5.5.2 发送数据"></a>5.5.2 发送数据</h3><p>建立好表后 DataConnector 就可以尝试发送数据了。<br>注意：如果已经启动了 Flume，就不需要再次启动了。<br>1）启动 Flume 程序</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[atguigu@hadoop102 flume]$ /opt/module/flume/bin/flume-ng agent -n a1 -c /opt/module/flume/conf/ -f /opt/module/flume/conf/file-flume-datahub.conf -Dflume.root.logger=info,console</span><br></pre></td></tr></table></figure>
-
-<p>2）在服务器 hadoop102 上执行命令</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[atguigu@hadoop102 module]$ java -jar log-collector-1.0-SNAPSHOT-jar-with-dependencies.jar &gt; /dev/null 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
-
-<h4 id="5-5-3-接收数据"><a href="#5-5-3-接收数据" class="headerlink" title="5.5.3 接收数据"></a>5.5.3 接收数据</h4><p>1）观察 DataHub 中接收到数据（速度很快</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024388519.png" alt="1594024388519"></p>
-<p>2）查看 MaxCompute 中接收到数据（1-5 分钟的延迟）</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024396848.png" alt="1594024396848"></p>
-<h3 id="5-6-明细数据层（DWD-层）"><a href="#5-6-明细数据层（DWD-层）" class="headerlink" title="5.6 明细数据层（DWD 层）"></a>5.6 明细数据层（DWD 层）</h3><p>​     DWD 层主要是对 ODS 层数据进行清洗（去除空值，脏数据，超过极限范围的数据）。DWD 层处理后的表，能够成为非常明确可用的基础明细数据。<br>​     本次项目中需要将用户行为过来基础日志，根据表类型，一张一张的解析出来 11 张不同类型的表数据，方便后续的处理。</p>
-<h3 id="5-6-1-日志格式分析"><a href="#5-6-1-日志格式分析" class="headerlink" title="5.6.1 日志格式分析"></a>5.6.1 日志格式分析</h3><p>1）日志格式：服务器时间 | json<br>2）其中 json 包括：<br>cm：公共字段的 key；<br>ap：app 的名称；<br>et：具体事件</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024489786.png" alt="1594024489786"></p>
-<h3 id="5-6-2-自定义-UDTF-（解析-具体事件字段）"><a href="#5-6-2-自定义-UDTF-（解析-具体事件字段）" class="headerlink" title="5.6.2 自定义 UDTF （解析 具体事件字段）"></a>5.6.2 自定义 UDTF （解析 具体事件字段）</h3><p>开发 UDTF 有两个方法：</p>
-<ul>
-<li><p>方法 1：在本地 IDEA 中创建工程，开发代码，打包，把 JAR 上传到 DataStudio 成为资源 JAR 包。然后基于资源 JAR 包，声明函数。</p>
-</li>
-<li><p>方法 2：直接在 FunctionStudio 中开发，然后在线打包发布程序，声明函数。</p>
-<p> 相比而言，从发布流程上来说利用 FunctionStudio 更快捷方便。但是从 IDEA 开发角度来说，网页版本的 FunctionStudio，肯定不如客户端的功能强大、反应速度流畅。不过也可以两者配合起来使用。<br>本次案例主要介绍通过 FunctionStudio 来编写 UDTF 函数。<br>1）按下图所示，打开 FunctionStudio 的界面</p>
-</li>
-</ul>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024631792.png" alt="1594024631792"></p>
-<p>2）创建工程</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024649248.png" alt="1594024649248"></p>
-<p>3）选择命名工程名，选择 udfjava</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024661647.png" alt="1594024661647"></p>
-<p>4）添加代码文件<br>可以看到工程创建好后，默认有很多参考的模板。</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024680996.png" alt="1594024680996"></p>
-<p>5）在 udtf 目录下创建一个 FlatEventUDTF 类</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024725424.png" alt="1594024725424"></p>
-<p>6）编写代码<br>首先分析日志结构</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024738853.png" alt="1594024738853"></p>
-<p>（1）在 pom.xml 中要加入 fastJson 依赖</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>fastjson<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2.28.odps<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>（2）编写自定义 UDTF 代码</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> com.aliyun.odps.udf.ExecutionContext;</span><br><span class="line"><span class="keyword">import</span> com.aliyun.odps.udf.UDFException;</span><br><span class="line"><span class="keyword">import</span> com.aliyun.odps.udf.UDTF;</span><br><span class="line"><span class="keyword">import</span> com.aliyun.odps.udf.annotation.Resolve;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.*;</span><br><span class="line"><span class="comment">// TODO define input and output types, e.g."string,string-&gt;string,bigint".</span></span><br><span class="line"><span class="meta">@Resolve</span>(&#123;<span class="string">"string-&gt;bigint,string,string"</span>&#125;)</span><br><span class="line">	<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FlatEventUDTF</span> <span class="keyword">extends</span> <span class="title">UDTF</span> </span>&#123;</span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setup</span><span class="params">(ExecutionContext ctx)</span> <span class="keyword">throws</span> UDFException</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(Object[] args)</span> <span class="keyword">throws</span> UDFException </span>&#123;</span><br><span class="line">	</span><br><span class="line">    String event =(String) args[<span class="number">0</span>];</span><br><span class="line">	JSONArray jsonArray = JSON.parseArray(event);</span><br><span class="line">	</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; jsonArray.size(); i++) &#123;</span><br><span class="line">	JSONObject jsonObject = jsonArray.getJSONObject(i);</span><br><span class="line">	String ett =(String) jsonObject.getString(<span class="string">"ett"</span>);</span><br><span class="line">	String eventName =(String) jsonObject.getString(<span class="string">"en"</span>);</span><br><span class="line">	String eventJson =(String) jsonObject.getString(<span class="string">"kv"</span>);</span><br><span class="line">	forward(Long.parseLong(ett),eventName,eventJson);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span> <span class="keyword">throws</span> UDFException </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>其中，@Resolve({“string-&gt;bigint,string,string”} 表示该函数，传入参数是 string，返回参数是三个，分别为长整型，和两个字符串，对应的返回值就是事件的时间、事件名称和事件内容（json 格式）。</p>
-<p>7）打包部署<br>（1）提交到 Data Studio 开发环境</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025039992.png" alt="1594025039992"></p>
-<p>（2）提交函数详情</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025047520.png" alt="1594025047520"></p>
-<p>（3）提交函数过程，控制台打印</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025060194.png" alt="1594025060194"></p>
-<p>提交成功后 ，回到 DataWorks 中的资源菜单中可以看到增加了 1 个 JAR 包，函数菜单中可以看到定义的函数。</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025070805.png" alt="1594025070805"></p>
-<p>8）测试函数<br>在 DataStudio 中临时查询，执行如下语句</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">select</span><br><span class="line">FlatEventUDTF(GET_JSON_OBJECT(log_string,&#39;$.et&#39;)) as</span><br><span class="line">(event_time, event_name, event_json)</span><br><span class="line">from ods_base_log</span><br><span class="line">where ds&#x3D;&#39;20191008&#39;;</span><br></pre></td></tr></table></figure>
-
-<p>能看到如下结果表示运行正确</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025170633.png" alt="1594025170633"></p>
-<h3 id="5-6-3-DWD-层建表（启动-日志表）"><a href="#5-6-3-DWD-层建表（启动-日志表）" class="headerlink" title="5.6.3 DWD 层建表（启动 日志表）"></a>5.6.3 DWD 层建表（启动 日志表）</h3><p>在流程中建立表，在 DWD 文件夹中增加一个 dwd_start_log 的表，可以直接用 ddl 模式建立，再进行微调。<br>1）在业务 1 的表上，右键新建表</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025206201.png" alt="1594025206201"></p>
-<p>2）点击 DDL 模式</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025212690.png" alt="1594025212690"></p>
-<p>3）在 DDL 模式中添加建表语句</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025238499.png" alt="1594025238499"></p>
-<p>详细建表语句如下</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">CREATE TABLE &#96;dwd_start_log&#96; (</span><br><span class="line">&#96;mid&#96; string,</span><br><span class="line">&#96;user_id&#96; string,</span><br><span class="line">&#96;version_code&#96; string,</span><br><span class="line">&#96;version_name&#96; string,</span><br><span class="line">&#96;lang&#96; string,</span><br><span class="line">&#96;source&#96; string,</span><br><span class="line">&#96;os&#96; string,</span><br><span class="line">&#96;area&#96; string,</span><br><span class="line">&#96;model&#96; string,</span><br><span class="line">&#96;brand&#96; string,</span><br><span class="line">&#96;sdk_version&#96; string,</span><br><span class="line">&#96;email&#96; string,</span><br><span class="line">&#96;height_width&#96; string,</span><br><span class="line">&#96;network&#96; string,</span><br><span class="line">&#96;lng&#96; string,</span><br><span class="line">&#96;lat&#96; string,</span><br><span class="line">&#96;entry&#96; string,</span><br><span class="line">&#96;open_ad_type&#96; string,</span><br><span class="line">&#96;action&#96; string,</span><br><span class="line">&#96;loading_time&#96; string,</span><br><span class="line">&#96;detail&#96; string,</span><br><span class="line">&#96;event_time&#96; string COMMENT &#39;事件时间&#39;</span><br><span class="line">)</span><br><span class="line">PARTITIONED BY (ds string, hh string, mm string);</span><br></pre></td></tr></table></figure>
-
-<p>4）补充一些相关字段。</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025273829.png" alt="1594025273829"></p>
-<p>5）补充分区格式</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025287100.png" alt="1594025287100"></p>
-<p>6）提交到生产环境</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025298188.png" alt="1594025298188"></p>
-<h3 id="5-6-4-手动将-将-ODS-层数据导入-DWD-层"><a href="#5-6-4-手动将-将-ODS-层数据导入-DWD-层" class="headerlink" title="5.6.4 手动将 将 ODS 层数据导入 DWD 层"></a>5.6.4 手动将 将 ODS 层数据导入 DWD 层</h3><p>1）在临时查询页面，把 ods 层 ods_base_log 里面的数据导入到 dwd_start_log</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">INSERT OVERWRITE TABLE dwd_start_log PARTITION (ds,hh,mm)</span><br><span class="line">select</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.mid&#39;) mid,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.uid&#39;) user_id,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.vc&#39;) version_code,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.vn&#39;) version_name,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.l&#39;) lang,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.sr&#39;) source,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.os&#39;) os,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.ar&#39;) area,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.md&#39;) model,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.ba&#39;) brand,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.sv&#39;) sdk_version,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.hw&#39;) height_width,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.g&#39;) email,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.hw&#39;) sv,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.ln&#39;) ln,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.la&#39;) la,</span><br><span class="line">GET_JSON_OBJECT( event_view.event_json,&#39;$.entry&#39;) entry,</span><br><span class="line">GET_JSON_OBJECT( event_view.event_json,&#39;$.loading_time&#39;)</span><br><span class="line">loading_time,</span><br><span class="line">GET_JSON_OBJECT( event_view.event_json,&#39;$.action&#39;) action,</span><br><span class="line">GET_JSON_OBJECT( event_view.event_json,&#39;$.open_ad_type&#39;)</span><br><span class="line">open_ad_type,</span><br><span class="line">GET_JSON_OBJECT( event_view.event_json,&#39;$.detail&#39;) detail ,</span><br><span class="line">event_view.event_time,</span><br><span class="line">ds,</span><br><span class="line">hh,</span><br><span class="line">mm</span><br><span class="line">from ods_base_log</span><br><span class="line">LATERAL VIEW FlatEventUDTF(GET_JSON_OBJECT(log_string,&#39;$.et&#39; ))</span><br><span class="line">event_view as event_time,event_name,event_json</span><br><span class="line">where ds&#x3D;&#39;20191008&#39; and event_view.event_name &#x3D; &#39;start&#39;;</span><br></pre></td></tr></table></figure>
-
-<p>2）查看导入结果</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">from</span> dwd_start_log <span class="keyword">WHERE</span> ds=<span class="string">'20191008'</span>;</span><br></pre></td></tr></table></figure>
-
-<h3 id="5-6-5-数据导入脚本-本"><a href="#5-6-5-数据导入脚本-本" class="headerlink" title="5.6.5 数据导入脚本 本"></a>5.6.5 数据导入脚本 本</h3><p>1）在流程中加入一个数据开发脚本</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025377362.png" alt="1594025377362"></p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025393721.png" alt="1594025393721"></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">INSERT OVERWRITE TABLE dwd_start_log PARTITION (ds,hh,mm)</span><br><span class="line">select</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.mid&#39;) mid,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.uid&#39;) user_id,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.vc&#39;) version_code,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.vn&#39;) version_name,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.l&#39;) lang,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.sr&#39;) source,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.os&#39;) os,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.ar&#39;) area,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.md&#39;) model,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.ba&#39;) brand,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.sv&#39;) sdk_version,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.hw&#39;) height_width,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.g&#39;) email,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.hw&#39;) sv,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.ln&#39;) ln,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.la&#39;) la,</span><br><span class="line">GET_JSON_OBJECT( event_view.event_json,&#39;$.entry&#39;) entry,</span><br><span class="line">GET_JSON_OBJECT( event_view.event_json,&#39;$.loading_time&#39;)</span><br><span class="line">loading_time,</span><br><span class="line">GET_JSON_OBJECT( event_view.event_json,&#39;$.action&#39;) action,</span><br><span class="line">GET_JSON_OBJECT( event_view.event_json,&#39;$.open_ad_type&#39;)</span><br><span class="line">open_ad_type,</span><br><span class="line">GET_JSON_OBJECT( event_view.event_json,&#39;$.detail&#39;) detail,</span><br><span class="line">event_view.event_time,</span><br><span class="line">ds,</span><br><span class="line">hh,</span><br><span class="line">mm</span><br><span class="line">from ods_base_log</span><br><span class="line">LATERAL VIEW FlatEventUdtf (GET_JSON_OBJECT(log_string,&#39;$.et&#39; ))</span><br><span class="line">event_view as event_time,event_name,event_json</span><br><span class="line">where ds&#x3D;&#39;$&#123;bizdate&#125;&#39; and event_view.event_name &#x3D; &#39;start&#39; ;</span><br></pre></td></tr></table></figure>
-
-<p>注意：在上面的 SQL 中我们使用了一个${bizedate}作为外部传入的日期参数。</p>
-<p>2）配置参数<br>在执行或者调度该脚本的时候传入相应的参数。</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025427699.png" alt="1594025427699"></p>
-<p>（1）在右侧有一个调度配置，打开可以对参数进行设置。</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025434520.png" alt="1594025434520"></p>
-<p>注意：<br>这里参数设置用的是 花括号，bizdate=${yyyymmdd}，表示取前一日的日期；<br>如果采用方括号，如，bizdate= $[yyyymmdd]，表示取当前日期。</p>
-<p>（2）配置脚本执行时间</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025447403.png" alt="1594025447403"></p>
-<h3 id="5-7-服务数据层（DWS-层）"><a href="#5-7-服务数据层（DWS-层）" class="headerlink" title="5.7 服务数据层（DWS 层）"></a>5.7 服务数据层（DWS 层）</h3><p>需求：日活统计</p>
-<h3 id="5-7-1-建表语句"><a href="#5-7-1-建表语句" class="headerlink" title="5.7.1 建表语句"></a>5.7.1 建表语句</h3><p>1）创建表 dws_uv_detail_d</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025476715.png" alt="1594025476715"></p>
-<p>2）点击 DDL 模式</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025483083.png" alt="1594025483083"></p>
-<p>3）在 DDL 模式中添加建表语句</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">CREATE TABLE &#96;dws_uv_detail_d&#96; (</span><br><span class="line">&#96;mid&#96; string COMMENT &#39;设备唯一标识&#39;,</span><br><span class="line">&#96;user_id&#96; string COMMENT &#39;用户标识&#39;,</span><br><span class="line">&#96;version_code&#96; string COMMENT &#39;程序版本号&#39;,</span><br><span class="line">&#96;version_name&#96; string COMMENT &#39;程序版本名&#39;,</span><br><span class="line">&#96;lang&#96; string COMMENT &#39;系统语言&#39;,</span><br><span class="line">&#96;source&#96; string COMMENT &#39;渠道号&#39;,</span><br><span class="line">&#96;os&#96; string COMMENT &#39;系统版本&#39;,</span><br><span class="line">&#96;area&#96; string COMMENT &#39;区域&#39;,</span><br><span class="line">&#96;model&#96; string COMMENT &#39;手机型号&#39;,</span><br><span class="line">&#96;brand&#96; string COMMENT &#39;手机品牌&#39;,</span><br><span class="line">&#96;sdk_version&#96; string COMMENT &#39;sdkversion&#39;,</span><br><span class="line">&#96;email&#96; string COMMENT &#39;email&#39;,</span><br><span class="line">&#96;height_width&#96; string COMMENT &#39;屏幕宽高&#39;,</span><br><span class="line">&#96;network&#96; string COMMENT &#39;网络模式&#39;,</span><br><span class="line">&#96;lng&#96; string COMMENT &#39;经度&#39;,</span><br><span class="line">&#96;lat&#96; string COMMENT &#39;纬度&#39;,</span><br><span class="line">&#96;event_time&#96; bigint</span><br><span class="line">)</span><br><span class="line">COMMENT &#39;活跃用户按天明细&#39;</span><br><span class="line">PARTITIONED BY (ds string,hh string,mm string);</span><br></pre></td></tr></table></figure>
-
-<p>4）补全建表信息描述</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025515492.png" alt="1594025515492"></p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025518679.png" alt="1594025518679"></p>
-<p>5）提交到生产环境</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025524520.png" alt="1594025524520"></p>
-<h3 id="5-7-2-手动将-将-DWD-层数据导入-DWS-层"><a href="#5-7-2-手动将-将-DWD-层数据导入-DWS-层" class="headerlink" title="5.7.2 手动将 将 DWD 层数据导入 DWS 层"></a>5.7.2 手动将 将 DWD 层数据导入 DWS 层</h3><p>1）在临时查询页面，把 DWD 层 dwd_start_log 里面的数据导入到 dws_uv_detail_d</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">insert</span> overwrite <span class="keyword">table</span> dws_uv_detail_d <span class="keyword">partition</span>(ds,hh,mm)</span><br><span class="line"><span class="keyword">select</span></span><br><span class="line"><span class="keyword">mid</span>,</span><br><span class="line">user_id,</span><br><span class="line">version_code,</span><br><span class="line">version_name,</span><br><span class="line">lang,</span><br><span class="line"><span class="keyword">source</span>,</span><br><span class="line">os,</span><br><span class="line">area,</span><br><span class="line"><span class="keyword">model</span>,</span><br><span class="line">brand,</span><br><span class="line">sdk_version,</span><br><span class="line">email,</span><br><span class="line">height_width,</span><br><span class="line">network,</span><br><span class="line">lng,</span><br><span class="line">lat,</span><br><span class="line">event_time,</span><br><span class="line">ds,</span><br><span class="line">hh,</span><br><span class="line">mm</span><br><span class="line"><span class="keyword">from</span></span><br><span class="line">(</span><br><span class="line"><span class="keyword">select</span></span><br><span class="line">*,</span><br><span class="line">ROW_NUMBER() <span class="keyword">OVER</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> <span class="keyword">mid</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> event_time</span><br><span class="line"><span class="keyword">asc</span>) rn</span><br><span class="line"><span class="keyword">from</span> dwd_start_log</span><br><span class="line"><span class="keyword">where</span> ds=<span class="string">'20191008'</span></span><br><span class="line">) st <span class="keyword">where</span> rn = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
-
-<p>2）查看导入结果</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">SELECT * from dws_uv_detail_d WHERE ds&#x3D;&#39;20191008&#39;;</span><br></pre></td></tr></table></figure>
-
-<h3 id="5-7-3-数据导入脚本"><a href="#5-7-3-数据导入脚本" class="headerlink" title="5.7.3 数据导入脚本"></a>5.7.3 数据导入脚本</h3><p>DWS 层一般围绕某个主题进行聚合、拼接处理。<br>针对统计日活的需求，DWS 主要的工作就进行以日为单位的去重操作。</p>
-<p>1）在流程中加入一个数据开发脚本</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025783457.png" alt="1594025783457"></p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025787737.png" alt="1594025787737"></p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">insert</span> overwrite <span class="keyword">table</span> dws_uv_detail_d <span class="keyword">partition</span>(ds,hh,mm)</span><br><span class="line"><span class="keyword">select</span></span><br><span class="line"><span class="keyword">mid</span>,</span><br><span class="line">user_id,</span><br><span class="line">version_code,</span><br><span class="line">version_name,</span><br><span class="line">lang,</span><br><span class="line"><span class="keyword">source</span>,</span><br><span class="line">os,</span><br><span class="line">area,</span><br><span class="line"><span class="keyword">model</span>,</span><br><span class="line">brand,</span><br><span class="line">sdk_version,</span><br><span class="line">email,</span><br><span class="line">height_width,</span><br><span class="line">network,</span><br><span class="line">lng,</span><br><span class="line">lat,</span><br><span class="line">event_time,</span><br><span class="line">ds,</span><br><span class="line">hh,</span><br><span class="line">mm</span><br><span class="line"><span class="keyword">from</span></span><br><span class="line">(</span><br><span class="line"><span class="keyword">select</span></span><br><span class="line">*,</span><br><span class="line">ROW_NUMBER() <span class="keyword">OVER</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> <span class="keyword">mid</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> event_time</span><br><span class="line"><span class="keyword">asc</span>) rn</span><br><span class="line"><span class="keyword">from</span> dwd_start_log</span><br><span class="line"><span class="keyword">where</span> ds = <span class="string">'$&#123;bizdate&#125;'</span></span><br><span class="line">) st <span class="keyword">where</span> rn = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
-
-<p>2）配置参数<br>点击调度配置-&gt; bizdate=${yyyymmdd}</p>
-<h3 id="5-8-应用数据层（ADS-层）"><a href="#5-8-应用数据层（ADS-层）" class="headerlink" title="5.8 应用数据层（ADS 层）"></a>5.8 应用数据层（ADS 层）</h3><p>统计各个渠道的 uv 个数</p>
-<h4 id="5-8-1-建表语句"><a href="#5-8-1-建表语句" class="headerlink" title="5.8.1 建表语句"></a>5.8.1 建表语句</h4><p>1）创建表 ads_uv_source_d</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025826738.png" alt="1594025826738"></p>
-<p>2）点击 DDL 模式</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025833213.png" alt="1594025833213"></p>
-<p>3）在 DDL 模式中添加建表语句</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`ads_uv_source_d`</span> (</span><br><span class="line"><span class="string">`source`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'渠道'</span>,</span><br><span class="line"><span class="string">`ct`</span> <span class="built_in">bigint</span> <span class="keyword">COMMENT</span> <span class="string">'个数'</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">COMMENT</span> <span class="string">'日活渠道统计'</span></span><br><span class="line">PARTITIONED <span class="keyword">BY</span> (ds <span class="keyword">string</span>);</span><br></pre></td></tr></table></figure>
-
-<p>4）补全建表信息描述</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025854812.png" alt="1594025854812"></p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025861415.png" alt="1594025861415"></p>
-<p>5）提交到生产环境</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025867648.png" alt="1594025867648"></p>
-<h3 id="5-8-2-数据导入脚本"><a href="#5-8-2-数据导入脚本" class="headerlink" title="5.8.2 数据导入脚本"></a>5.8.2 数据导入脚本</h3><p>1）在流程中加入一个数据开发脚本</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025879754.png" alt="1594025879754"></p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025886943.png" alt="1594025886943"></p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">insert</span> OVERWRITE <span class="keyword">table</span> ads_uv_source_d <span class="keyword">PARTITION</span></span><br><span class="line">(ds=<span class="string">'$&#123;bizdate&#125;'</span>)</span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line"><span class="keyword">source</span>,</span><br><span class="line"><span class="keyword">COUNT</span>(*) ct</span><br><span class="line"><span class="keyword">from</span> dws_uv_detail_d</span><br><span class="line"><span class="keyword">where</span> ds=<span class="string">'$&#123;bizdate&#125;'</span></span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> <span class="keyword">source</span>;</span><br></pre></td></tr></table></figure>
-
-<p>2）配置参数<br>点击调度配置-&gt; bizdate=${yyyymmdd}</p>
-<h3 id="5-9-日活-需求：-全流程-业务调度"><a href="#5-9-日活-需求：-全流程-业务调度" class="headerlink" title="5.9 日活 需求： 全流程 业务调度"></a>5.9 日活 需求： 全流程 业务调度</h3><p>1）点击业务 1，右侧就会出现之前写的脚本。默认三个脚本之间没有关系，可以根据业务需求，手动连线。</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025927419.png" alt="1594025927419"></p>
-<p>2）点击执行</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025933834.png" alt="1594025933834"></p>
-<p>3）查询运行日志</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025940991.png" alt="1594025940991"></p>
-<p>4）临时查询，检查结果</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">from</span> ads_uv_source_d <span class="keyword">WHERE</span> ds=<span class="string">'20191008'</span>;</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025962371.png" alt="1594025962371"></p>
-]]></content>
-      <categories>
-        <category>大数据</category>
-        <category>大数据实战项目</category>
-        <category>阿里云离线数仓</category>
-        <category>2.用户行为数仓搭建</category>
-      </categories>
-      <tags>
-        <tag>大数据</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>1.阿里云服务器搭建部署</title>
-    <url>/2020/07/07/1.%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2/</url>
+    <url>/2020/04/07/1.%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2/</url>
     <content><![CDATA[<h2 id="4-1-阿里云-ECS-服务器准备"><a href="#4-1-阿里云-ECS-服务器准备" class="headerlink" title="4.1 阿里云 ECS 服务器准备"></a>4.1 阿里云 ECS 服务器准备</h2><h3 id="4-1-1-注册阿里云账户"><a href="#4-1-1-注册阿里云账户" class="headerlink" title="4.1.1 注册阿里云账户"></a>4.1.1 注册阿里云账户</h3><p>1）登录阿里云官方网站：<a href="https://cn.aliyun.com/" target="_blank" rel="noopener">https://cn.aliyun.com/</a></p>
 <p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594018865359.png" alt="1594018865359"></p>
 <p>2）点击免费注册，提示支付宝快捷注册和账号密码注册两种方式，任选其一。</p>
@@ -499,8 +285,222 @@
       </tags>
   </entry>
   <entry>
+    <title>2.用户行为数仓搭建</title>
+    <url>/2020/04/07/2.%E7%94%A8%E6%88%B7%E8%A1%8C%E4%B8%BA%E6%95%B0%E4%BB%93%E6%90%AD%E5%BB%BA/</url>
+    <content><![CDATA[<h2 id="第-5-章-用户行为数仓搭建"><a href="#第-5-章-用户行为数仓搭建" class="headerlink" title="第 5 章 用户行为数仓搭建"></a>第 5 章 用户行为数仓搭建</h2><h3 id="5-1-数仓分层概念"><a href="#5-1-数仓分层概念" class="headerlink" title="5.1 数仓分层概念"></a>5.1 数仓分层概念</h3><h4 id="5-1-1-数仓分层"><a href="#5-1-1-数仓分层" class="headerlink" title="5.1.1 数仓分层"></a>5.1.1 数仓分层</h4><p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023504588.png" alt="1594023504588"></p>
+<p>1）ODS 层<br>原始数据层，存放原始数据，直接加载原始日志、数据，数据保持原貌不做处理。<br>2）DWD 层<br>对 ODS 层数据进行清洗（去除空值，脏数据，超过极限范围的数据）<br>3）DWS 层<br>以 DWD 为基础，进行轻度汇总。<br>4）ADS 层<br>为各种统计报表提供数据</p>
+<h4 id="5-1-2-数仓分层优点"><a href="#5-1-2-数仓分层优点" class="headerlink" title="5.1.2 数仓分层优点"></a>5.1.2 数仓分层优点</h4><p>1）把复杂问题简单化<br>将一个复杂的任务分解成多个步骤来完成，每一层只处理单一的步骤，比较简单、并且<br>方便定位问题。<br>2）减少重复开发<br>规范数据分层，通过的中间层数据，能够减少极大的重复计算，增加一次计算结果的复<br>用性。<br>3）隔离原始数据<br>不论是数据的异常还是数据的敏感性，使真实数据与统计数据解耦开。</p>
+<h4 id="5-1-3-数仓命名"><a href="#5-1-3-数仓命名" class="headerlink" title="5.1.3 数仓命名"></a>5.1.3 数仓命名</h4><p> ODS层命名为ods前缀<br> DWD层命名为dwd前缀</p>
+<p> DWS层命名为dws前缀<br> ADS层命名为ads前缀<br> 维度表命名为dim前缀<br> 每日全量导入命名为df（day full）后缀<br> 每日增量导入命名为di（day increase）后缀</p>
+<h4 id="5-2-数仓分层配置"><a href="#5-2-数仓分层配置" class="headerlink" title="5.2 数仓分层配置"></a>5.2 数仓分层配置</h4><h4 id="5-2-1-建立业务流程"><a href="#5-2-1-建立业务流程" class="headerlink" title="5.2.1 建立业务流程"></a>5.2.1 建立业务流程</h4><p>1）点击数据开发-&gt;业务流程-&gt;新建业务流程-&gt;输入业务名称</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023571084.png" alt="1594023571084"></p>
+<p>2）再业务流程下面就可以看到业务 1</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023583660.png" alt="1594023583660"></p>
+<h4 id="5-2-2-配置表主题"><a href="#5-2-2-配置表主题" class="headerlink" title="5.2.2 配置表主题"></a>5.2.2 配置表主题</h4><p>1）进入配置中心<br>点击最下方的齿轮，进入配置中心</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023600022.png" alt="1594023600022"></p>
+<p>2）配置主题管理，这里主要是划分表的主题<br>主题一般是表的对应的业务主题，比如：基础表、用户、商品、广告等对应的业务线。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023611879.png" alt="1594023611879"></p>
+<h4 id="5-2-3-配置表层级"><a href="#5-2-3-配置表层级" class="headerlink" title="5.2.3 配置表层级"></a>5.2.3 配置表层级</h4><p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023635420.png" alt="1594023635420">在同一页面中，DataWorks 还提供了一个物理分类的划分维度，用户可以根据情况自行<br>决定划分方式。<br>本案例中，对数据表按照数据来源划分为，日志、数据库和综合。</p>
+<h3 id="5-3-原始数据层-（ODS-层）"><a href="#5-3-原始数据层-（ODS-层）" class="headerlink" title="5.3 原始数据层 （ODS 层）"></a>5.3 原始数据层 （ODS 层）</h3><p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023695464.png" alt="1594023695464"></p>
+<h3 id="5-3-1-建表语句"><a href="#5-3-1-建表语句" class="headerlink" title="5.3.1 建表语句"></a>5.3.1 建表语句</h3><p>1）回到数据开发的界面，按下图开始创建数据表</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023709003.png" alt="1594023709003"></p>
+<p>2）输入表名-&gt;提交</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023717362.png" alt="1594023717362"></p>
+<p>开始建立的表要和原始数据最基本的结构一致。</p>
+<h3 id="5-3-2-配置基本属性"><a href="#5-3-2-配置基本属性" class="headerlink" title="5.3.2 配置基本属性"></a>5.3.2 配置基本属性</h3><p>配置新创建的表的主题。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023740749.png" alt="1594023740749"></p>
+<h3 id="5-3-3-配置物理模型"><a href="#5-3-3-配置物理模型" class="headerlink" title="5.3.3 配置物理模型"></a>5.3.3 配置物理模型</h3><p>注意选择层级和物理分类，由于建立的原始日志表，所以此处选择 ODS 层。分类是日志。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023761360.png" alt="1594023761360"></p>
+<p>​    从 DataHub 过来的数据必须选择分区表。如果手工文件导入的表可以选择非分区。<br>​    为了减少再购买存储服务器，所以选择内部表。真实企业开发时，大部分情况都是创建外部表，需要在 OSS 服务中申请存储空间。</p>
+<h3 id="5-3-4-配置字段"><a href="#5-3-4-配置字段" class="headerlink" title="5.3.4 配置字段"></a>5.3.4 配置字段</h3><p>发送过来的日志包含两部分：服务器时间和日志详情。这里面设计了两个字段对应接收。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023854289.png" alt="1594023854289"></p>
+<p>注意：这里的主键，是指一个标志而已，本身不提供索引和唯一性约束。</p>
+<h3 id="5-3-5-配置分区"><a href="#5-3-5-配置分区" class="headerlink" title="5.3.5 配置分区"></a>5.3.5 配置分区</h3><p>表示数据按如下字段进行分区</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023878123.png" alt="1594023878123"></p>
+<p>​     由于目前 DataHub 至 MaxCompute 的接口，只支持按年月日+小时+分钟方式分区，所以这三个字段是必须有的，且字段类型必须是 String。</p>
+<h3 id="5-3-6-查看建表语句"><a href="#5-3-6-查看建表语句" class="headerlink" title="5.3.6 查看建表语句"></a>5.3.6 查看建表语句</h3><p>点击 DDL 模式，可以查看自动生成的建表语句。和普通的创建表语句一样。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023947054.png" alt="1594023947054"></p>
+<h3 id="5-3-7-提交到生产环境"><a href="#5-3-7-提交到生产环境" class="headerlink" title="5.3.7 提交到生产环境"></a>5.3.7 提交到生产环境</h3><p>点击提交到生产环境，表就创建完成了。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023967700.png" alt="1594023967700"></p>
+<h3 id="5-4-表的基本操作"><a href="#5-4-表的基本操作" class="headerlink" title="5.4 表的基本操作"></a>5.4 表的基本操作</h3><h4 id="5-4-1-查看表结构"><a href="#5-4-1-查看表结构" class="headerlink" title="5.4.1 查看表结构"></a>5.4.1 查看表结构</h4><p>在最左侧菜单中选择【表管理】，可以在右侧查看表的结构信息。但是不可以修改。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023991126.png" alt="1594023991126"></p>
+<h4 id="5-4-2-在业务流程中导入表"><a href="#5-4-2-在业务流程中导入表" class="headerlink" title="5.4.2 在业务流程中导入表"></a>5.4.2 在业务流程中导入表</h4><p>1）在业务 1 中建 ods、dwd、dws、ads，4 个文件夹</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024055393.png" alt="1594024055393"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024059753.png" alt="1594024059753"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024063816.png" alt="1594024063816"></p>
+<p>2）向 ods 文件夹中导入表</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024073580.png" alt="1594024073580"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024080431.png" alt="1594024080431"></p>
+<h3 id="5-4-3-临时查询"><a href="#5-4-3-临时查询" class="headerlink" title="5.4.3 临时查询"></a>5.4.3 临时查询</h3><p>1）点击临时查询-&gt;新建-&gt;ODPS SQL</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024097393.png" alt="1594024097393"></p>
+<p>2）创建临时查询节点</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024104537.png" alt="1594024104537"></p>
+<p>3）可以执行 SQL 命令</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024126755.png" alt="1594024126755"></p>
+<h3 id="5-5-DataHub-到-推送数据到-MaxCompute"><a href="#5-5-DataHub-到-推送数据到-MaxCompute" class="headerlink" title="5.5 DataHub 到 推送数据到 MaxCompute"></a>5.5 DataHub 到 推送数据到 MaxCompute</h3><p>​    如下图，之前 Flume 中的数据利用 DataHub Sink 把数据写入到了 DataHub 中，DataHub中提供了很多的其他第三方的 DataConnector 可以连接各种例如：MaxCompute，ElasticSearch，ADB，RDS 等数据库。</p>
+<p>所以下面就要建立 DataConnector 把数据推送到 MaxCompute 中。</p>
+<h4 id="5-5-1-建-创建-DataConnector"><a href="#5-5-1-建-创建-DataConnector" class="headerlink" title="5.5.1 建 创建 DataConnector"></a>5.5.1 建 创建 DataConnector</h4><p>1）在 DataHub 中找到 Topic，在某个 Topic 下，点击右上角的 DataConnector</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024190452.png" alt="1594024190452"></p>
+<p>2）点击同步到 MaxCompute 离线表</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024231024.png" alt="1594024231024"></p>
+<p>3） 创建 DataConnector</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024263855.png" alt="1594024263855"></p>
+<p>（1）MaxCompute Project：名称要和 MaxCompute 创建的工作空间名称一致<br>（2）MaxCompute Table：数据导入到 MaxCompute 中的表名<br>（3）AccessKey ID：LTAI4FiU71dZAL17SdLBa6Nt<br>（4）AccessKey Secret：63YzSmqMOSjDR5A2ZXEzFLM2tREY6m<br>注意：AccessKey ID 和 AccessKey Secret 要和自己的阿里云账号一一对应<br>（5）分区选项：system、event_time<br>通常采用 system 时间分区。<br>如果是 event_time 方式分区，就要在 topic 中包含一个 event_time 的字段。不过这个字段与以往的timestamp 不同的是，必须精确到微秒级。而且这个字段一旦用于分区，则不会再写入到实体表中。<br>（6）分区范围：15 分钟起</p>
+<h3 id="5-5-2-发送数据"><a href="#5-5-2-发送数据" class="headerlink" title="5.5.2 发送数据"></a>5.5.2 发送数据</h3><p>建立好表后 DataConnector 就可以尝试发送数据了。<br>注意：如果已经启动了 Flume，就不需要再次启动了。<br>1）启动 Flume 程序</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[atguigu@hadoop102 flume]$ /opt/module/flume/bin/flume-ng agent -n a1 -c /opt/module/flume/conf/ -f /opt/module/flume/conf/file-flume-datahub.conf -Dflume.root.logger=info,console</span><br></pre></td></tr></table></figure>
+
+<p>2）在服务器 hadoop102 上执行命令</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[atguigu@hadoop102 module]$ java -jar log-collector-1.0-SNAPSHOT-jar-with-dependencies.jar &gt; /dev/null 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-5-3-接收数据"><a href="#5-5-3-接收数据" class="headerlink" title="5.5.3 接收数据"></a>5.5.3 接收数据</h4><p>1）观察 DataHub 中接收到数据（速度很快</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024388519.png" alt="1594024388519"></p>
+<p>2）查看 MaxCompute 中接收到数据（1-5 分钟的延迟）</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024396848.png" alt="1594024396848"></p>
+<h3 id="5-6-明细数据层（DWD-层）"><a href="#5-6-明细数据层（DWD-层）" class="headerlink" title="5.6 明细数据层（DWD 层）"></a>5.6 明细数据层（DWD 层）</h3><p>​     DWD 层主要是对 ODS 层数据进行清洗（去除空值，脏数据，超过极限范围的数据）。DWD 层处理后的表，能够成为非常明确可用的基础明细数据。<br>​     本次项目中需要将用户行为过来基础日志，根据表类型，一张一张的解析出来 11 张不同类型的表数据，方便后续的处理。</p>
+<h3 id="5-6-1-日志格式分析"><a href="#5-6-1-日志格式分析" class="headerlink" title="5.6.1 日志格式分析"></a>5.6.1 日志格式分析</h3><p>1）日志格式：服务器时间 | json<br>2）其中 json 包括：<br>cm：公共字段的 key；<br>ap：app 的名称；<br>et：具体事件</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024489786.png" alt="1594024489786"></p>
+<h3 id="5-6-2-自定义-UDTF-（解析-具体事件字段）"><a href="#5-6-2-自定义-UDTF-（解析-具体事件字段）" class="headerlink" title="5.6.2 自定义 UDTF （解析 具体事件字段）"></a>5.6.2 自定义 UDTF （解析 具体事件字段）</h3><p>开发 UDTF 有两个方法：</p>
+<ul>
+<li><p>方法 1：在本地 IDEA 中创建工程，开发代码，打包，把 JAR 上传到 DataStudio 成为资源 JAR 包。然后基于资源 JAR 包，声明函数。</p>
+</li>
+<li><p>方法 2：直接在 FunctionStudio 中开发，然后在线打包发布程序，声明函数。</p>
+<p> 相比而言，从发布流程上来说利用 FunctionStudio 更快捷方便。但是从 IDEA 开发角度来说，网页版本的 FunctionStudio，肯定不如客户端的功能强大、反应速度流畅。不过也可以两者配合起来使用。<br>本次案例主要介绍通过 FunctionStudio 来编写 UDTF 函数。<br>1）按下图所示，打开 FunctionStudio 的界面</p>
+</li>
+</ul>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024631792.png" alt="1594024631792"></p>
+<p>2）创建工程</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024649248.png" alt="1594024649248"></p>
+<p>3）选择命名工程名，选择 udfjava</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024661647.png" alt="1594024661647"></p>
+<p>4）添加代码文件<br>可以看到工程创建好后，默认有很多参考的模板。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024680996.png" alt="1594024680996"></p>
+<p>5）在 udtf 目录下创建一个 FlatEventUDTF 类</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024725424.png" alt="1594024725424"></p>
+<p>6）编写代码<br>首先分析日志结构</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024738853.png" alt="1594024738853"></p>
+<p>（1）在 pom.xml 中要加入 fastJson 依赖</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>fastjson<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2.28.odps<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>（2）编写自定义 UDTF 代码</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> com.aliyun.odps.udf.ExecutionContext;</span><br><span class="line"><span class="keyword">import</span> com.aliyun.odps.udf.UDFException;</span><br><span class="line"><span class="keyword">import</span> com.aliyun.odps.udf.UDTF;</span><br><span class="line"><span class="keyword">import</span> com.aliyun.odps.udf.annotation.Resolve;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.*;</span><br><span class="line"><span class="comment">// TODO define input and output types, e.g."string,string-&gt;string,bigint".</span></span><br><span class="line"><span class="meta">@Resolve</span>(&#123;<span class="string">"string-&gt;bigint,string,string"</span>&#125;)</span><br><span class="line">	<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FlatEventUDTF</span> <span class="keyword">extends</span> <span class="title">UDTF</span> </span>&#123;</span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setup</span><span class="params">(ExecutionContext ctx)</span> <span class="keyword">throws</span> UDFException</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(Object[] args)</span> <span class="keyword">throws</span> UDFException </span>&#123;</span><br><span class="line">	</span><br><span class="line">    String event =(String) args[<span class="number">0</span>];</span><br><span class="line">	JSONArray jsonArray = JSON.parseArray(event);</span><br><span class="line">	</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; jsonArray.size(); i++) &#123;</span><br><span class="line">	JSONObject jsonObject = jsonArray.getJSONObject(i);</span><br><span class="line">	String ett =(String) jsonObject.getString(<span class="string">"ett"</span>);</span><br><span class="line">	String eventName =(String) jsonObject.getString(<span class="string">"en"</span>);</span><br><span class="line">	String eventJson =(String) jsonObject.getString(<span class="string">"kv"</span>);</span><br><span class="line">	forward(Long.parseLong(ett),eventName,eventJson);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span> <span class="keyword">throws</span> UDFException </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中，@Resolve({“string-&gt;bigint,string,string”} 表示该函数，传入参数是 string，返回参数是三个，分别为长整型，和两个字符串，对应的返回值就是事件的时间、事件名称和事件内容（json 格式）。</p>
+<p>7）打包部署<br>（1）提交到 Data Studio 开发环境</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025039992.png" alt="1594025039992"></p>
+<p>（2）提交函数详情</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025047520.png" alt="1594025047520"></p>
+<p>（3）提交函数过程，控制台打印</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025060194.png" alt="1594025060194"></p>
+<p>提交成功后 ，回到 DataWorks 中的资源菜单中可以看到增加了 1 个 JAR 包，函数菜单中可以看到定义的函数。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025070805.png" alt="1594025070805"></p>
+<p>8）测试函数<br>在 DataStudio 中临时查询，执行如下语句</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">select</span><br><span class="line">FlatEventUDTF(GET_JSON_OBJECT(log_string,&#39;$.et&#39;)) as</span><br><span class="line">(event_time, event_name, event_json)</span><br><span class="line">from ods_base_log</span><br><span class="line">where ds&#x3D;&#39;20191008&#39;;</span><br></pre></td></tr></table></figure>
+
+<p>能看到如下结果表示运行正确</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025170633.png" alt="1594025170633"></p>
+<h3 id="5-6-3-DWD-层建表（启动-日志表）"><a href="#5-6-3-DWD-层建表（启动-日志表）" class="headerlink" title="5.6.3 DWD 层建表（启动 日志表）"></a>5.6.3 DWD 层建表（启动 日志表）</h3><p>在流程中建立表，在 DWD 文件夹中增加一个 dwd_start_log 的表，可以直接用 ddl 模式建立，再进行微调。<br>1）在业务 1 的表上，右键新建表</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025206201.png" alt="1594025206201"></p>
+<p>2）点击 DDL 模式</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025212690.png" alt="1594025212690"></p>
+<p>3）在 DDL 模式中添加建表语句</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025238499.png" alt="1594025238499"></p>
+<p>详细建表语句如下</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">CREATE TABLE &#96;dwd_start_log&#96; (</span><br><span class="line">&#96;mid&#96; string,</span><br><span class="line">&#96;user_id&#96; string,</span><br><span class="line">&#96;version_code&#96; string,</span><br><span class="line">&#96;version_name&#96; string,</span><br><span class="line">&#96;lang&#96; string,</span><br><span class="line">&#96;source&#96; string,</span><br><span class="line">&#96;os&#96; string,</span><br><span class="line">&#96;area&#96; string,</span><br><span class="line">&#96;model&#96; string,</span><br><span class="line">&#96;brand&#96; string,</span><br><span class="line">&#96;sdk_version&#96; string,</span><br><span class="line">&#96;email&#96; string,</span><br><span class="line">&#96;height_width&#96; string,</span><br><span class="line">&#96;network&#96; string,</span><br><span class="line">&#96;lng&#96; string,</span><br><span class="line">&#96;lat&#96; string,</span><br><span class="line">&#96;entry&#96; string,</span><br><span class="line">&#96;open_ad_type&#96; string,</span><br><span class="line">&#96;action&#96; string,</span><br><span class="line">&#96;loading_time&#96; string,</span><br><span class="line">&#96;detail&#96; string,</span><br><span class="line">&#96;event_time&#96; string COMMENT &#39;事件时间&#39;</span><br><span class="line">)</span><br><span class="line">PARTITIONED BY (ds string, hh string, mm string);</span><br></pre></td></tr></table></figure>
+
+<p>4）补充一些相关字段。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025273829.png" alt="1594025273829"></p>
+<p>5）补充分区格式</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025287100.png" alt="1594025287100"></p>
+<p>6）提交到生产环境</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025298188.png" alt="1594025298188"></p>
+<h3 id="5-6-4-手动将-将-ODS-层数据导入-DWD-层"><a href="#5-6-4-手动将-将-ODS-层数据导入-DWD-层" class="headerlink" title="5.6.4 手动将 将 ODS 层数据导入 DWD 层"></a>5.6.4 手动将 将 ODS 层数据导入 DWD 层</h3><p>1）在临时查询页面，把 ods 层 ods_base_log 里面的数据导入到 dwd_start_log</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">INSERT OVERWRITE TABLE dwd_start_log PARTITION (ds,hh,mm)</span><br><span class="line">select</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.mid&#39;) mid,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.uid&#39;) user_id,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.vc&#39;) version_code,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.vn&#39;) version_name,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.l&#39;) lang,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.sr&#39;) source,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.os&#39;) os,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.ar&#39;) area,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.md&#39;) model,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.ba&#39;) brand,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.sv&#39;) sdk_version,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.hw&#39;) height_width,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.g&#39;) email,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.hw&#39;) sv,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.ln&#39;) ln,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.la&#39;) la,</span><br><span class="line">GET_JSON_OBJECT( event_view.event_json,&#39;$.entry&#39;) entry,</span><br><span class="line">GET_JSON_OBJECT( event_view.event_json,&#39;$.loading_time&#39;)</span><br><span class="line">loading_time,</span><br><span class="line">GET_JSON_OBJECT( event_view.event_json,&#39;$.action&#39;) action,</span><br><span class="line">GET_JSON_OBJECT( event_view.event_json,&#39;$.open_ad_type&#39;)</span><br><span class="line">open_ad_type,</span><br><span class="line">GET_JSON_OBJECT( event_view.event_json,&#39;$.detail&#39;) detail ,</span><br><span class="line">event_view.event_time,</span><br><span class="line">ds,</span><br><span class="line">hh,</span><br><span class="line">mm</span><br><span class="line">from ods_base_log</span><br><span class="line">LATERAL VIEW FlatEventUDTF(GET_JSON_OBJECT(log_string,&#39;$.et&#39; ))</span><br><span class="line">event_view as event_time,event_name,event_json</span><br><span class="line">where ds&#x3D;&#39;20191008&#39; and event_view.event_name &#x3D; &#39;start&#39;;</span><br></pre></td></tr></table></figure>
+
+<p>2）查看导入结果</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">from</span> dwd_start_log <span class="keyword">WHERE</span> ds=<span class="string">'20191008'</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-6-5-数据导入脚本-本"><a href="#5-6-5-数据导入脚本-本" class="headerlink" title="5.6.5 数据导入脚本 本"></a>5.6.5 数据导入脚本 本</h3><p>1）在流程中加入一个数据开发脚本</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025377362.png" alt="1594025377362"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025393721.png" alt="1594025393721"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">INSERT OVERWRITE TABLE dwd_start_log PARTITION (ds,hh,mm)</span><br><span class="line">select</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.mid&#39;) mid,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.uid&#39;) user_id,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.vc&#39;) version_code,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.vn&#39;) version_name,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.l&#39;) lang,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.sr&#39;) source,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.os&#39;) os,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.ar&#39;) area,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.md&#39;) model,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.ba&#39;) brand,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.sv&#39;) sdk_version,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.hw&#39;) height_width,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.g&#39;) email,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.hw&#39;) sv,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.ln&#39;) ln,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.la&#39;) la,</span><br><span class="line">GET_JSON_OBJECT( event_view.event_json,&#39;$.entry&#39;) entry,</span><br><span class="line">GET_JSON_OBJECT( event_view.event_json,&#39;$.loading_time&#39;)</span><br><span class="line">loading_time,</span><br><span class="line">GET_JSON_OBJECT( event_view.event_json,&#39;$.action&#39;) action,</span><br><span class="line">GET_JSON_OBJECT( event_view.event_json,&#39;$.open_ad_type&#39;)</span><br><span class="line">open_ad_type,</span><br><span class="line">GET_JSON_OBJECT( event_view.event_json,&#39;$.detail&#39;) detail,</span><br><span class="line">event_view.event_time,</span><br><span class="line">ds,</span><br><span class="line">hh,</span><br><span class="line">mm</span><br><span class="line">from ods_base_log</span><br><span class="line">LATERAL VIEW FlatEventUdtf (GET_JSON_OBJECT(log_string,&#39;$.et&#39; ))</span><br><span class="line">event_view as event_time,event_name,event_json</span><br><span class="line">where ds&#x3D;&#39;$&#123;bizdate&#125;&#39; and event_view.event_name &#x3D; &#39;start&#39; ;</span><br></pre></td></tr></table></figure>
+
+<p>注意：在上面的 SQL 中我们使用了一个${bizedate}作为外部传入的日期参数。</p>
+<p>2）配置参数<br>在执行或者调度该脚本的时候传入相应的参数。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025427699.png" alt="1594025427699"></p>
+<p>（1）在右侧有一个调度配置，打开可以对参数进行设置。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025434520.png" alt="1594025434520"></p>
+<p>注意：<br>这里参数设置用的是 花括号，bizdate=${yyyymmdd}，表示取前一日的日期；<br>如果采用方括号，如，bizdate= $[yyyymmdd]，表示取当前日期。</p>
+<p>（2）配置脚本执行时间</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025447403.png" alt="1594025447403"></p>
+<h3 id="5-7-服务数据层（DWS-层）"><a href="#5-7-服务数据层（DWS-层）" class="headerlink" title="5.7 服务数据层（DWS 层）"></a>5.7 服务数据层（DWS 层）</h3><p>需求：日活统计</p>
+<h3 id="5-7-1-建表语句"><a href="#5-7-1-建表语句" class="headerlink" title="5.7.1 建表语句"></a>5.7.1 建表语句</h3><p>1）创建表 dws_uv_detail_d</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025476715.png" alt="1594025476715"></p>
+<p>2）点击 DDL 模式</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025483083.png" alt="1594025483083"></p>
+<p>3）在 DDL 模式中添加建表语句</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">CREATE TABLE &#96;dws_uv_detail_d&#96; (</span><br><span class="line">&#96;mid&#96; string COMMENT &#39;设备唯一标识&#39;,</span><br><span class="line">&#96;user_id&#96; string COMMENT &#39;用户标识&#39;,</span><br><span class="line">&#96;version_code&#96; string COMMENT &#39;程序版本号&#39;,</span><br><span class="line">&#96;version_name&#96; string COMMENT &#39;程序版本名&#39;,</span><br><span class="line">&#96;lang&#96; string COMMENT &#39;系统语言&#39;,</span><br><span class="line">&#96;source&#96; string COMMENT &#39;渠道号&#39;,</span><br><span class="line">&#96;os&#96; string COMMENT &#39;系统版本&#39;,</span><br><span class="line">&#96;area&#96; string COMMENT &#39;区域&#39;,</span><br><span class="line">&#96;model&#96; string COMMENT &#39;手机型号&#39;,</span><br><span class="line">&#96;brand&#96; string COMMENT &#39;手机品牌&#39;,</span><br><span class="line">&#96;sdk_version&#96; string COMMENT &#39;sdkversion&#39;,</span><br><span class="line">&#96;email&#96; string COMMENT &#39;email&#39;,</span><br><span class="line">&#96;height_width&#96; string COMMENT &#39;屏幕宽高&#39;,</span><br><span class="line">&#96;network&#96; string COMMENT &#39;网络模式&#39;,</span><br><span class="line">&#96;lng&#96; string COMMENT &#39;经度&#39;,</span><br><span class="line">&#96;lat&#96; string COMMENT &#39;纬度&#39;,</span><br><span class="line">&#96;event_time&#96; bigint</span><br><span class="line">)</span><br><span class="line">COMMENT &#39;活跃用户按天明细&#39;</span><br><span class="line">PARTITIONED BY (ds string,hh string,mm string);</span><br></pre></td></tr></table></figure>
+
+<p>4）补全建表信息描述</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025515492.png" alt="1594025515492"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025518679.png" alt="1594025518679"></p>
+<p>5）提交到生产环境</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025524520.png" alt="1594025524520"></p>
+<h3 id="5-7-2-手动将-将-DWD-层数据导入-DWS-层"><a href="#5-7-2-手动将-将-DWD-层数据导入-DWS-层" class="headerlink" title="5.7.2 手动将 将 DWD 层数据导入 DWS 层"></a>5.7.2 手动将 将 DWD 层数据导入 DWS 层</h3><p>1）在临时查询页面，把 DWD 层 dwd_start_log 里面的数据导入到 dws_uv_detail_d</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">insert</span> overwrite <span class="keyword">table</span> dws_uv_detail_d <span class="keyword">partition</span>(ds,hh,mm)</span><br><span class="line"><span class="keyword">select</span></span><br><span class="line"><span class="keyword">mid</span>,</span><br><span class="line">user_id,</span><br><span class="line">version_code,</span><br><span class="line">version_name,</span><br><span class="line">lang,</span><br><span class="line"><span class="keyword">source</span>,</span><br><span class="line">os,</span><br><span class="line">area,</span><br><span class="line"><span class="keyword">model</span>,</span><br><span class="line">brand,</span><br><span class="line">sdk_version,</span><br><span class="line">email,</span><br><span class="line">height_width,</span><br><span class="line">network,</span><br><span class="line">lng,</span><br><span class="line">lat,</span><br><span class="line">event_time,</span><br><span class="line">ds,</span><br><span class="line">hh,</span><br><span class="line">mm</span><br><span class="line"><span class="keyword">from</span></span><br><span class="line">(</span><br><span class="line"><span class="keyword">select</span></span><br><span class="line">*,</span><br><span class="line">ROW_NUMBER() <span class="keyword">OVER</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> <span class="keyword">mid</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> event_time</span><br><span class="line"><span class="keyword">asc</span>) rn</span><br><span class="line"><span class="keyword">from</span> dwd_start_log</span><br><span class="line"><span class="keyword">where</span> ds=<span class="string">'20191008'</span></span><br><span class="line">) st <span class="keyword">where</span> rn = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<p>2）查看导入结果</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">SELECT * from dws_uv_detail_d WHERE ds&#x3D;&#39;20191008&#39;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-7-3-数据导入脚本"><a href="#5-7-3-数据导入脚本" class="headerlink" title="5.7.3 数据导入脚本"></a>5.7.3 数据导入脚本</h3><p>DWS 层一般围绕某个主题进行聚合、拼接处理。<br>针对统计日活的需求，DWS 主要的工作就进行以日为单位的去重操作。</p>
+<p>1）在流程中加入一个数据开发脚本</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025783457.png" alt="1594025783457"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025787737.png" alt="1594025787737"></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">insert</span> overwrite <span class="keyword">table</span> dws_uv_detail_d <span class="keyword">partition</span>(ds,hh,mm)</span><br><span class="line"><span class="keyword">select</span></span><br><span class="line"><span class="keyword">mid</span>,</span><br><span class="line">user_id,</span><br><span class="line">version_code,</span><br><span class="line">version_name,</span><br><span class="line">lang,</span><br><span class="line"><span class="keyword">source</span>,</span><br><span class="line">os,</span><br><span class="line">area,</span><br><span class="line"><span class="keyword">model</span>,</span><br><span class="line">brand,</span><br><span class="line">sdk_version,</span><br><span class="line">email,</span><br><span class="line">height_width,</span><br><span class="line">network,</span><br><span class="line">lng,</span><br><span class="line">lat,</span><br><span class="line">event_time,</span><br><span class="line">ds,</span><br><span class="line">hh,</span><br><span class="line">mm</span><br><span class="line"><span class="keyword">from</span></span><br><span class="line">(</span><br><span class="line"><span class="keyword">select</span></span><br><span class="line">*,</span><br><span class="line">ROW_NUMBER() <span class="keyword">OVER</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> <span class="keyword">mid</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> event_time</span><br><span class="line"><span class="keyword">asc</span>) rn</span><br><span class="line"><span class="keyword">from</span> dwd_start_log</span><br><span class="line"><span class="keyword">where</span> ds = <span class="string">'$&#123;bizdate&#125;'</span></span><br><span class="line">) st <span class="keyword">where</span> rn = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<p>2）配置参数<br>点击调度配置-&gt; bizdate=${yyyymmdd}</p>
+<h3 id="5-8-应用数据层（ADS-层）"><a href="#5-8-应用数据层（ADS-层）" class="headerlink" title="5.8 应用数据层（ADS 层）"></a>5.8 应用数据层（ADS 层）</h3><p>统计各个渠道的 uv 个数</p>
+<h4 id="5-8-1-建表语句"><a href="#5-8-1-建表语句" class="headerlink" title="5.8.1 建表语句"></a>5.8.1 建表语句</h4><p>1）创建表 ads_uv_source_d</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025826738.png" alt="1594025826738"></p>
+<p>2）点击 DDL 模式</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025833213.png" alt="1594025833213"></p>
+<p>3）在 DDL 模式中添加建表语句</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`ads_uv_source_d`</span> (</span><br><span class="line"><span class="string">`source`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'渠道'</span>,</span><br><span class="line"><span class="string">`ct`</span> <span class="built_in">bigint</span> <span class="keyword">COMMENT</span> <span class="string">'个数'</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">COMMENT</span> <span class="string">'日活渠道统计'</span></span><br><span class="line">PARTITIONED <span class="keyword">BY</span> (ds <span class="keyword">string</span>);</span><br></pre></td></tr></table></figure>
+
+<p>4）补全建表信息描述</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025854812.png" alt="1594025854812"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025861415.png" alt="1594025861415"></p>
+<p>5）提交到生产环境</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025867648.png" alt="1594025867648"></p>
+<h3 id="5-8-2-数据导入脚本"><a href="#5-8-2-数据导入脚本" class="headerlink" title="5.8.2 数据导入脚本"></a>5.8.2 数据导入脚本</h3><p>1）在流程中加入一个数据开发脚本</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025879754.png" alt="1594025879754"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025886943.png" alt="1594025886943"></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">insert</span> OVERWRITE <span class="keyword">table</span> ads_uv_source_d <span class="keyword">PARTITION</span></span><br><span class="line">(ds=<span class="string">'$&#123;bizdate&#125;'</span>)</span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line"><span class="keyword">source</span>,</span><br><span class="line"><span class="keyword">COUNT</span>(*) ct</span><br><span class="line"><span class="keyword">from</span> dws_uv_detail_d</span><br><span class="line"><span class="keyword">where</span> ds=<span class="string">'$&#123;bizdate&#125;'</span></span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> <span class="keyword">source</span>;</span><br></pre></td></tr></table></figure>
+
+<p>2）配置参数<br>点击调度配置-&gt; bizdate=${yyyymmdd}</p>
+<h3 id="5-9-日活-需求：-全流程-业务调度"><a href="#5-9-日活-需求：-全流程-业务调度" class="headerlink" title="5.9 日活 需求： 全流程 业务调度"></a>5.9 日活 需求： 全流程 业务调度</h3><p>1）点击业务 1，右侧就会出现之前写的脚本。默认三个脚本之间没有关系，可以根据业务需求，手动连线。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025927419.png" alt="1594025927419"></p>
+<p>2）点击执行</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025933834.png" alt="1594025933834"></p>
+<p>3）查询运行日志</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025940991.png" alt="1594025940991"></p>
+<p>4）临时查询，检查结果</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">from</span> ads_uv_source_d <span class="keyword">WHERE</span> ds=<span class="string">'20191008'</span>;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025962371.png" alt="1594025962371"></p>
+]]></content>
+      <categories>
+        <category>大数据</category>
+        <category>大数据实战项目</category>
+        <category>阿里云离线数仓</category>
+        <category>2.用户行为数仓搭建</category>
+      </categories>
+      <tags>
+        <tag>大数据</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>3.业务数仓理论</title>
-    <url>/2020/07/07/3.%E4%B8%9A%E5%8A%A1%E6%95%B0%E4%BB%93%E7%90%86%E8%AE%BA/</url>
+    <url>/2020/04/07/3.%E4%B8%9A%E5%8A%A1%E6%95%B0%E4%BB%93%E7%90%86%E8%AE%BA/</url>
     <content><![CDATA[<h2 id="第-6-章-业务数仓理论"><a href="#第-6-章-业务数仓理论" class="headerlink" title="第 6 章 业务数仓理论"></a>第 6 章 业务数仓理论</h2><h3 id="6-1-表的-分类"><a href="#6-1-表的-分类" class="headerlink" title="6.1 表的 分类"></a>6.1 表的 分类</h3><h4 id="6-1-1-实体表"><a href="#6-1-1-实体表" class="headerlink" title="6.1.1 实体表"></a>6.1.1 实体表</h4><p>实体表，一般是指一个现实存在的业务对象，比如用户，商品，商家，销售员等等。<br>用户表：</p>
 <p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026026671.png" alt="1594026026671"></p>
 <h4 id="6-1-2-维度表"><a href="#6-1-2-维度表" class="headerlink" title="6.1.2 维度表"></a>6.1.2 维度表</h4><p>维度表，一般是指对应一些业务状态，编号的解释表。也可以称之为码表。<br>比如地区表，订单状态，支付方式，审批状态，商品分类等等。</p>
@@ -533,7 +533,7 @@
   </entry>
   <entry>
     <title>4.业务数仓搭建</title>
-    <url>/2020/07/07/4.%E4%B8%9A%E5%8A%A1%E6%95%B0%E4%BB%93%E6%90%AD%E5%BB%BA/</url>
+    <url>/2020/04/07/4.%E4%B8%9A%E5%8A%A1%E6%95%B0%E4%BB%93%E6%90%AD%E5%BB%BA/</url>
     <content><![CDATA[<h2 id="第-7-章-业务数仓搭建"><a href="#第-7-章-业务数仓搭建" class="headerlink" title="第 7 章 业务数仓搭建"></a>第 7 章 业务数仓搭建</h2><h3 id="7-1-业务-数仓-架构图"><a href="#7-1-业务-数仓-架构图" class="headerlink" title="7.1 业务 数仓 架构图"></a>7.1 业务 数仓 架构图</h3><h4 id="7-1-1-业务数仓系统流程设计"><a href="#7-1-1-业务数仓系统流程设计" class="headerlink" title="7.1.1 业务数仓系统流程设计"></a>7.1.1 业务数仓系统流程设计</h4><h4 id="7-1-2-业务表结构"><a href="#7-1-2-业务表结构" class="headerlink" title="7.1.2 业务表结构"></a>7.1.2 业务表结构</h4><p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026298145.png" alt="1594026298145"></p>
 <h4 id="7-1-3-业务数仓分层"><a href="#7-1-3-业务数仓分层" class="headerlink" title="7.1.3 业务数仓分层"></a>7.1.3 业务数仓分层</h4><p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026326050.png" alt="1594026326050"></p>
 <h3 id="7-2-RDS-服务器准备"><a href="#7-2-RDS-服务器准备" class="headerlink" title="7.2 RDS 服务器准备"></a>7.2 RDS 服务器准备</h3><h4 id="7-2-1-RDS-服务器购买"><a href="#7-2-1-RDS-服务器购买" class="headerlink" title="7.2.1 RDS 服务器购买"></a>7.2.1 RDS 服务器购买</h4><p>阿里云关系型数据库（Relational Database Service，简称 RDS）是一种稳定可靠、可弹性伸缩的在线数据库服务。</p>
@@ -788,7 +788,7 @@
   </entry>
   <entry>
     <title>5.数据导出与作业调度</title>
-    <url>/2020/07/07/5.%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%87%BA%E4%B8%8E%E4%BD%9C%E4%B8%9A%E8%B0%83%E5%BA%A6/</url>
+    <url>/2020/04/07/5.%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%87%BA%E4%B8%8E%E4%BD%9C%E4%B8%9A%E8%B0%83%E5%BA%A6/</url>
     <content><![CDATA[<h2 id="第-8-章-数据导出与作业调度"><a href="#第-8-章-数据导出与作业调度" class="headerlink" title="第 8 章 数据导出与作业调度"></a>第 8 章 数据导出与作业调度</h2><p>将 MaxCompute 中的计算完的结果，需要导入到 RDS 数据库中，用于后续的可视化。</p>
 <h3 id="8-1-创建结果数据库"><a href="#8-1-创建结果数据库" class="headerlink" title="8.1 创建结果数据库"></a>8.1 创建结果数据库</h3><p>1）在 RDS 服务器中，新建一个 gmall_adb 数据库，用来保存之后从 MaxCompute 中的结果<br>数据。</p>
 <p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594028344024.png" alt="1594028344024"></p>
@@ -846,7 +846,7 @@
   </entry>
   <entry>
     <title>6.数据可视化</title>
-    <url>/2020/07/07/6.%E6%95%B0%E6%8D%AE%E5%8F%AF%E8%A7%86%E5%8C%96/</url>
+    <url>/2020/04/07/6.%E6%95%B0%E6%8D%AE%E5%8F%AF%E8%A7%86%E5%8C%96/</url>
     <content><![CDATA[<h2 id="第-9-章-数据可视化"><a href="#第-9-章-数据可视化" class="headerlink" title="第 9 章 数据可视化"></a>第 9 章 数据可视化</h2><h3 id="9-1-可视化工具"><a href="#9-1-可视化工具" class="headerlink" title="9.1 可视化工具"></a>9.1 可视化工具</h3><h4 id="9-1-1-DataV-简介"><a href="#9-1-1-DataV-简介" class="headerlink" title="9.1.1 DataV 简介"></a>9.1.1 DataV 简介</h4><p>DataV 框架是阿里云主推的大屏实时可视化工具。<br>1）官方入口地址：<br><a href="https://data.aliyun.com/visual/datav?spm=a2c0j.8190895.1kquk9v2l.3.e98b7d6aI6ZvXa" target="_blank" rel="noopener">https://data.aliyun.com/visual/datav?spm=a2c0j.8190895.1kquk9v2l.3.e98b7d6aI6ZvXa</a><br>2）官方模板案例</p>
 <p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594028644031.png" alt="1594028644031"></p>
 <p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594028652729.png" alt="1594028652729"></p>
@@ -1046,7 +1046,7 @@
   </entry>
   <entry>
     <title>7.协同工作</title>
-    <url>/2020/07/07/7.%E5%8D%8F%E5%90%8C%E5%B7%A5%E4%BD%9C/</url>
+    <url>/2020/04/07/7.%E5%8D%8F%E5%90%8C%E5%B7%A5%E4%BD%9C/</url>
     <content><![CDATA[<h2 id="第-10-章-协同工作"><a href="#第-10-章-协同工作" class="headerlink" title="第 10 章 协同工作"></a>第 10 章 协同工作</h2><p>​    阿里云存在多个服务，显然是无法一个人完成的，需要多个人协同开发。<br>​    但是所有的服务器又都是有一个账号统一管理（一般是公司的账号），这个账号非常关键不可能让所有的开发人员人手一个，那么如何让这些程序员一起参与开发呢？<br>​    这就要用到 RAM 子账户。</p>
 <h3 id="10-1-RAM-简介"><a href="#10-1-RAM-简介" class="headerlink" title="10.1 RAM 简介"></a>10.1 RAM 简介</h3><p>​    RAM（Resource Access Management）是阿里云为客户提供的用户身份管理与资源访问控制服务。</p>
 <p>​    RAM 允许在一个云账号下创建并管理多个身份，并允许给单个身份或一组身份分配不<br>同的权限，从而实现不同用户拥有不同的云资源访问权限。</p>
@@ -1108,6 +1108,364 @@
       </categories>
       <tags>
         <tag>大数据</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Flume监控之Ganglia</title>
+    <url>/2020/02/06/Flume%E7%9B%91%E6%8E%A7%E4%B9%8BGanglia/</url>
+    <content><![CDATA[<h2 id="Ganglia-的安装与部署"><a href="#Ganglia-的安装与部署" class="headerlink" title="Ganglia 的安装与部署"></a>Ganglia 的安装与部署</h2><p>1) 安装 httpd 服务与 php</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[leinuo@hadoop102 flume]$ sudo yum -y install httpd php</span><br></pre></td></tr></table></figure>
+
+<p>2) 安装其他依赖</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[leinuo@hadoop102 flume]$ sudo yum -y install rrdtool perl-rrdtool rrdtool-devel</span><br><span class="line">[leinuo@hadoop102 flume]$ sudo yum -y install apr-devel</span><br></pre></td></tr></table></figure>
+
+<p>3) 安装 ganglia</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[leinuo@hadoop102 flume]$ sudo rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm</span><br><span class="line">[leinuo@hadoop102 flume]$ sudo yum -y install ganglia-gmetad</span><br><span class="line">[leinuo@hadoop102 flume]$ sudo yum -y install ganglia-web</span><br><span class="line">[leinuo@hadoop102 flume]$ sudo yum install -y ganglia-gmond</span><br></pre></td></tr></table></figure>
+
+<p>4) 修改配置文件/etc/httpd/conf.d/ganglia.conf</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[leinuo@hadoop102 flume]$ sudo vim /etc/httpd/conf.d/ganglia.conf</span><br></pre></td></tr></table></figure>
+
+<p>修改为*的配置 ：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Ganglia monitoring system php web frontend</span></span><br><span class="line">Alias /ganglia /usr/share/ganglia</span><br><span class="line">&lt;Location /ganglia&gt;</span><br><span class="line">Order deny,allow</span><br><span class="line">Deny from all</span><br><span class="line">Allow from all               * </span><br><span class="line"><span class="meta">#</span><span class="bash"> Allow from 127.0.0.1       *</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Allow from ::1             *</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Allow from .example.com</span></span><br><span class="line">&lt;/Location&gt;</span><br></pre></td></tr></table></figure>
+
+<p>5) 修改配置文件/etc/ganglia/gmetad.conf</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[leinuo@hadoop102 flume]$ sudo vim /etc/ganglia/gmetad.conf</span><br><span class="line">修改为：</span><br><span class="line">data_source "hadoop102" 192.168.25.102</span><br></pre></td></tr></table></figure>
+
+<p>6) 修改配置文件/etc/ganglia/gmond.conf</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[leinuo@hadoop102 flume]$ sudo vim /etc/ganglia/gmond.conf</span><br></pre></td></tr></table></figure>
+
+<p>修改为：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cluster &#123;</span><br><span class="line">name = "hadoop102"                 *</span><br><span class="line">owner = "unspecified"</span><br><span class="line">latlong = "unspecified"</span><br><span class="line">url = "unspecified"</span><br><span class="line">&#125;</span><br><span class="line">udp_send_channel &#123;</span><br><span class="line"><span class="meta">#</span><span class="bash">bind_hostname = yes <span class="comment"># Highly recommended, soon to be default.</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> This option tells gmond to use a <span class="built_in">source</span></span></span><br><span class="line">address</span><br><span class="line"><span class="meta">#</span><span class="bash"> that resolves to the machine<span class="string">'s hostname.</span></span></span><br><span class="line">Without</span><br><span class="line"><span class="meta">#</span><span class="bash"> this, the metrics may appear to come from any</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> interface and the DNS names associated with</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> those IPs will be used to create the RRDs.</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> mcast_join = 239.2.11.71</span></span><br><span class="line">host = 192.168.1.102                 *</span><br><span class="line">port = 8649</span><br><span class="line">ttl = 1</span><br><span class="line">&#125;</span><br><span class="line">udp_recv_channel &#123;</span><br><span class="line"><span class="meta">#</span><span class="bash"> mcast_join = 239.2.11.71            *</span></span><br><span class="line">port = 8649</span><br><span class="line">bind = 192.168.25.102                 *</span><br><span class="line">retry_bind = true</span><br><span class="line"><span class="meta">#</span><span class="bash"> Size of the UDP buffer. If you are handling lots of metrics you really</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> should bump it up to e.g. 10MB or even higher.</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> buffer = 10485760</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>7) 修改配置文件/etc/selinux/config</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[leinuo@hadoop102 flume]$ sudo vim /etc/selinux/config</span><br></pre></td></tr></table></figure>
+
+<p>修改为：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> This file controls the state of SELinux on the system.</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> SELINUX= can take one of these three values:</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> enforcing - SELinux security policy is enforced.</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> permissive - SELinux prints warnings instead of enforcing.</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> disabled - No SELinux policy is loaded.</span></span><br><span class="line">SELINUX=disabled           </span><br><span class="line"><span class="meta">#</span><span class="bash"> SELINUXTYPE= can take one of these two values:</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> targeted - Targeted processes are protected,</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> mls - Multi Level Security protection.</span></span><br><span class="line">SELINUXTYPE=targeted</span><br></pre></td></tr></table></figure>
+
+<p><strong>尖叫提示</strong>：selinux 本次生效关闭必须重启，如果此时不想重启，可以临时生效之：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[leinuo@hadoop102 flume]$ sudo setenforce 0</span><br></pre></td></tr></table></figure>
+
+<p>5) 启动 ganglia</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[leinuo@hadoop102 flume]$ sudo service httpd start</span><br><span class="line">[leinuo@hadoop102 flume]$ sudo service gmetad start</span><br><span class="line">[leinuo@hadoop102 flume]$ sudo service gmond start</span><br></pre></td></tr></table></figure>
+
+<p>6) 打开网页浏览 ganglia 页面<br><a href="http://192.168.25.102/ganglia" target="_blank" rel="noopener">http://192.168.25.102/ganglia</a><br><strong>尖叫提示</strong>：如果完成以上操作依然出现权限不足错误，请修改/var/lib/ganglia 目录的权限</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[leinuo@hadoop102 flume]$ sudo chmod -R 777 /var/lib/ganglia</span><br></pre></td></tr></table></figure>
+
+<h2 id="操作-Flume-测试监控"><a href="#操作-Flume-测试监控" class="headerlink" title="操作 Flume 测试监控"></a>操作 Flume 测试监控</h2><p>1) 修改/opt/module/flume/conf 目录的 下的 flume-env.sh 配置：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">JAVA_OPTS="-Dflume.monitoring.type=ganglia</span><br><span class="line">-Dflume.monitoring.hosts=192.168.25.102:8649</span><br><span class="line">-Xms100m</span><br><span class="line">-Xmx200m"</span><br></pre></td></tr></table></figure>
+
+<p>2) 启动 Flume 任务</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[leinuo@hadoop102 flume]$ bin/flume-ng agent \</span><br><span class="line">--conf conf/ \</span><br><span class="line">--name a1 \</span><br><span class="line">--conf-file job/flume-telnet-logger.conf \</span><br><span class="line">-Dflume.root.logger==INFO,console \</span><br><span class="line">-Dflume.monitoring.type=ganglia \</span><br><span class="line">-Dflume.monitoring.hosts=192.168.25.102:8649</span><br></pre></td></tr></table></figure>
+
+<p>3) 发送数据观察 ganglia 监测图</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[leinuo@hadoop102 flume]$ telnet localhost 44444</span><br></pre></td></tr></table></figure>
+
+<p>样式如图:</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1590221698405.png" alt="1590221698405"></p>
+<p>图例说明：</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1590221737003.png" alt="1590221737003"></p>
+]]></content>
+      <categories>
+        <category>大数据</category>
+        <category>大数据项目部署</category>
+        <category>Flume</category>
+        <category>Flume监控之Ganglia</category>
+      </categories>
+      <tags>
+        <tag>大数据</tag>
+        <tag>Flume</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>HDFS基准测试&amp;参数调优</title>
+    <url>/2019/11/23/HDFS%E5%9F%BA%E5%87%86%E6%B5%8B%E8%AF%95%E4%B8%8E%E5%8F%82%E6%95%B0%E8%B0%83%E4%BC%98/</url>
+    <content><![CDATA[<h3 id="基准测试"><a href="#基准测试" class="headerlink" title="基准测试"></a>基准测试</h3><p>1） 测试 HDFS 写性能<br>测试内容：向 HDFS 集群写 10 个 128M 的文件</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop jar /opt/module/hadoop-2.7.6/share/hadoop/mapreduce/hadoop-mapreduce-client-jobclient-2.7.6-tests.jar TestDFSIO -write -nrFiles 10 -fileSize 128MB</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1590064620016.png" alt="1590064620016"></p>
+<p>2）测试 HDFS 读性能<br>测试内容：读取 HDFS 集群 10 个 128M 的文件</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop jar /opt/module/hadoop-2.7.6/share/hadoop/mapreduce/hadoop-mapreduce-client-jobclient-2.7.6-tests.jar TestDFSIO -read -nrFiles 10 -fileSize 128MB</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1590064603377.png" alt="1590064603377"></p>
+<p>可以用top命令查看CUP利用率</p>
+<p>3）删除测试生成数据</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop jar /opt/module/hadoop-2.7.6/share/hadoop/mapreduce/hadoop-mapreduce-client-jobclient-2.7.6-tests.jar TestDFSIO -clean</span><br></pre></td></tr></table></figure>
+
+<p>4）使用 Sort 程序评测 MapReduce（自己玩的话慎用！容易把机子搞崩）</p>
+<p>（1）使用 RandomWriter 来产生随机数，每个节点运行 10 个 Map 任务，每个 Map 产生大约 1G 大小的二进制随机数</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop jar /opt/module/hadoop-2.7.6/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.6.jar randomwriter random-data</span><br></pre></td></tr></table></figure>
+
+<p>（2）执行 Sort 程序</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop jar /opt/module/hadoop-2.7.6/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.6.jar sort random-data  sorted-data</span><br></pre></td></tr></table></figure>
+
+<p>（3）验证数据是否真正排好序了</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop jar /opt/module/hadoop-2.7.6/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.6.jar testmapredsort -sortInput random-data -sortOutput sorted-data</span><br></pre></td></tr></table></figure>
+
+<h3 id="Hadoop-参数-调优"><a href="#Hadoop-参数-调优" class="headerlink" title="Hadoop 参数 调优"></a>Hadoop 参数 调优</h3><p>1）HDFS 参数调优 <strong>hdfs-site.xml</strong><br><strong>dfs.namenode.handler.count=20 * log2(Cluster Size)</strong>，比如集群规模为 8 台时，此参数设置为 60 NameNode 有一个工作线程池，用来处理不同 DataNode 的并发心跳以及客户端并发的元数据操作。对于大集群或者有大量客户端的集群来说，通常需要增大参数dfs.namenode.handler.count 的默认值 10。设置该值的一般原则是将其设置为集群大小的自然对数乘以 20，即 20logN，N 为集群大小。</p>
+<p>2）YARN 参数调优 <strong>yarn-site.xml</strong><br>（1）情景描述：总共 7 台机器，每天几亿条数据，数据源-&gt;Flume-&gt;Kafka-&gt;HDFS-&gt;Hive 面临问题：数据统计主要用 HiveSQL，没有数据倾斜，小文件已经做了合并处理，开启了 JVM 重用，而且 IO 没有阻塞，内存用了不到 50%。但是还是跑的非常慢，而且数据量洪峰过来时，整个集群都会宕掉。基于这种情况有没有优化方案。<br>（2）解决办法：<br>内存利用率不够。这个一般是 Yarn 的 2 个配置造成的，单个任务可以申请的最大内存大小，和Hadoop 单个节点可用内存大小。调节这两个参数能提高系统内存的利用率。<br>（a）<strong>yarn.nodemanager.resource.memory-mb</strong><br>表示<strong>该节点</strong>上 YARN <strong>可使用</strong>的<strong>物理内存总量</strong>，默认是 8192（MB），注意，如果你的节点内存资源不够 8GB，则需要调减小这个值，而 YARN 不会智能的探测节点的物理内存总量。<br>（b）<strong>yarn.scheduler.maximum-allocation-mb</strong><br>单个任务可申请的<strong>最多物理内存量</strong>，默认是 8192（MB）。<br>3）Hadoop 宕机<br>（1）如果 MR 造成系统宕机。此时要<strong>控制 Yarn 同时运行的任务数</strong>，和每个任务申请的最大内存。调整参数：yarn.scheduler.maximum-allocation-mb（单个任务可申请的最多物理内存量，默认是 8192MB）<br>（2）如果<strong>写入文件过量</strong>造成 NameNode 宕机。那么<strong>调高 Kafka 的存储大小</strong>，<strong>控制从 Kafka到 HDFS 的写入速度</strong>。高峰期的时候用 Kafka 进行缓存，高峰期过去数据同步会自动跟上。</p>
+]]></content>
+      <categories>
+        <category>大数据</category>
+        <category>大数据项目经验</category>
+        <category>HDFS</category>
+        <category>HDFS基准测试&amp;参数调优</category>
+      </categories>
+      <tags>
+        <tag>大数据</tag>
+        <tag>HDFS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hadoop-lzo压缩配置</title>
+    <url>/2019/12/06/Hadoop-lzo%E5%8E%8B%E7%BC%A9%E9%85%8D%E7%BD%AE/</url>
+    <content><![CDATA[<h2 id="LZO-压缩配置"><a href="#LZO-压缩配置" class="headerlink" title="LZO 压缩配置"></a>LZO 压缩配置</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>a. LZO本身是不支持分片的，但是我们给LZO压缩的文件加上索引，就支持分片了</p>
+<p>b. Linux本身是不支持LZO压缩的，所以我们需要下载安装软件包，其中包括三个：lzo,lzop,hdoop-gpl-packaging.</p>
+<p>c. hdoop-gpl-packaging的主要作用就是给压缩的LZO文件创建索引，否则LZO是不支持分片的，无论文件有多大，都只能有一个map</p>
+<p>snappy 速度要比LZO速度快，但不支持切片</p>
+<p>1）hadoop 本身并不支持 lzo 压缩，故需要使用 twitter 提供的 hadoop-lzo 开源组件。hadoop-lzo<br>需依赖 hadoop 和 lzo 进行编译，编译步骤如下。</p>
+<h2 id="集群每一个节点都要安装lzo-本地lib包！"><a href="#集群每一个节点都要安装lzo-本地lib包！" class="headerlink" title="集群每一个节点都要安装lzo 本地lib包！"></a><strong>集群每一个节点都要安装lzo 本地lib包！</strong></h2><h3 id="安装lzop-native-library"><a href="#安装lzop-native-library" class="headerlink" title="安装lzop native library"></a>安装lzop native library</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum -y install gcc-c++ lzo-devel zlib-devel autoconf automake libtool</span><br><span class="line"><span class="meta">#</span><span class="bash"> 下载安装并编译LZO</span></span><br><span class="line">wget www.oberhumer.com/opensource/lzo/download/lzo-2.10.tar.gz</span><br><span class="line">tar -zxvf lzo-2.10.tar.gz -C /opt/module/</span><br><span class="line">cd lzo-2.10</span><br><span class="line">export CFLAGS=-m64</span><br><span class="line">mkdir -p /usr/local/hadoop/lzo/ </span><br><span class="line">./configure prefix=/usr/local/hadoop/lzo/  #如果你想指定具体的安装目录的话，可以添加参数–prefix==your_path</span><br><span class="line">make &amp;&amp; make install  #这个过程要注意权限问题，所以我建议你还是使用root用户来操作</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装maven"><a href="#安装maven" class="headerlink" title="安装maven"></a>安装maven</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd /opt/software</span><br><span class="line">wget http://archive.apache.org/dist/maven/maven-3/3.5.2/binaries/apache-maven-3.5.2-bin.tar.gz</span><br><span class="line">tar -zxvf apache-maven-3.5.2-bin.tar.gz -C /opt/module/</span><br></pre></td></tr></table></figure>
+
+<p>将maven配置到环境变量当中去</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">vim /etc/profile</span><br><span class="line"><span class="meta">#</span><span class="bash">MAVEN_HOME</span></span><br><span class="line">export MAVEN_HOME=/opt/module/apache-maven-3.5.2</span><br><span class="line">export PATH=$PATH:$MAVEN_HOME/bin</span><br><span class="line">source /etc/profile</span><br><span class="line">mvn -v  # 有信息则说明安装正确</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装hadoop-lzo"><a href="#安装hadoop-lzo" class="headerlink" title="安装hadoop-lzo"></a>安装hadoop-lzo</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">wget https://github.com/twitter/hadoop-lzo/archive/master.zip</span><br><span class="line">unzip master </span><br><span class="line">mv hadoop-lzo-master /opt/module/</span><br><span class="line">vim hadoop-lzo-master/pom.xml    #修改hadoop版本号</span><br><span class="line">cd hadoop-lzo-master/</span><br><span class="line">export CFLAGS=-m64</span><br><span class="line">export CXXFLAGS=-m64</span><br><span class="line">export C_INCLUDE_PATH=/usr/local/hadoop/lzo/include #这里是指定你lzo-2.06的地址里面的include目录，这就是为什么我们要安装配置lzo-2.10的原因了</span><br><span class="line">export LIBRARY_PATH=/usr/local/hadoop/lzo/lib #同上</span><br><span class="line">mvn clean package -Dmaven.test.skip=true #使用maven编译</span><br></pre></td></tr></table></figure>
+
+<p>2）将编译好后的 hadoop-lzo-0.4.20.jar 放入 hadoop-2.7.2/share/hadoop/common/</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd target/native/Linux-amd64-64</span><br><span class="line">tar -cBf - -C lib . | tar -xBvf - -C ~</span><br><span class="line">cp ~/libgplcompression* $HADOOP_HOME/lib/native/ #将这个包里面的所有东西都cp到hadoop目录下的lib下的native里面，最好你是编译过的hadoop，否则你的native里面是空的</span><br><span class="line">cp /opt/module/hadoop-lzo-master/target/hadoop-lzo-0.4.21-SNAPSHOT.jar $HADOOP_HOME/share/hadoop/common/ #这个非常重要，你能否正常使用lzo就看这个了</span><br><span class="line">ls -l /root/libgplcompression.*</span><br></pre></td></tr></table></figure>
+
+<p>3）同步 hadoop-lzo-0.4.20.jar 到 hadoop103、hadoop104</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[leinuo@hadoop102 ~]$ cd $HADOOP_HOME/share/hadoop/common/</span><br><span class="line">[leinuo@hadoop102 common]$ xsync hadoop-lzo-0.4.21-SNAPSHOT.jar</span><br></pre></td></tr></table></figure>
+
+<p>4） 配置hadoop-env.sh </p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">vim $HADOOP_HOME/etc/hadoop/hadoop-env.sh </span><br><span class="line"><span class="meta">#</span><span class="bash"> 添加下面内容</span></span><br><span class="line">export LD_LIBRARY_PATH=/usr/local/hadoop/lzo/lib</span><br></pre></td></tr></table></figure>
+
+<p>  配置 core-site.xml </p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">vim $HADOOP_HOME/etc/hadoop/core-site.xml</span><br></pre></td></tr></table></figure>
+
+<p>加入如下配置</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">name</span>&gt;</span>io.compression.codecs<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">value</span>&gt;</span></span><br><span class="line">org.apache.hadoop.io.compress.GzipCodec,</span><br><span class="line">org.apache.hadoop.io.compress.DefaultCodec,</span><br><span class="line">org.apache.hadoop.io.compress.BZip2Codec,</span><br><span class="line">org.apache.hadoop.io.compress.SnappyCodec,</span><br><span class="line">com.hadoop.compression.lzo.LzoCodec,</span><br><span class="line">com.hadoop.compression.lzo.LzopCodec</span><br><span class="line"><span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">name</span>&gt;</span>io.compression.codec.lzo.class<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">value</span>&gt;</span>com.hadoop.compression.lzo.LzoCodec<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>配置 mapred-site.xml </p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">vim $HADOOP_HOME/etc/hadoop/mapred-site.xml</span><br></pre></td></tr></table></figure>
+
+<p>添加如下配置</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- lzo 压缩 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">name</span>&gt;</span>mapred.child.env<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">value</span>&gt;</span>LD_LIBRARY_PATH=/usr/local/hadoop/lzo/lib<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.map.output.compress<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.map.output.compress.codec<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">value</span>&gt;</span>com.hadoop.compression.lzo.LzoCodec<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>5）同步到 hadoop103、hadoop104</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd $HADOOP_HOME/etc/hadoop/</span><br><span class="line"></span><br><span class="line">xsync hadoop-env.sh</span><br><span class="line">xsync core-site.xml</span><br><span class="line">xsync mapred-site.xml</span><br></pre></td></tr></table></figure>
+
+<p>6）启动及查看集群</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[leinuo@hadoop102 hadoop-2.7.2]$ sbin/start-dfs.sh</span><br><span class="line">[leinuo@hadoop103 hadoop-2.7.2]$ sbin/start-yarn.sh</span><br></pre></td></tr></table></figure>
+
+<h2 id="LZO-创建索引"><a href="#LZO-创建索引" class="headerlink" title="LZO 创建索引"></a>LZO 创建索引</h2><p>1）创建 LZO 文件的索引，LZO 压缩文件的可切片特性依赖于其索引，故我们需要手动为LZO 压缩文件创建索引。若无索引，则 LZO 文件的切片只有一个。</p>
+<p>2）测试<br>（1）将 bigtable.lzo（150M）上传到集群的根目录</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hdfs dfs -mkdir /input</span><br><span class="line">hdfs dfs -put bigtable.lzo /input</span><br><span class="line">hdfs dfs -text /input/bigtable.lzo</span><br></pre></td></tr></table></figure>
+
+<p>（2）执行 wordcount 程序</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop jar $HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.6.jar wordcount /input /output1</span><br><span class="line">--------------------------------------</span><br><span class="line">20/05/21 20:11:20 INFO mapreduce.JobSubmitter: number of splits:1</span><br></pre></td></tr></table></figure>
+
+<p>（3）对上传的 LZO 文件建索引</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop jar $HADOOP_HOME/share/hadoop/common/hadoop-lzo-0.4.21-SNAPSHOT.jar com.hadoop.compression.lzo.DistributedLzoIndexer /input/bigtable.lzo</span><br></pre></td></tr></table></figure>
+
+<p>（4）再次执行 WordCount 程序</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 不带参数</span></span><br><span class="line">hadoop jar $HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.6.jar wordcount  /input /output2</span><br><span class="line">-------------------------------------------------</span><br><span class="line">20/05/21 20:14:18 INFO mapreduce.JobSubmitter: number of splits:2</span><br><span class="line">程序结束用时1分39秒</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>大数据</category>
+        <category>大数据项目经验</category>
+        <category>LZO</category>
+        <category>Hadoop-lzo压缩配置</category>
+      </categories>
+      <tags>
+        <tag>大数据</tag>
+        <tag>LZO</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hive SQL语法总结</title>
+    <url>/2019/08/26/HiveSQL%E8%AF%AD%E6%B3%95%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<h1 id="Hive-SQL语法总结"><a href="#Hive-SQL语法总结" class="headerlink" title="Hive SQL语法总结"></a>Hive SQL语法总结</h1><p>Hive是一个数据仓库基础的应用工具，在Hadoop中用来处理结构化数据.</p>
+<p>Hive 查询操作过程严格遵守Hadoop MapReduce 的作业执行模型，Hive 将用户的Hive SQL 语句通过解释器转换为MapReduce 作业提交到Hadoop 集群上，Hadoop 监控作业执行过程，然后返回作业执行结果给用户。Hive 并非为联机事务处理而设计，Hive 并不提供实时的查询和基于行级的数据更新操作。Hive 的最佳使用场合是<strong>大数据集的批处理作业</strong>。 </p>
+<h2 id="创建数据库"><a href="#创建数据库" class="headerlink" title="创建数据库"></a>创建数据库</h2><p> <strong>CREATE</strong> DATABASE <strong>name</strong>; </p>
+<p> 显示查看操作命令 </p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">show</span> <span class="keyword">tables</span>; <span class="comment">--显示表</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">show</span> <span class="keyword">databases</span>; <span class="comment">--显示数据库</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">show</span> <span class="keyword">partitions</span> table_name; <span class="comment">--显示表名为table_name的表的所有分区</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">show</span> functions ; <span class="comment">--显示所有函数</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">describe</span> <span class="keyword">extended</span> table_name col_name; <span class="comment">--查看表中字段</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="DDL-Data-Defination-Language"><a href="#DDL-Data-Defination-Language" class="headerlink" title="DDL(Data Defination Language)"></a>DDL(Data Defination Language)</h2><p> 数据库定义语言 </p>
+<p> 创建表结构 </p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> [<span class="keyword">EXTERNAL</span>] <span class="keyword">TABLE</span> [<span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span>] table_name</span><br><span class="line"></span><br><span class="line">[(col_name data_type [<span class="keyword">COMMENT</span> col_comment], ...)]</span><br><span class="line"></span><br><span class="line">[<span class="keyword">COMMENT</span> table_comment]</span><br><span class="line"></span><br><span class="line">[PARTITIONED <span class="keyword">BY</span> (col_name data_type [<span class="keyword">COMMENT</span> col_comment], ...)]</span><br><span class="line"></span><br><span class="line">[CLUSTERED <span class="keyword">BY</span> (col_name, col_name, ...)</span><br><span class="line"></span><br><span class="line">[SORTED <span class="keyword">BY</span> (col_name [<span class="keyword">ASC</span>|<span class="keyword">DESC</span>], ...)] <span class="keyword">INTO</span> num_buckets BUCKETS]</span><br><span class="line"></span><br><span class="line">[<span class="keyword">ROW</span> <span class="keyword">FORMAT</span> row_format]</span><br><span class="line"></span><br><span class="line">[<span class="keyword">STORED</span> <span class="keyword">AS</span> file_format]  <span class="comment">-- 默认文件存储格式有textfile、sequencefile、rcfile等</span></span><br><span class="line"></span><br><span class="line">[LOCATION hdfs_path]     <span class="comment">-- hdfs 路径</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>CREATE TABLE 创建一个指定名字的表。如果相同名字的表已经存在，则抛出异常；用户可以用 IF NOT EXIST 选项来忽略这个异常</li>
+<li>EXTERNAL 关键字可以让用户创建一个外部表，在建表的同时指定一个指向实际数据的路径（LOCATION）</li>
+<li>LIKE 允许用户复制现有的表结构，但是不复制数据</li>
+<li>COMMENT可以为表与字段增加描述</li>
+<li>ROW FORMAT 设置行数据分割格式</li>
+<li>虽然单独rcfile的列运算不一定总是存在的，但是rcfile的高压缩率确实减少文件大小，因此实际应用中，<strong>rcfile总是成为不二的选择，达观数据平台在选择文件存储格式时也大量选择了rcfile方案。</strong> </li>
+</ul>
+<h4 id="STORED-AS"><a href="#STORED-AS" class="headerlink" title="STORED AS"></a>STORED AS</h4><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">SEQUENCEFILE</span><br><span class="line"></span><br><span class="line">| TEXTFILE</span><br><span class="line"></span><br><span class="line">| RCFILE</span><br><span class="line"></span><br><span class="line">| INPUTFORMAT input_format_classname OUTPUTFORMAT</span><br><span class="line"></span><br><span class="line">output_format_classname</span><br></pre></td></tr></table></figure>
+
+<p>如果文件数据是纯文本，可以使用 STORED <strong>AS</strong> TEXTFILE。</p>
+<p>如果数据需要压缩，使用 STORED <strong>AS SEQUENCE</strong> 。</p>
+<p> 创建简单表： </p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> person(<span class="keyword">name</span> <span class="keyword">STRING</span>,age <span class="built_in">INT</span>);</span><br></pre></td></tr></table></figure>
+
+<p> 创建外部表: </p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">EXTERNAL</span> <span class="keyword">TABLE</span> page_view(viewTime <span class="built_in">INT</span>, userid <span class="built_in">BIGINT</span>,</span><br><span class="line"></span><br><span class="line">page_url <span class="keyword">STRING</span>, referrer_url <span class="keyword">STRING</span>,</span><br><span class="line"></span><br><span class="line">ip <span class="keyword">STRING</span> <span class="keyword">COMMENT</span> <span class="string">'IP Address of the User'</span>,</span><br><span class="line"></span><br><span class="line">country <span class="keyword">STRING</span> <span class="keyword">COMMENT</span> <span class="string">'country of origination'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">COMMENT</span> <span class="string">'这里写表的描述信息'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">ROW</span> <span class="keyword">FORMAT</span> <span class="keyword">DELIMITED</span> <span class="keyword">FIELDS</span> <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="string">'\054'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">STORED</span> <span class="keyword">AS</span> TEXTFILE</span><br><span class="line"></span><br><span class="line">LOCATION <span class="string">'&lt;hdfs_location&gt;'</span>;</span><br></pre></td></tr></table></figure>
+
+<p> 创建分区表： </p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> par_table(viewTime <span class="built_in">INT</span>, userid <span class="built_in">BIGINT</span>,</span><br><span class="line"></span><br><span class="line">page_url <span class="keyword">STRING</span>, referrer_url <span class="keyword">STRING</span>,</span><br><span class="line"></span><br><span class="line">ip <span class="keyword">STRING</span> <span class="keyword">COMMENT</span> <span class="string">'IP Address of the User'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">COMMENT</span> <span class="string">'This is the page view table'</span></span><br><span class="line"></span><br><span class="line">PARTITIONED <span class="keyword">BY</span>(<span class="built_in">date</span> <span class="keyword">STRING</span>, pos <span class="keyword">STRING</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">ROW</span> <span class="keyword">FORMAT</span> <span class="keyword">DELIMITED</span> <span class="string">'\t'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">FIELDS</span> <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="string">'\n'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">STORED</span> <span class="keyword">AS</span> SEQUENCEFILE;</span><br></pre></td></tr></table></figure>
+
+<p> 创建分桶表： </p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> par_table(viewTime <span class="built_in">INT</span>, userid <span class="built_in">BIGINT</span>,</span><br><span class="line"></span><br><span class="line">page_url <span class="keyword">STRING</span>, referrer_url <span class="keyword">STRING</span>,</span><br><span class="line"></span><br><span class="line">ip <span class="keyword">STRING</span> <span class="keyword">COMMENT</span> <span class="string">'IP Address of the User'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">COMMENT</span> <span class="string">'This is the page view table'</span></span><br><span class="line"></span><br><span class="line">PARTITIONED <span class="keyword">BY</span>(<span class="built_in">date</span> <span class="keyword">STRING</span>, pos <span class="keyword">STRING</span>)</span><br><span class="line"></span><br><span class="line">CLUSTERED <span class="keyword">BY</span>(userid) SORTED <span class="keyword">BY</span>(viewTime) <span class="keyword">INTO</span> <span class="number">32</span> BUCKETS</span><br><span class="line"></span><br><span class="line"><span class="keyword">ROW</span> <span class="keyword">FORMAT</span> <span class="keyword">DELIMITED</span> <span class="string">'\t'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">FIELDS</span> <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="string">'\n'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">STORED</span> <span class="keyword">AS</span> SEQUENCEFILE;</span><br></pre></td></tr></table></figure>
+
+<p> 创建带索引字段的表： </p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> invites (foo <span class="built_in">INT</span>, bar <span class="keyword">STRING</span>) PARTITIONED <span class="keyword">BY</span> (dindex <span class="keyword">STRING</span>);</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">--显示所有表： </span></span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">TABLES</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">--按正则表达式显示表：</span></span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">TABLES</span> <span class="string">'.*s'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">--表中添加一个字段：</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> pokes <span class="keyword">ADD</span> <span class="keyword">COLUMNS</span> (new_col <span class="built_in">INT</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">--添加一个字段并为其添加注释：</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> invites <span class="keyword">ADD</span> <span class="keyword">COLUMNS</span> (new_col2 <span class="built_in">INT</span> <span class="keyword">COMMENT</span> <span class="string">'a comment'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 删除列：</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> <span class="keyword">test</span> <span class="keyword">REPLACE</span> <span class="keyword">COLUMNS</span>(<span class="keyword">id</span> <span class="built_in">BIGINT</span>, <span class="keyword">name</span> <span class="keyword">STRING</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">--更改表名：</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> <span class="keyword">events</span> <span class="keyword">RENAME</span> <span class="keyword">TO</span> new_events;</span><br><span class="line"></span><br><span class="line"><span class="comment">--增加、删除分区</span></span><br><span class="line"></span><br><span class="line"><span class="comment">--增加：</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> table_name <span class="keyword">ADD</span> [<span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span>] partition_spec [ LOCATION <span class="string">'location1'</span> ] partition_spec [ LOCATION <span class="string">'location2'</span> ] ...</span><br><span class="line"></span><br><span class="line">partition_spec:</span><br><span class="line"></span><br><span class="line">: <span class="keyword">PARTITION</span> (partition_col = partition_col_value, partition_col = partiton_col_value, ...)</span><br><span class="line"></span><br><span class="line">   </span><br><span class="line"><span class="comment">--删除：</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> table_name <span class="keyword">DROP</span> partition_spec, partition_spec,...</span><br><span class="line"></span><br><span class="line">   </span><br><span class="line"></span><br><span class="line"><span class="comment">--改变表的文件格式与组织：</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> table_name <span class="keyword">SET</span> FILEFORMAT file_format</span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> table_name CLUSTERED <span class="keyword">BY</span>(userid) SORTED <span class="keyword">BY</span>(viewTime) <span class="keyword">INTO</span> num_buckets BUCKETS <span class="comment">--这个命令修改了表的物理存储属性</span></span><br><span class="line"></span><br><span class="line">   </span><br><span class="line"></span><br><span class="line"><span class="comment">--创建和删除视图：</span></span><br><span class="line"></span><br><span class="line"><span class="comment">--创建视图：</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> [<span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span>] view_name [ (column_name [<span class="keyword">COMMENT</span> column_comment], ...) ][<span class="keyword">COMMENT</span> view_comment][TBLPROPERTIES (property_name = property_value, ...)] <span class="keyword">AS</span> <span class="keyword">SELECT</span>；</span><br><span class="line"></span><br><span class="line"><span class="comment">--删除视图：</span></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">VIEW</span> view_name；</span><br></pre></td></tr></table></figure>
+
+<h2 id="DML（Data-manipulation-language）"><a href="#DML（Data-manipulation-language）" class="headerlink" title="DML（Data manipulation language）"></a>DML（Data manipulation language）</h2><p> 数据操作语言，主要是数据库增删改三种操作，DML包括：INSERT插入、UPDATE新、DELETE删除。 </p>
+<p> 向数据表内加载文件： </p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">LOAD</span> <span class="keyword">DATA</span> [<span class="keyword">LOCAL</span>] INPATH <span class="string">'filepath'</span> [OVERWRITE] <span class="keyword">INTO</span> <span class="keyword">TABLE</span> tablename [<span class="keyword">PARTITION</span> (partcol1=val1, partcol2=val2 ...)]</span><br><span class="line"></span><br><span class="line"><span class="comment">--load操作只是单纯的复制/移动操作，将数据文件移动到Hive表对应的位置。</span></span><br><span class="line"></span><br><span class="line"><span class="comment">--加载本地</span></span><br><span class="line"><span class="keyword">LOAD</span> <span class="keyword">DATA</span> <span class="keyword">LOCAL</span> INPATH <span class="string">'./examples/files/kv1.txt'</span> OVERWRITE <span class="keyword">INTO</span> <span class="keyword">TABLE</span> pokes;</span><br><span class="line"></span><br><span class="line">   </span><br><span class="line"><span class="comment">--加载HDFS数据，同时给定分区信息</span></span><br><span class="line"><span class="keyword">LOAD</span> <span class="keyword">DATA</span> INPATH <span class="string">'/user/myname/kv2.txt'</span> OVERWRITE <span class="keyword">INTO</span> <span class="keyword">TABLE</span> invites <span class="keyword">PARTITION</span> (ds=<span class="string">'2008-08-15'</span>);</span><br></pre></td></tr></table></figure>
+
+<p> 将查询结果插入到Hive表： </p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> tablename1 [<span class="keyword">PARTITION</span> (partcol1=val1, partcol2=val2 ...)] select_statement1 <span class="keyword">FROM</span> from_statement;</span><br><span class="line"></span><br><span class="line">   </span><br><span class="line"></span><br><span class="line"><span class="comment">--多插入模式：</span></span><br><span class="line">FROM from_statement</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> tablename1 [<span class="keyword">PARTITION</span> (partcol1=val1, partcol2=val2 ...)] select_statement1</span><br><span class="line"></span><br><span class="line">[<span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> tablename2 [<span class="keyword">PARTITION</span> ...] select_statement2] ...</span><br><span class="line"></span><br><span class="line">   </span><br><span class="line"></span><br><span class="line"><span class="comment">--自动分区模式</span></span><br><span class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> tablename <span class="keyword">PARTITION</span> (partcol1[=val1], partcol2[=val2] ...) select_statement <span class="keyword">FROM</span> from_statement;</span><br></pre></td></tr></table></figure>
+
+<p> 将查询结果插入到HDFS文件系统中： </p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> OVERWRITE [<span class="keyword">LOCAL</span>] <span class="keyword">DIRECTORY</span> directory1 <span class="keyword">SELECT</span> ... <span class="keyword">FROM</span> ...</span><br><span class="line"></span><br><span class="line"><span class="keyword">FROM</span> from_statement</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> OVERWRITE [<span class="keyword">LOCAL</span>] <span class="keyword">DIRECTORY</span> directory1 select_statement1</span><br><span class="line"></span><br><span class="line">[<span class="keyword">INSERT</span> OVERWRITE [<span class="keyword">LOCAL</span>] <span class="keyword">DIRECTORY</span> directory2 select_statement2]</span><br></pre></td></tr></table></figure>
+
+<p> INSERT INTO </p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">TABLE</span> tablename1 [<span class="keyword">PARTITION</span> (partcol1=val1, partcol2=val2 ...)] select_statement1 <span class="keyword">FROM</span> from_statement;</span><br></pre></td></tr></table></figure>
+
+<p>insert overwrite和insert into的区别：</p>
+<ul>
+<li>insert overwrite 会覆盖已经存在的数据，假如原始表使用overwrite 上述的数据，先现将原始表的数据remove，再插入新数据。</li>
+<li>insert into 只是简单的插入，不考虑原始表的数据，直接追加到表中。最后表的数据是原始数据和新插入数据。</li>
+</ul>
+<h2 id="DQL（data-query-language）数据查询语言-select操作"><a href="#DQL（data-query-language）数据查询语言-select操作" class="headerlink" title="DQL（data query language）数据查询语言 select操作"></a>DQL（data query language）数据查询语言 select操作</h2><p> SELECT查询结构： </p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> [<span class="keyword">ALL</span> | <span class="keyword">DISTINCT</span>] select_expr, select_expr, ...</span><br><span class="line"></span><br><span class="line"><span class="keyword">FROM</span> table_reference</span><br><span class="line"></span><br><span class="line">[<span class="keyword">WHERE</span> where_condition]</span><br><span class="line"></span><br><span class="line">[<span class="keyword">GROUP</span> <span class="keyword">BY</span> col_list [<span class="keyword">HAVING</span> condition]]</span><br><span class="line"></span><br><span class="line">[ CLUSTER <span class="keyword">BY</span> col_list</span><br><span class="line"></span><br><span class="line">| [<span class="keyword">DISTRIBUTE</span> <span class="keyword">BY</span> col_list] [<span class="keyword">SORT</span> <span class="keyword">BY</span>| <span class="keyword">ORDER</span> <span class="keyword">BY</span> col_list]</span><br><span class="line"></span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">[<span class="keyword">LIMIT</span> <span class="built_in">number</span>]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用ALL和DISTINCT选项区分对重复记录的处理。默认是ALL，表示查询所有记录DISTINCT表示去掉重复的记录</li>
+<li>Where 条件 类似我们传统SQL的where 条件</li>
+<li>ORDER BY 全局排序，只有一个Reduce任务</li>
+<li>SORT BY 只在本机做排序</li>
+<li>LIMIT限制输出的个数和输出起始位置</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">--将查询数据输出至目录： </span></span><br><span class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">DIRECTORY</span> <span class="string">'/tmp/hdfs_out'</span> <span class="keyword">SELECT</span> a.* <span class="keyword">FROM</span> invites a <span class="keyword">WHERE</span> a.ds=<span class="string">'&lt;DATE&gt;'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">--将查询结果输出至本地目录：</span></span><br><span class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">LOCAL</span> <span class="keyword">DIRECTORY</span> <span class="string">'/tmp/local_out'</span> <span class="keyword">SELECT</span> a.* <span class="keyword">FROM</span> pokes a;</span><br></pre></td></tr></table></figure>
+
+<p> 将一个表的结果插入到另一个表： </p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">FROM invites a <span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> <span class="keyword">events</span> <span class="keyword">SELECT</span> a.bar, <span class="keyword">count</span>(<span class="number">1</span>) <span class="keyword">WHERE</span> a.foo &gt; <span class="number">0</span> <span class="keyword">GROUP</span> <span class="keyword">BY</span> a.bar;</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> <span class="keyword">events</span> <span class="keyword">SELECT</span> a.bar, <span class="keyword">count</span>(<span class="number">1</span>) <span class="keyword">FROM</span> invites a <span class="keyword">WHERE</span> a.foo &gt; <span class="number">0</span> <span class="keyword">GROUP</span> <span class="keyword">BY</span> a.bar;</span><br><span class="line"></span><br><span class="line">JOIN</span><br><span class="line"></span><br><span class="line">FROM pokes t1 JOIN invites t2 ON (t1.bar = t2.bar) <span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> <span class="keyword">events</span> <span class="keyword">SELECT</span> t1.bar, t1.foo, t2.foo;</span><br></pre></td></tr></table></figure>
+
+<p> 将多表数据插入到同一表中 </p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">FROM src</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> dest1 <span class="keyword">SELECT</span> src.* <span class="keyword">WHERE</span> src.key &lt; <span class="number">100</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> dest2 <span class="keyword">SELECT</span> src.key, src.value <span class="keyword">WHERE</span> src.key &gt;= <span class="number">100</span> <span class="keyword">and</span> src.key &lt; <span class="number">200</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> dest3 <span class="keyword">PARTITION</span>(ds=<span class="string">'2008-04-08'</span>, hr=<span class="string">'12'</span>) <span class="keyword">SELECT</span> src.key <span class="keyword">WHERE</span> src.key &gt;= <span class="number">200</span> <span class="keyword">and</span> src.key &lt; <span class="number">300</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">LOCAL</span> <span class="keyword">DIRECTORY</span> <span class="string">'/tmp/dest4.out'</span> <span class="keyword">SELECT</span> src.value <span class="keyword">WHERE</span> src.key &gt;= <span class="number">300</span>;</span><br></pre></td></tr></table></figure>
+
+<p>Hive 只支持等值连接（equality joins）、外连接（outer joins）和（left semi joins）。Hive 不支持所有非等值的连接，因为非等值连接非常难转化到 map/reduce 任务。</p>
+<ul>
+<li><p>LEFT，RIGHT和FULL OUTER关键字用于处理join中空记录的情况</p>
+</li>
+<li><p>LEFT SEMI JOIN 是 IN/EXISTS 子查询的一种更高效的实现</p>
+</li>
+<li><p>join 时，每次 map/reduce 任务的逻辑是这样的：reducer 会缓存 join 序列中除了最后一个表的所有表的记录，再通过最后一个表将结果序列化到文件系统</p>
+</li>
+<li><p>实际应用过程中应尽量使用小表join大表</p>
+</li>
+</ul>
+<h5 id="join查询时应注意的点："><a href="#join查询时应注意的点：" class="headerlink" title="join查询时应注意的点："></a>join查询时应注意的点：</h5><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">--只支持等值连接</span></span><br><span class="line"><span class="keyword">SELECT</span> a.* <span class="keyword">FROM</span> a <span class="keyword">JOIN</span> b <span class="keyword">ON</span> (a.id = b.id)</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> a.* <span class="keyword">FROM</span> a <span class="keyword">JOIN</span> b <span class="keyword">ON</span> (a.id = b.id <span class="keyword">AND</span> a.department = b.department)</span><br><span class="line"></span><br><span class="line">   </span><br><span class="line"></span><br><span class="line"><span class="comment">--可以 join 多个表</span></span><br><span class="line"><span class="keyword">SELECT</span> a.val, b.val, c.val <span class="keyword">FROM</span> a <span class="keyword">JOIN</span> b</span><br><span class="line"><span class="keyword">ON</span> (a.key = b.key1) <span class="keyword">JOIN</span> c <span class="keyword">ON</span> (c.key = b.key2)</span><br><span class="line"></span><br><span class="line">   </span><br><span class="line"></span><br><span class="line"><span class="comment">--如果join中多个表的 join key 是同一个，则 join 会被转化为单个 map/reduce 任务</span></span><br><span class="line"></span><br><span class="line">   </span><br><span class="line"></span><br><span class="line"><span class="comment">-- LEFT，RIGHT和FULL OUTER关键字</span></span><br><span class="line"></span><br><span class="line"><span class="comment">--左外连接</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> a.val, b.val <span class="keyword">FROM</span> a <span class="keyword">LEFT</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> b <span class="keyword">ON</span> (a.key=b.key)</span><br><span class="line"></span><br><span class="line"><span class="comment">--右外链接</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> a.val, b.val <span class="keyword">FROM</span> a <span class="keyword">RIGHT</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> b <span class="keyword">ON</span> (a.key=b.key)</span><br><span class="line"></span><br><span class="line"><span class="comment">--满外连接</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> a.val, b.val <span class="keyword">FROM</span> a <span class="keyword">FULL</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> b <span class="keyword">ON</span> (a.key=b.key)</span><br><span class="line"></span><br><span class="line">   </span><br><span class="line"></span><br><span class="line"><span class="comment">-- LEFT SEMI JOIN关键字</span></span><br><span class="line"></span><br><span class="line"><span class="comment">--LEFT SEMI JOIN 的限制是， JOIN 子句中右边的表只能在 ON 子句中设置过滤条件，在 WHERE 子句、SELECT 子句或其他地方过滤都不行</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> a.key, a.value</span><br><span class="line"></span><br><span class="line"><span class="keyword">FROM</span> a</span><br><span class="line"></span><br><span class="line"><span class="keyword">WHERE</span> a.key <span class="keyword">in</span></span><br><span class="line"></span><br><span class="line">(<span class="keyword">SELECT</span> b.key</span><br><span class="line"></span><br><span class="line"><span class="keyword">FROM</span> B);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">--可以被写为：</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> a.key, a.val</span><br><span class="line"></span><br><span class="line"><span class="keyword">FROM</span> a <span class="keyword">LEFT</span> <span class="keyword">SEMI</span> <span class="keyword">JOIN</span> b <span class="keyword">on</span> (a.key = b.key)</span><br><span class="line"></span><br><span class="line">   </span><br><span class="line"></span><br><span class="line"><span class="keyword">UNION</span> 与 <span class="keyword">UNION</span> <span class="keyword">ALL</span></span><br><span class="line"></span><br><span class="line"><span class="comment">--用来合并多个select的查询结果，需要保证select中字段须一致</span></span><br><span class="line"></span><br><span class="line">select_statement <span class="keyword">UNION</span> <span class="keyword">ALL</span> select_statement <span class="keyword">UNION</span> <span class="keyword">ALL</span> select_statement ...</span><br><span class="line"></span><br><span class="line"><span class="comment">--UNION 和 UNION ALL的区别</span></span><br><span class="line"></span><br><span class="line"><span class="comment">--UNION只会查询到两个表中不同的数据，相同的部分不会被查出</span></span><br><span class="line"></span><br><span class="line"><span class="comment">--UNION ALL会把两个表的所有数据都查询出</span></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>大数据</category>
+        <category>大数据之数据计算</category>
+        <category>Hive</category>
+        <category>Hive SQL语法总结</category>
+      </categories>
+      <tags>
+        <tag>大数据</tag>
+        <tag>Hive</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Kafka Eagle安装及使用简介</title>
+    <url>/2020/02/10/KafkaEagle%E5%AE%89%E8%A3%85%E5%8F%8A%E4%BD%BF%E7%94%A8%E7%AE%80%E4%BB%8B/</url>
+    <content><![CDATA[<h2 id="Kafka-Eagle安装及使用简介"><a href="#Kafka-Eagle安装及使用简介" class="headerlink" title="Kafka Eagle安装及使用简介"></a>Kafka Eagle安装及使用简介</h2><h3 id="1-安装包拷贝至服务器解压安装包"><a href="#1-安装包拷贝至服务器解压安装包" class="headerlink" title="1.安装包拷贝至服务器解压安装包"></a>1.安装包拷贝至服务器解压安装包</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tar -zxvf kafka-eagle-bin-1.2.4.tar.gz -C /opt/module</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-设置全局变量，设置JDK的全局变量JAVA-HOME和本应用的KE-HOME"><a href="#2-设置全局变量，设置JDK的全局变量JAVA-HOME和本应用的KE-HOME" class="headerlink" title="2. 设置全局变量，设置JDK的全局变量JAVA_HOME和本应用的KE_HOME"></a>2. 设置全局变量，设置JDK的全局变量JAVA_HOME和本应用的KE_HOME</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">--使用root权限编辑环境变量</span><br><span class="line">sudo vi /etc/profile</span><br><span class="line"> </span><br><span class="line">--打开后加上</span><br><span class="line"> </span><br><span class="line">export JAVA_HOME=/opt/module/jdk1.8.0_181</span><br><span class="line">export KE_HOME=/kafka/kafka-eagle-bin-1.2.4/kafka-eagle-web-1.2.4</span><br><span class="line">export PATH=$PATH:$KE_HOME/bin:$JAVA_HOME/bin</span><br><span class="line"></span><br><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-进入kafka-eagle的conf目录下修改配置文件，配置基础配置"><a href="#3-进入kafka-eagle的conf目录下修改配置文件，配置基础配置" class="headerlink" title="3.进入kafka-eagle的conf目录下修改配置文件，配置基础配置"></a>3.进入kafka-eagle的conf目录下修改配置文件，配置基础配置</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">修改配置文件</span></span><br><span class="line">vim system-config.properties</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash">配置文件详情介绍</span></span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash"> * kafkazookeeper节点配置属性多个可以添加一个，cluster1 </span></span><br><span class="line">kafka.eagle.zk.cluster.alias=cluster1</span><br><span class="line">cluster1.zk.list=hadoop102:2181 </span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> * zk 线程数量</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line">kafka.zk.limit.size=25</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> * kafka eagle 的端口</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line">kafka.eagle.webui.port=8048</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> kafka offset storage</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line">cluster1.kafka.eagle.offset.storage=kafka</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="built_in">enable</span> kafka 开启图表</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 及开始sql查询</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line">kafka.eagle.metrics.charts=true</span><br><span class="line"> </span><br><span class="line">kafka.eagle.sql.fix.error=true</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 提醒的email</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line">kafka.eagle.mail.enable=true</span><br><span class="line">kafka.eagle.mail.sa=alert_sa</span><br><span class="line">kafka.eagle.mail.username=alert_sa@163.com</span><br><span class="line">kafka.eagle.mail.password=mqslimczkdqabbbh</span><br><span class="line">kafka.eagle.mail.server.host=smtp.163.com</span><br><span class="line">kafka.eagle.mail.server.port=25</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除kafka topic 的token</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line">kafka.eagle.topic.token=keadmin</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> kafka sasl authenticate</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line">kafka.eagle.sasl.enable=false</span><br><span class="line">kafka.eagle.sasl.protocol=SASL_PLAINTEXT</span><br><span class="line">kafka.eagle.sasl.mechanism=PLAIN</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> kafka jdbc 地址注意可以自己安装数据mysql也可以自带的</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line">kafka.eagle.driver=org.sqlite.JDBC</span><br><span class="line">kafka.eagle.url=jdbc:sqlite:/kafka/kafka-eagle-bin-1.2.4/kafka-eagle-web-1.2.4/db/ke.db</span><br><span class="line">kafka.eagle.username=root</span><br><span class="line">kafka.eagle.password=smartloli</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-文件配置完毕后开始启动-，启动要进入bin目录下"><a href="#4-文件配置完毕后开始启动-，启动要进入bin目录下" class="headerlink" title="4.文件配置完毕后开始启动 ，启动要进入bin目录下"></a>4.文件配置完毕后开始启动 ，启动要进入bin目录下</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">进入bin目录后会看到 ke.sh 文件先修改文件的权限</span></span><br><span class="line">sudo chomd 777 ke.sh</span><br><span class="line"><span class="meta">#</span><span class="bash">启动命令</span></span><br><span class="line">./ke.sh start</span><br></pre></td></tr></table></figure>
+
+<p> 启动成功后的控制台输出 </p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/20180926095313859.png" alt="img"> </p>
+<p> 部署完成结束 </p>
+<p> 我们下面介绍下他的页面功能 </p>
+<p> <img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/20180926095601457.png" alt="img"> </p>
+<p> 功能界面 </p>
+<p> <img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/20180926100006424.png" alt="img"> </p>
+<p> 我们来着重的说下kafkasql查询的功能其他的功能点点就知道什么意思和怎么使用了 </p>
+<p> <img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/20180926100849641.png" alt="img"> </p>
+<p> <img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/2018092610092585.png" alt="img"> </p>
+]]></content>
+      <categories>
+        <category>大数据</category>
+        <category>大数据项目部署</category>
+        <category>Kafka</category>
+        <category>Kafka Eagle安装及使用简介</category>
+      </categories>
+      <tags>
+        <tag>大数据</tag>
+        <tag>Kafka</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Kafka压力测试</title>
+    <url>/2020/03/07/Kafka%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95/</url>
+    <content><![CDATA[<h2 id="项目经验之-Kafka-压力测试"><a href="#项目经验之-Kafka-压力测试" class="headerlink" title="项目经验之 Kafka 压力测试"></a>项目经验之 Kafka 压力测试</h2><p>1）Kafka 压测<br>用 Kafka 官方自带的脚本，对 Kafka 进行压测。Kafka 压测时，可以查看到哪个地方出现了瓶颈（CPU，内存，网络 IO）。一般都是网络 IO 达到瓶颈。<br>kafka-consumer-perf-test.sh<br>kafka-producer-perf-test.sh</p>
+<p>2）Kafka Producer 压力测试</p>
+<p>（1）在/opt/module/kafka/bin 目录下面有这两个文件。我们来测试一下</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[leinuo@hadoop102 kafka]$ bin/kafka-producer-perf-test.sh --topic test --record-size 100 --num-records 100000 --throughput -1 --producer-props bootstrap.servers=hadoop102:9092,hadoop103:9092,hadoop104:9092</span><br></pre></td></tr></table></figure>
+
+<p>说明：</p>
+<p>record-size 是一条信息有多大，单位是字节。</p>
+<p>num-records 是总共发送多少条信息。<br>throughput 是每秒多少条信息，设成-1，表示不限流，可测出生产者最大吞吐量。</p>
+<p>（2）Kafka 会打印下面的信息</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">100000 records sent, 24740.227610 records/sec (2.36 MB/sec), 1183.89 ms avg latency, 1622.00 ms max latency, 1367 ms 50th, 1553 ms 95th, 1593 ms 99th, 1617 ms 99.9th.</span><br></pre></td></tr></table></figure>
+
+<p>参数解析：本例中一共写入 10w 条消息，吞吐量为 2.36 MB/sec，每次写入的平均延迟为 1183.89 毫秒，最大的延迟为 1622.00 毫秒。</p>
+<p>3）Kafka Consumer 压力测试</p>
+<p>Consumer 的测试，如果这四个指标（IO，CPU，内存，网络）都不能改变，<strong>考虑增加分区数来提升性能。</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[leinuo@hadoop102 kafka]$ bin/kafka-consumer-perf-test.sh --zookeeper hadoop102:2181 --topic test --fetch-size 10000 --messages 10000000 --threads 1</span><br></pre></td></tr></table></figure>
+
+<p>参数说明：<br>–zookeeper 指定 zookeeper 的链接信息<br>–topic 指定 topic 的名称<br>–fetch-size 指定每次 fetch 的数据的大小<br>–messages 总共要消费的消息个数<br>测试结果说明：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">start.time, end.time, data.consumed.in.MB, MB.sec, data.consumed.in.nMsg, nMsg.sec</span><br><span class="line">2019-02-19 20:29:07:566, 2019-02-19 20:29:12:170, 9.5368, 2.0714,100010,21722.4153</span><br><span class="line">开始测试时间，测试结束数据，共消费数据 9.5368MB，吞吐量 2.0714MB/s ，共消费100010 条，平均每秒消费 21722.4153 条。</span><br></pre></td></tr></table></figure>
+
+<h3 id="项目之-经验之-Kafka-机器数量"><a href="#项目之-经验之-Kafka-机器数量" class="headerlink" title="项目之 经验之 Kafka 机器数量"></a>项目之 经验之 Kafka 机器数量</h3><p>Kafka 机器数量（经验公式）=2 X（峰值生产速度 X 副本数/100）+1<br>先拿到峰值生产速度，再根据设定的副本数，就能预估出需要部署 Kafka 的数量。<br>比如我们的峰值生产速度是 50M/s。副本数为 2。<br>Kafka 机器数量=2<em>（50</em>2/100）+ 1=3 台</p>
+<h3 id="使用kafka-server-stop-sh命令关闭kafka服务，发现无法停止"><a href="#使用kafka-server-stop-sh命令关闭kafka服务，发现无法停止" class="headerlink" title="使用kafka-server-stop.sh命令关闭kafka服务，发现无法停止"></a>使用kafka-server-stop.sh命令关闭kafka服务，发现无法停止</h3><p>主要是因为zookeeper停止后，kafka就不会再继续运行了</p>
+<p>所以可以 kill -9 强制关闭 </p>
+<p> <strong>下面修改kafka-server-stop.sh</strong><br>将 </p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">PIDS=$(ps ax | grep -i 'kafka\.Kafka' | grep java | grep -v grep | awk '&#123;print $1&#125;')</span><br></pre></td></tr></table></figure>
+
+<p>修改为</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">PIDS=$(jps -lm | grep -i 'kafka.Kafka'| awk '&#123;print $1&#125;')</span><br></pre></td></tr></table></figure>
+
+<p> <strong>命令详解：</strong>使用jps -lm命令列出所有的java进程，然后通过管道，利用grep -i ‘kafka.Kafka’命令将kafka进程筛出来，最后再接一管道命令，利用awk将进程号取出来。 </p>
+<p>而kafka-server-stop.sh 里的kill 不是强制关闭，kill -s 比较温和 不容易数据丢失</p>
+]]></content>
+      <categories>
+        <category>大数据</category>
+        <category>大数据项目经验</category>
+        <category>Kafka</category>
+        <category>Kafka压力测试</category>
+      </categories>
+      <tags>
+        <tag>大数据</tag>
+        <tag>Kafka</tag>
       </tags>
   </entry>
 </search>

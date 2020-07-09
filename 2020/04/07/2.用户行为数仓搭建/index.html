@@ -1,0 +1,1753 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-flash.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobstar Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="大数据," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="LeiNuo's Note" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="第 5 章 用户行为数仓搭建5.1 数仓分层概念5.1.1 数仓分层 1）ODS 层原始数据层，存放原始数据，直接加载原始日志、数据，数据保持原貌不做处理。2）DWD 层对 ODS 层数据进行清洗（去除空值，脏数据，超过极限范围的数据）3）DWS 层以 DWD 为基础，进行轻度汇总。4）ADS 层为各种统计报表提供数据 5.1.2 数仓分层优点1）把复杂问题简单化将一个复杂的任务分解成多个步骤来完">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2.用户行为数仓搭建">
+<meta property="og:url" content="https://lei-nuo.github.io/2020/04/07/2.%E7%94%A8%E6%88%B7%E8%A1%8C%E4%B8%BA%E6%95%B0%E4%BB%93%E6%90%AD%E5%BB%BA/index.html">
+<meta property="og:site_name" content="LeiNuo&#39;s Note">
+<meta property="og:description" content="第 5 章 用户行为数仓搭建5.1 数仓分层概念5.1.1 数仓分层 1）ODS 层原始数据层，存放原始数据，直接加载原始日志、数据，数据保持原貌不做处理。2）DWD 层对 ODS 层数据进行清洗（去除空值，脏数据，超过极限范围的数据）3）DWS 层以 DWD 为基础，进行轻度汇总。4）ADS 层为各种统计报表提供数据 5.1.2 数仓分层优点1）把复杂问题简单化将一个复杂的任务分解成多个步骤来完">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023504588.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023571084.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023583660.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023600022.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023611879.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023635420.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023695464.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023709003.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023717362.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023740749.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023761360.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023854289.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023878123.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023947054.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023967700.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023991126.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024055393.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024059753.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024063816.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024073580.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024080431.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024097393.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024104537.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024126755.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024190452.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024231024.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024263855.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024388519.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024396848.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024489786.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024631792.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024649248.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024661647.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024680996.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024725424.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024738853.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025039992.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025047520.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025060194.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025070805.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025170633.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025206201.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025212690.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025238499.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025273829.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025287100.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025298188.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025377362.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025393721.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025427699.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025434520.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025447403.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025476715.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025483083.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025515492.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025518679.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025524520.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025783457.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025787737.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025826738.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025833213.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025854812.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025861415.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025867648.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025879754.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025886943.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025927419.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025933834.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025940991.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025962371.png">
+<meta property="article:published_time" content="2020-04-07T12:50:56.000Z">
+<meta property="article:modified_time" content="2020-07-09T03:32:21.235Z">
+<meta property="article:author" content="Lei Nuo">
+<meta property="article:tag" content="大数据">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023504588.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lei-nuo.github.io/2020/04/07/2.用户行为数仓搭建/"/>
+
+
+
+
+
+  <title>2.用户行为数仓搭建 | LeiNuo's Note</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?9590a707452dc873909b62ec25776cff";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<link rel="stylesheet" href="/dist/APlayer.min.css">
+<div id="aplayer"></div>
+<script type="text/javascript" src="/dist/APlayer.min.js"></script>
+<script type="text/javascript" src="/dist/music.js"></script>
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LeiNuo's Note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Stay hungry,Stay foolish</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lei-nuo.github.io/2020/04/07/2.%E7%94%A8%E6%88%B7%E8%A1%8C%E4%B8%BA%E6%95%B0%E4%BB%93%E6%90%AD%E5%BB%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lei Nuo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LeiNuo's Note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">2.用户行为数仓搭建</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-07T20:50:56+08:00">
+                2020-04-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/" itemprop="url" rel="index">
+                    <span itemprop="name">大数据</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AE%9E%E6%88%98%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index">
+                    <span itemprop="name">大数据实战项目</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AE%9E%E6%88%98%E9%A1%B9%E7%9B%AE/%E9%98%BF%E9%87%8C%E4%BA%91%E7%A6%BB%E7%BA%BF%E6%95%B0%E4%BB%93/" itemprop="url" rel="index">
+                    <span itemprop="name">阿里云离线数仓</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AE%9E%E6%88%98%E9%A1%B9%E7%9B%AE/%E9%98%BF%E9%87%8C%E4%BA%91%E7%A6%BB%E7%BA%BF%E6%95%B0%E4%BB%93/2-%E7%94%A8%E6%88%B7%E8%A1%8C%E4%B8%BA%E6%95%B0%E4%BB%93%E6%90%AD%E5%BB%BA/" itemprop="url" rel="index">
+                    <span itemprop="name">2.用户行为数仓搭建</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/04/07/2.%E7%94%A8%E6%88%B7%E8%A1%8C%E4%B8%BA%E6%95%B0%E4%BB%93%E6%90%AD%E5%BB%BA/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/04/07/2.%E7%94%A8%E6%88%B7%E8%A1%8C%E4%B8%BA%E6%95%B0%E4%BB%93%E6%90%AD%E5%BB%BA/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020/04/07/2.%E7%94%A8%E6%88%B7%E8%A1%8C%E4%B8%BA%E6%95%B0%E4%BB%93%E6%90%AD%E5%BB%BA/" class="leancloud_visitors" data-flag-title="2.用户行为数仓搭建">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3.8k 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  16 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="第-5-章-用户行为数仓搭建"><a href="#第-5-章-用户行为数仓搭建" class="headerlink" title="第 5 章 用户行为数仓搭建"></a>第 5 章 用户行为数仓搭建</h2><h3 id="5-1-数仓分层概念"><a href="#5-1-数仓分层概念" class="headerlink" title="5.1 数仓分层概念"></a>5.1 数仓分层概念</h3><h4 id="5-1-1-数仓分层"><a href="#5-1-1-数仓分层" class="headerlink" title="5.1.1 数仓分层"></a>5.1.1 数仓分层</h4><p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023504588.png" alt="1594023504588"></p>
+<p>1）ODS 层<br>原始数据层，存放原始数据，直接加载原始日志、数据，数据保持原貌不做处理。<br>2）DWD 层<br>对 ODS 层数据进行清洗（去除空值，脏数据，超过极限范围的数据）<br>3）DWS 层<br>以 DWD 为基础，进行轻度汇总。<br>4）ADS 层<br>为各种统计报表提供数据</p>
+<h4 id="5-1-2-数仓分层优点"><a href="#5-1-2-数仓分层优点" class="headerlink" title="5.1.2 数仓分层优点"></a>5.1.2 数仓分层优点</h4><p>1）把复杂问题简单化<br>将一个复杂的任务分解成多个步骤来完成，每一层只处理单一的步骤，比较简单、并且<br>方便定位问题。<br>2）减少重复开发<br>规范数据分层，通过的中间层数据，能够减少极大的重复计算，增加一次计算结果的复<br>用性。<br>3）隔离原始数据<br>不论是数据的异常还是数据的敏感性，使真实数据与统计数据解耦开。</p>
+<h4 id="5-1-3-数仓命名"><a href="#5-1-3-数仓命名" class="headerlink" title="5.1.3 数仓命名"></a>5.1.3 数仓命名</h4><p> ODS层命名为ods前缀<br> DWD层命名为dwd前缀</p>
+<p> DWS层命名为dws前缀<br> ADS层命名为ads前缀<br> 维度表命名为dim前缀<br> 每日全量导入命名为df（day full）后缀<br> 每日增量导入命名为di（day increase）后缀</p>
+<h4 id="5-2-数仓分层配置"><a href="#5-2-数仓分层配置" class="headerlink" title="5.2 数仓分层配置"></a>5.2 数仓分层配置</h4><h4 id="5-2-1-建立业务流程"><a href="#5-2-1-建立业务流程" class="headerlink" title="5.2.1 建立业务流程"></a>5.2.1 建立业务流程</h4><p>1）点击数据开发-&gt;业务流程-&gt;新建业务流程-&gt;输入业务名称</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023571084.png" alt="1594023571084"></p>
+<p>2）再业务流程下面就可以看到业务 1</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023583660.png" alt="1594023583660"></p>
+<h4 id="5-2-2-配置表主题"><a href="#5-2-2-配置表主题" class="headerlink" title="5.2.2 配置表主题"></a>5.2.2 配置表主题</h4><p>1）进入配置中心<br>点击最下方的齿轮，进入配置中心</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023600022.png" alt="1594023600022"></p>
+<p>2）配置主题管理，这里主要是划分表的主题<br>主题一般是表的对应的业务主题，比如：基础表、用户、商品、广告等对应的业务线。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023611879.png" alt="1594023611879"></p>
+<h4 id="5-2-3-配置表层级"><a href="#5-2-3-配置表层级" class="headerlink" title="5.2.3 配置表层级"></a>5.2.3 配置表层级</h4><p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023635420.png" alt="1594023635420">在同一页面中，DataWorks 还提供了一个物理分类的划分维度，用户可以根据情况自行<br>决定划分方式。<br>本案例中，对数据表按照数据来源划分为，日志、数据库和综合。</p>
+<h3 id="5-3-原始数据层-（ODS-层）"><a href="#5-3-原始数据层-（ODS-层）" class="headerlink" title="5.3 原始数据层 （ODS 层）"></a>5.3 原始数据层 （ODS 层）</h3><p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023695464.png" alt="1594023695464"></p>
+<h3 id="5-3-1-建表语句"><a href="#5-3-1-建表语句" class="headerlink" title="5.3.1 建表语句"></a>5.3.1 建表语句</h3><p>1）回到数据开发的界面，按下图开始创建数据表</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023709003.png" alt="1594023709003"></p>
+<p>2）输入表名-&gt;提交</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023717362.png" alt="1594023717362"></p>
+<p>开始建立的表要和原始数据最基本的结构一致。</p>
+<h3 id="5-3-2-配置基本属性"><a href="#5-3-2-配置基本属性" class="headerlink" title="5.3.2 配置基本属性"></a>5.3.2 配置基本属性</h3><p>配置新创建的表的主题。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023740749.png" alt="1594023740749"></p>
+<h3 id="5-3-3-配置物理模型"><a href="#5-3-3-配置物理模型" class="headerlink" title="5.3.3 配置物理模型"></a>5.3.3 配置物理模型</h3><p>注意选择层级和物理分类，由于建立的原始日志表，所以此处选择 ODS 层。分类是日志。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023761360.png" alt="1594023761360"></p>
+<p>​    从 DataHub 过来的数据必须选择分区表。如果手工文件导入的表可以选择非分区。<br>​    为了减少再购买存储服务器，所以选择内部表。真实企业开发时，大部分情况都是创建外部表，需要在 OSS 服务中申请存储空间。</p>
+<h3 id="5-3-4-配置字段"><a href="#5-3-4-配置字段" class="headerlink" title="5.3.4 配置字段"></a>5.3.4 配置字段</h3><p>发送过来的日志包含两部分：服务器时间和日志详情。这里面设计了两个字段对应接收。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023854289.png" alt="1594023854289"></p>
+<p>注意：这里的主键，是指一个标志而已，本身不提供索引和唯一性约束。</p>
+<h3 id="5-3-5-配置分区"><a href="#5-3-5-配置分区" class="headerlink" title="5.3.5 配置分区"></a>5.3.5 配置分区</h3><p>表示数据按如下字段进行分区</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023878123.png" alt="1594023878123"></p>
+<p>​     由于目前 DataHub 至 MaxCompute 的接口，只支持按年月日+小时+分钟方式分区，所以这三个字段是必须有的，且字段类型必须是 String。</p>
+<h3 id="5-3-6-查看建表语句"><a href="#5-3-6-查看建表语句" class="headerlink" title="5.3.6 查看建表语句"></a>5.3.6 查看建表语句</h3><p>点击 DDL 模式，可以查看自动生成的建表语句。和普通的创建表语句一样。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023947054.png" alt="1594023947054"></p>
+<h3 id="5-3-7-提交到生产环境"><a href="#5-3-7-提交到生产环境" class="headerlink" title="5.3.7 提交到生产环境"></a>5.3.7 提交到生产环境</h3><p>点击提交到生产环境，表就创建完成了。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023967700.png" alt="1594023967700"></p>
+<h3 id="5-4-表的基本操作"><a href="#5-4-表的基本操作" class="headerlink" title="5.4 表的基本操作"></a>5.4 表的基本操作</h3><h4 id="5-4-1-查看表结构"><a href="#5-4-1-查看表结构" class="headerlink" title="5.4.1 查看表结构"></a>5.4.1 查看表结构</h4><p>在最左侧菜单中选择【表管理】，可以在右侧查看表的结构信息。但是不可以修改。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023991126.png" alt="1594023991126"></p>
+<h4 id="5-4-2-在业务流程中导入表"><a href="#5-4-2-在业务流程中导入表" class="headerlink" title="5.4.2 在业务流程中导入表"></a>5.4.2 在业务流程中导入表</h4><p>1）在业务 1 中建 ods、dwd、dws、ads，4 个文件夹</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024055393.png" alt="1594024055393"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024059753.png" alt="1594024059753"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024063816.png" alt="1594024063816"></p>
+<p>2）向 ods 文件夹中导入表</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024073580.png" alt="1594024073580"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024080431.png" alt="1594024080431"></p>
+<h3 id="5-4-3-临时查询"><a href="#5-4-3-临时查询" class="headerlink" title="5.4.3 临时查询"></a>5.4.3 临时查询</h3><p>1）点击临时查询-&gt;新建-&gt;ODPS SQL</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024097393.png" alt="1594024097393"></p>
+<p>2）创建临时查询节点</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024104537.png" alt="1594024104537"></p>
+<p>3）可以执行 SQL 命令</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024126755.png" alt="1594024126755"></p>
+<h3 id="5-5-DataHub-到-推送数据到-MaxCompute"><a href="#5-5-DataHub-到-推送数据到-MaxCompute" class="headerlink" title="5.5 DataHub 到 推送数据到 MaxCompute"></a>5.5 DataHub 到 推送数据到 MaxCompute</h3><p>​    如下图，之前 Flume 中的数据利用 DataHub Sink 把数据写入到了 DataHub 中，DataHub中提供了很多的其他第三方的 DataConnector 可以连接各种例如：MaxCompute，ElasticSearch，ADB，RDS 等数据库。</p>
+<p>所以下面就要建立 DataConnector 把数据推送到 MaxCompute 中。</p>
+<h4 id="5-5-1-建-创建-DataConnector"><a href="#5-5-1-建-创建-DataConnector" class="headerlink" title="5.5.1 建 创建 DataConnector"></a>5.5.1 建 创建 DataConnector</h4><p>1）在 DataHub 中找到 Topic，在某个 Topic 下，点击右上角的 DataConnector</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024190452.png" alt="1594024190452"></p>
+<p>2）点击同步到 MaxCompute 离线表</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024231024.png" alt="1594024231024"></p>
+<p>3） 创建 DataConnector</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024263855.png" alt="1594024263855"></p>
+<p>（1）MaxCompute Project：名称要和 MaxCompute 创建的工作空间名称一致<br>（2）MaxCompute Table：数据导入到 MaxCompute 中的表名<br>（3）AccessKey ID：LTAI4FiU71dZAL17SdLBa6Nt<br>（4）AccessKey Secret：63YzSmqMOSjDR5A2ZXEzFLM2tREY6m<br>注意：AccessKey ID 和 AccessKey Secret 要和自己的阿里云账号一一对应<br>（5）分区选项：system、event_time<br>通常采用 system 时间分区。<br>如果是 event_time 方式分区，就要在 topic 中包含一个 event_time 的字段。不过这个字段与以往的timestamp 不同的是，必须精确到微秒级。而且这个字段一旦用于分区，则不会再写入到实体表中。<br>（6）分区范围：15 分钟起</p>
+<h3 id="5-5-2-发送数据"><a href="#5-5-2-发送数据" class="headerlink" title="5.5.2 发送数据"></a>5.5.2 发送数据</h3><p>建立好表后 DataConnector 就可以尝试发送数据了。<br>注意：如果已经启动了 Flume，就不需要再次启动了。<br>1）启动 Flume 程序</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[atguigu@hadoop102 flume]$ /opt/module/flume/bin/flume-ng agent -n a1 -c /opt/module/flume/conf/ -f /opt/module/flume/conf/file-flume-datahub.conf -Dflume.root.logger=info,console</span><br></pre></td></tr></table></figure>
+
+<p>2）在服务器 hadoop102 上执行命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[atguigu@hadoop102 module]$ java -jar log-collector-1.0-SNAPSHOT-jar-with-dependencies.jar &gt; /dev/null 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-5-3-接收数据"><a href="#5-5-3-接收数据" class="headerlink" title="5.5.3 接收数据"></a>5.5.3 接收数据</h4><p>1）观察 DataHub 中接收到数据（速度很快</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024388519.png" alt="1594024388519"></p>
+<p>2）查看 MaxCompute 中接收到数据（1-5 分钟的延迟）</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024396848.png" alt="1594024396848"></p>
+<h3 id="5-6-明细数据层（DWD-层）"><a href="#5-6-明细数据层（DWD-层）" class="headerlink" title="5.6 明细数据层（DWD 层）"></a>5.6 明细数据层（DWD 层）</h3><p>​     DWD 层主要是对 ODS 层数据进行清洗（去除空值，脏数据，超过极限范围的数据）。DWD 层处理后的表，能够成为非常明确可用的基础明细数据。<br>​     本次项目中需要将用户行为过来基础日志，根据表类型，一张一张的解析出来 11 张不同类型的表数据，方便后续的处理。</p>
+<h3 id="5-6-1-日志格式分析"><a href="#5-6-1-日志格式分析" class="headerlink" title="5.6.1 日志格式分析"></a>5.6.1 日志格式分析</h3><p>1）日志格式：服务器时间 | json<br>2）其中 json 包括：<br>cm：公共字段的 key；<br>ap：app 的名称；<br>et：具体事件</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024489786.png" alt="1594024489786"></p>
+<h3 id="5-6-2-自定义-UDTF-（解析-具体事件字段）"><a href="#5-6-2-自定义-UDTF-（解析-具体事件字段）" class="headerlink" title="5.6.2 自定义 UDTF （解析 具体事件字段）"></a>5.6.2 自定义 UDTF （解析 具体事件字段）</h3><p>开发 UDTF 有两个方法：</p>
+<ul>
+<li><p>方法 1：在本地 IDEA 中创建工程，开发代码，打包，把 JAR 上传到 DataStudio 成为资源 JAR 包。然后基于资源 JAR 包，声明函数。</p>
+</li>
+<li><p>方法 2：直接在 FunctionStudio 中开发，然后在线打包发布程序，声明函数。</p>
+<p> 相比而言，从发布流程上来说利用 FunctionStudio 更快捷方便。但是从 IDEA 开发角度来说，网页版本的 FunctionStudio，肯定不如客户端的功能强大、反应速度流畅。不过也可以两者配合起来使用。<br>本次案例主要介绍通过 FunctionStudio 来编写 UDTF 函数。<br>1）按下图所示，打开 FunctionStudio 的界面</p>
+</li>
+</ul>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024631792.png" alt="1594024631792"></p>
+<p>2）创建工程</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024649248.png" alt="1594024649248"></p>
+<p>3）选择命名工程名，选择 udfjava</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024661647.png" alt="1594024661647"></p>
+<p>4）添加代码文件<br>可以看到工程创建好后，默认有很多参考的模板。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024680996.png" alt="1594024680996"></p>
+<p>5）在 udtf 目录下创建一个 FlatEventUDTF 类</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024725424.png" alt="1594024725424"></p>
+<p>6）编写代码<br>首先分析日志结构</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594024738853.png" alt="1594024738853"></p>
+<p>（1）在 pom.xml 中要加入 fastJson 依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>fastjson<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2.28.odps<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>（2）编写自定义 UDTF 代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.aliyun.odps.udf.ExecutionContext;</span><br><span class="line"><span class="keyword">import</span> com.aliyun.odps.udf.UDFException;</span><br><span class="line"><span class="keyword">import</span> com.aliyun.odps.udf.UDTF;</span><br><span class="line"><span class="keyword">import</span> com.aliyun.odps.udf.annotation.Resolve;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.*;</span><br><span class="line"><span class="comment">// TODO define input and output types, e.g."string,string-&gt;string,bigint".</span></span><br><span class="line"><span class="meta">@Resolve</span>(&#123;<span class="string">"string-&gt;bigint,string,string"</span>&#125;)</span><br><span class="line">	<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FlatEventUDTF</span> <span class="keyword">extends</span> <span class="title">UDTF</span> </span>&#123;</span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setup</span><span class="params">(ExecutionContext ctx)</span> <span class="keyword">throws</span> UDFException</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(Object[] args)</span> <span class="keyword">throws</span> UDFException </span>&#123;</span><br><span class="line">	</span><br><span class="line">    String event =(String) args[<span class="number">0</span>];</span><br><span class="line">	JSONArray jsonArray = JSON.parseArray(event);</span><br><span class="line">	</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; jsonArray.size(); i++) &#123;</span><br><span class="line">	JSONObject jsonObject = jsonArray.getJSONObject(i);</span><br><span class="line">	String ett =(String) jsonObject.getString(<span class="string">"ett"</span>);</span><br><span class="line">	String eventName =(String) jsonObject.getString(<span class="string">"en"</span>);</span><br><span class="line">	String eventJson =(String) jsonObject.getString(<span class="string">"kv"</span>);</span><br><span class="line">	forward(Long.parseLong(ett),eventName,eventJson);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span> <span class="keyword">throws</span> UDFException </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中，@Resolve({“string-&gt;bigint,string,string”} 表示该函数，传入参数是 string，返回参数是三个，分别为长整型，和两个字符串，对应的返回值就是事件的时间、事件名称和事件内容（json 格式）。</p>
+<p>7）打包部署<br>（1）提交到 Data Studio 开发环境</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025039992.png" alt="1594025039992"></p>
+<p>（2）提交函数详情</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025047520.png" alt="1594025047520"></p>
+<p>（3）提交函数过程，控制台打印</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025060194.png" alt="1594025060194"></p>
+<p>提交成功后 ，回到 DataWorks 中的资源菜单中可以看到增加了 1 个 JAR 包，函数菜单中可以看到定义的函数。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025070805.png" alt="1594025070805"></p>
+<p>8）测试函数<br>在 DataStudio 中临时查询，执行如下语句</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select</span><br><span class="line">FlatEventUDTF(GET_JSON_OBJECT(log_string,&#39;$.et&#39;)) as</span><br><span class="line">(event_time, event_name, event_json)</span><br><span class="line">from ods_base_log</span><br><span class="line">where ds&#x3D;&#39;20191008&#39;;</span><br></pre></td></tr></table></figure>
+
+<p>能看到如下结果表示运行正确</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025170633.png" alt="1594025170633"></p>
+<h3 id="5-6-3-DWD-层建表（启动-日志表）"><a href="#5-6-3-DWD-层建表（启动-日志表）" class="headerlink" title="5.6.3 DWD 层建表（启动 日志表）"></a>5.6.3 DWD 层建表（启动 日志表）</h3><p>在流程中建立表，在 DWD 文件夹中增加一个 dwd_start_log 的表，可以直接用 ddl 模式建立，再进行微调。<br>1）在业务 1 的表上，右键新建表</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025206201.png" alt="1594025206201"></p>
+<p>2）点击 DDL 模式</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025212690.png" alt="1594025212690"></p>
+<p>3）在 DDL 模式中添加建表语句</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025238499.png" alt="1594025238499"></p>
+<p>详细建表语句如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE &#96;dwd_start_log&#96; (</span><br><span class="line">&#96;mid&#96; string,</span><br><span class="line">&#96;user_id&#96; string,</span><br><span class="line">&#96;version_code&#96; string,</span><br><span class="line">&#96;version_name&#96; string,</span><br><span class="line">&#96;lang&#96; string,</span><br><span class="line">&#96;source&#96; string,</span><br><span class="line">&#96;os&#96; string,</span><br><span class="line">&#96;area&#96; string,</span><br><span class="line">&#96;model&#96; string,</span><br><span class="line">&#96;brand&#96; string,</span><br><span class="line">&#96;sdk_version&#96; string,</span><br><span class="line">&#96;email&#96; string,</span><br><span class="line">&#96;height_width&#96; string,</span><br><span class="line">&#96;network&#96; string,</span><br><span class="line">&#96;lng&#96; string,</span><br><span class="line">&#96;lat&#96; string,</span><br><span class="line">&#96;entry&#96; string,</span><br><span class="line">&#96;open_ad_type&#96; string,</span><br><span class="line">&#96;action&#96; string,</span><br><span class="line">&#96;loading_time&#96; string,</span><br><span class="line">&#96;detail&#96; string,</span><br><span class="line">&#96;event_time&#96; string COMMENT &#39;事件时间&#39;</span><br><span class="line">)</span><br><span class="line">PARTITIONED BY (ds string, hh string, mm string);</span><br></pre></td></tr></table></figure>
+
+<p>4）补充一些相关字段。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025273829.png" alt="1594025273829"></p>
+<p>5）补充分区格式</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025287100.png" alt="1594025287100"></p>
+<p>6）提交到生产环境</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025298188.png" alt="1594025298188"></p>
+<h3 id="5-6-4-手动将-将-ODS-层数据导入-DWD-层"><a href="#5-6-4-手动将-将-ODS-层数据导入-DWD-层" class="headerlink" title="5.6.4 手动将 将 ODS 层数据导入 DWD 层"></a>5.6.4 手动将 将 ODS 层数据导入 DWD 层</h3><p>1）在临时查询页面，把 ods 层 ods_base_log 里面的数据导入到 dwd_start_log</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">INSERT OVERWRITE TABLE dwd_start_log PARTITION (ds,hh,mm)</span><br><span class="line">select</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.mid&#39;) mid,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.uid&#39;) user_id,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.vc&#39;) version_code,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.vn&#39;) version_name,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.l&#39;) lang,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.sr&#39;) source,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.os&#39;) os,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.ar&#39;) area,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.md&#39;) model,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.ba&#39;) brand,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.sv&#39;) sdk_version,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.hw&#39;) height_width,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.g&#39;) email,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.hw&#39;) sv,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.ln&#39;) ln,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.la&#39;) la,</span><br><span class="line">GET_JSON_OBJECT( event_view.event_json,&#39;$.entry&#39;) entry,</span><br><span class="line">GET_JSON_OBJECT( event_view.event_json,&#39;$.loading_time&#39;)</span><br><span class="line">loading_time,</span><br><span class="line">GET_JSON_OBJECT( event_view.event_json,&#39;$.action&#39;) action,</span><br><span class="line">GET_JSON_OBJECT( event_view.event_json,&#39;$.open_ad_type&#39;)</span><br><span class="line">open_ad_type,</span><br><span class="line">GET_JSON_OBJECT( event_view.event_json,&#39;$.detail&#39;) detail ,</span><br><span class="line">event_view.event_time,</span><br><span class="line">ds,</span><br><span class="line">hh,</span><br><span class="line">mm</span><br><span class="line">from ods_base_log</span><br><span class="line">LATERAL VIEW FlatEventUDTF(GET_JSON_OBJECT(log_string,&#39;$.et&#39; ))</span><br><span class="line">event_view as event_time,event_name,event_json</span><br><span class="line">where ds&#x3D;&#39;20191008&#39; and event_view.event_name &#x3D; &#39;start&#39;;</span><br></pre></td></tr></table></figure>
+
+<p>2）查看导入结果</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">from</span> dwd_start_log <span class="keyword">WHERE</span> ds=<span class="string">'20191008'</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-6-5-数据导入脚本-本"><a href="#5-6-5-数据导入脚本-本" class="headerlink" title="5.6.5 数据导入脚本 本"></a>5.6.5 数据导入脚本 本</h3><p>1）在流程中加入一个数据开发脚本</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025377362.png" alt="1594025377362"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025393721.png" alt="1594025393721"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">INSERT OVERWRITE TABLE dwd_start_log PARTITION (ds,hh,mm)</span><br><span class="line">select</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.mid&#39;) mid,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.uid&#39;) user_id,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.vc&#39;) version_code,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.vn&#39;) version_name,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.l&#39;) lang,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.sr&#39;) source,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.os&#39;) os,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.ar&#39;) area,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.md&#39;) model,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.ba&#39;) brand,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.sv&#39;) sdk_version,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.hw&#39;) height_width,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.g&#39;) email,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.hw&#39;) sv,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.ln&#39;) ln,</span><br><span class="line">GET_JSON_OBJECT(log_string,&#39;$.cm.la&#39;) la,</span><br><span class="line">GET_JSON_OBJECT( event_view.event_json,&#39;$.entry&#39;) entry,</span><br><span class="line">GET_JSON_OBJECT( event_view.event_json,&#39;$.loading_time&#39;)</span><br><span class="line">loading_time,</span><br><span class="line">GET_JSON_OBJECT( event_view.event_json,&#39;$.action&#39;) action,</span><br><span class="line">GET_JSON_OBJECT( event_view.event_json,&#39;$.open_ad_type&#39;)</span><br><span class="line">open_ad_type,</span><br><span class="line">GET_JSON_OBJECT( event_view.event_json,&#39;$.detail&#39;) detail,</span><br><span class="line">event_view.event_time,</span><br><span class="line">ds,</span><br><span class="line">hh,</span><br><span class="line">mm</span><br><span class="line">from ods_base_log</span><br><span class="line">LATERAL VIEW FlatEventUdtf (GET_JSON_OBJECT(log_string,&#39;$.et&#39; ))</span><br><span class="line">event_view as event_time,event_name,event_json</span><br><span class="line">where ds&#x3D;&#39;$&#123;bizdate&#125;&#39; and event_view.event_name &#x3D; &#39;start&#39; ;</span><br></pre></td></tr></table></figure>
+
+<p>注意：在上面的 SQL 中我们使用了一个${bizedate}作为外部传入的日期参数。</p>
+<p>2）配置参数<br>在执行或者调度该脚本的时候传入相应的参数。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025427699.png" alt="1594025427699"></p>
+<p>（1）在右侧有一个调度配置，打开可以对参数进行设置。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025434520.png" alt="1594025434520"></p>
+<p>注意：<br>这里参数设置用的是 花括号，bizdate=${yyyymmdd}，表示取前一日的日期；<br>如果采用方括号，如，bizdate= $[yyyymmdd]，表示取当前日期。</p>
+<p>（2）配置脚本执行时间</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025447403.png" alt="1594025447403"></p>
+<h3 id="5-7-服务数据层（DWS-层）"><a href="#5-7-服务数据层（DWS-层）" class="headerlink" title="5.7 服务数据层（DWS 层）"></a>5.7 服务数据层（DWS 层）</h3><p>需求：日活统计</p>
+<h3 id="5-7-1-建表语句"><a href="#5-7-1-建表语句" class="headerlink" title="5.7.1 建表语句"></a>5.7.1 建表语句</h3><p>1）创建表 dws_uv_detail_d</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025476715.png" alt="1594025476715"></p>
+<p>2）点击 DDL 模式</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025483083.png" alt="1594025483083"></p>
+<p>3）在 DDL 模式中添加建表语句</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE &#96;dws_uv_detail_d&#96; (</span><br><span class="line">&#96;mid&#96; string COMMENT &#39;设备唯一标识&#39;,</span><br><span class="line">&#96;user_id&#96; string COMMENT &#39;用户标识&#39;,</span><br><span class="line">&#96;version_code&#96; string COMMENT &#39;程序版本号&#39;,</span><br><span class="line">&#96;version_name&#96; string COMMENT &#39;程序版本名&#39;,</span><br><span class="line">&#96;lang&#96; string COMMENT &#39;系统语言&#39;,</span><br><span class="line">&#96;source&#96; string COMMENT &#39;渠道号&#39;,</span><br><span class="line">&#96;os&#96; string COMMENT &#39;系统版本&#39;,</span><br><span class="line">&#96;area&#96; string COMMENT &#39;区域&#39;,</span><br><span class="line">&#96;model&#96; string COMMENT &#39;手机型号&#39;,</span><br><span class="line">&#96;brand&#96; string COMMENT &#39;手机品牌&#39;,</span><br><span class="line">&#96;sdk_version&#96; string COMMENT &#39;sdkversion&#39;,</span><br><span class="line">&#96;email&#96; string COMMENT &#39;email&#39;,</span><br><span class="line">&#96;height_width&#96; string COMMENT &#39;屏幕宽高&#39;,</span><br><span class="line">&#96;network&#96; string COMMENT &#39;网络模式&#39;,</span><br><span class="line">&#96;lng&#96; string COMMENT &#39;经度&#39;,</span><br><span class="line">&#96;lat&#96; string COMMENT &#39;纬度&#39;,</span><br><span class="line">&#96;event_time&#96; bigint</span><br><span class="line">)</span><br><span class="line">COMMENT &#39;活跃用户按天明细&#39;</span><br><span class="line">PARTITIONED BY (ds string,hh string,mm string);</span><br></pre></td></tr></table></figure>
+
+<p>4）补全建表信息描述</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025515492.png" alt="1594025515492"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025518679.png" alt="1594025518679"></p>
+<p>5）提交到生产环境</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025524520.png" alt="1594025524520"></p>
+<h3 id="5-7-2-手动将-将-DWD-层数据导入-DWS-层"><a href="#5-7-2-手动将-将-DWD-层数据导入-DWS-层" class="headerlink" title="5.7.2 手动将 将 DWD 层数据导入 DWS 层"></a>5.7.2 手动将 将 DWD 层数据导入 DWS 层</h3><p>1）在临时查询页面，把 DWD 层 dwd_start_log 里面的数据导入到 dws_uv_detail_d</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> overwrite <span class="keyword">table</span> dws_uv_detail_d <span class="keyword">partition</span>(ds,hh,mm)</span><br><span class="line"><span class="keyword">select</span></span><br><span class="line"><span class="keyword">mid</span>,</span><br><span class="line">user_id,</span><br><span class="line">version_code,</span><br><span class="line">version_name,</span><br><span class="line">lang,</span><br><span class="line"><span class="keyword">source</span>,</span><br><span class="line">os,</span><br><span class="line">area,</span><br><span class="line"><span class="keyword">model</span>,</span><br><span class="line">brand,</span><br><span class="line">sdk_version,</span><br><span class="line">email,</span><br><span class="line">height_width,</span><br><span class="line">network,</span><br><span class="line">lng,</span><br><span class="line">lat,</span><br><span class="line">event_time,</span><br><span class="line">ds,</span><br><span class="line">hh,</span><br><span class="line">mm</span><br><span class="line"><span class="keyword">from</span></span><br><span class="line">(</span><br><span class="line"><span class="keyword">select</span></span><br><span class="line">*,</span><br><span class="line">ROW_NUMBER() <span class="keyword">OVER</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> <span class="keyword">mid</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> event_time</span><br><span class="line"><span class="keyword">asc</span>) rn</span><br><span class="line"><span class="keyword">from</span> dwd_start_log</span><br><span class="line"><span class="keyword">where</span> ds=<span class="string">'20191008'</span></span><br><span class="line">) st <span class="keyword">where</span> rn = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<p>2）查看导入结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * from dws_uv_detail_d WHERE ds&#x3D;&#39;20191008&#39;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-7-3-数据导入脚本"><a href="#5-7-3-数据导入脚本" class="headerlink" title="5.7.3 数据导入脚本"></a>5.7.3 数据导入脚本</h3><p>DWS 层一般围绕某个主题进行聚合、拼接处理。<br>针对统计日活的需求，DWS 主要的工作就进行以日为单位的去重操作。</p>
+<p>1）在流程中加入一个数据开发脚本</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025783457.png" alt="1594025783457"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025787737.png" alt="1594025787737"></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> overwrite <span class="keyword">table</span> dws_uv_detail_d <span class="keyword">partition</span>(ds,hh,mm)</span><br><span class="line"><span class="keyword">select</span></span><br><span class="line"><span class="keyword">mid</span>,</span><br><span class="line">user_id,</span><br><span class="line">version_code,</span><br><span class="line">version_name,</span><br><span class="line">lang,</span><br><span class="line"><span class="keyword">source</span>,</span><br><span class="line">os,</span><br><span class="line">area,</span><br><span class="line"><span class="keyword">model</span>,</span><br><span class="line">brand,</span><br><span class="line">sdk_version,</span><br><span class="line">email,</span><br><span class="line">height_width,</span><br><span class="line">network,</span><br><span class="line">lng,</span><br><span class="line">lat,</span><br><span class="line">event_time,</span><br><span class="line">ds,</span><br><span class="line">hh,</span><br><span class="line">mm</span><br><span class="line"><span class="keyword">from</span></span><br><span class="line">(</span><br><span class="line"><span class="keyword">select</span></span><br><span class="line">*,</span><br><span class="line">ROW_NUMBER() <span class="keyword">OVER</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> <span class="keyword">mid</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> event_time</span><br><span class="line"><span class="keyword">asc</span>) rn</span><br><span class="line"><span class="keyword">from</span> dwd_start_log</span><br><span class="line"><span class="keyword">where</span> ds = <span class="string">'$&#123;bizdate&#125;'</span></span><br><span class="line">) st <span class="keyword">where</span> rn = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<p>2）配置参数<br>点击调度配置-&gt; bizdate=${yyyymmdd}</p>
+<h3 id="5-8-应用数据层（ADS-层）"><a href="#5-8-应用数据层（ADS-层）" class="headerlink" title="5.8 应用数据层（ADS 层）"></a>5.8 应用数据层（ADS 层）</h3><p>统计各个渠道的 uv 个数</p>
+<h4 id="5-8-1-建表语句"><a href="#5-8-1-建表语句" class="headerlink" title="5.8.1 建表语句"></a>5.8.1 建表语句</h4><p>1）创建表 ads_uv_source_d</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025826738.png" alt="1594025826738"></p>
+<p>2）点击 DDL 模式</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025833213.png" alt="1594025833213"></p>
+<p>3）在 DDL 模式中添加建表语句</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`ads_uv_source_d`</span> (</span><br><span class="line"><span class="string">`source`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'渠道'</span>,</span><br><span class="line"><span class="string">`ct`</span> <span class="built_in">bigint</span> <span class="keyword">COMMENT</span> <span class="string">'个数'</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">COMMENT</span> <span class="string">'日活渠道统计'</span></span><br><span class="line">PARTITIONED <span class="keyword">BY</span> (ds <span class="keyword">string</span>);</span><br></pre></td></tr></table></figure>
+
+<p>4）补全建表信息描述</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025854812.png" alt="1594025854812"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025861415.png" alt="1594025861415"></p>
+<p>5）提交到生产环境</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025867648.png" alt="1594025867648"></p>
+<h3 id="5-8-2-数据导入脚本"><a href="#5-8-2-数据导入脚本" class="headerlink" title="5.8.2 数据导入脚本"></a>5.8.2 数据导入脚本</h3><p>1）在流程中加入一个数据开发脚本</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025879754.png" alt="1594025879754"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025886943.png" alt="1594025886943"></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> OVERWRITE <span class="keyword">table</span> ads_uv_source_d <span class="keyword">PARTITION</span></span><br><span class="line">(ds=<span class="string">'$&#123;bizdate&#125;'</span>)</span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line"><span class="keyword">source</span>,</span><br><span class="line"><span class="keyword">COUNT</span>(*) ct</span><br><span class="line"><span class="keyword">from</span> dws_uv_detail_d</span><br><span class="line"><span class="keyword">where</span> ds=<span class="string">'$&#123;bizdate&#125;'</span></span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> <span class="keyword">source</span>;</span><br></pre></td></tr></table></figure>
+
+<p>2）配置参数<br>点击调度配置-&gt; bizdate=${yyyymmdd}</p>
+<h3 id="5-9-日活-需求：-全流程-业务调度"><a href="#5-9-日活-需求：-全流程-业务调度" class="headerlink" title="5.9 日活 需求： 全流程 业务调度"></a>5.9 日活 需求： 全流程 业务调度</h3><p>1）点击业务 1，右侧就会出现之前写的脚本。默认三个脚本之间没有关系，可以根据业务需求，手动连线。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025927419.png" alt="1594025927419"></p>
+<p>2）点击执行</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025933834.png" alt="1594025933834"></p>
+<p>3）查询运行日志</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025940991.png" alt="1594025940991"></p>
+<p>4）临时查询，检查结果</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">from</span> ads_uv_source_d <span class="keyword">WHERE</span> ds=<span class="string">'20191008'</span>;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594025962371.png" alt="1594025962371"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>感谢您的支持和鼓励！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Lei Nuo 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Lei Nuo 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+<div>
+   
+   <div>
+    
+        <div style="text-align:center;" lass="read-over">-------------------本文结束 <i class="fa fa-paw"></i> 感谢您的阅读-------------------</div>
+    
+</div>
+
+ 
+</div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"># 大数据</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/07/1.%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2/" rel="next" title="1.阿里云服务器搭建部署">
+                <i class="fa fa-chevron-left"></i> 1.阿里云服务器搭建部署
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/07/3.%E4%B8%9A%E5%8A%A1%E6%95%B0%E4%BB%93%E7%90%86%E8%AE%BA/" rel="prev" title="3.业务数仓理论">
+                3.业务数仓理论 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="Lei Nuo" />
+            
+              <p class="site-author-name" itemprop="name">Lei Nuo</p>
+              <p class="site-description motion-element" itemprop="description">知见立知，即无明本</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Lei-Nuo" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:576111076@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/2529184021/" target="_blank" title="WeiBo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>WeiBo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.zhihu.com/people/Lei-Nuo-2020" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-snapchat"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#第-5-章-用户行为数仓搭建"><span class="nav-text">第 5 章 用户行为数仓搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-数仓分层概念"><span class="nav-text">5.1 数仓分层概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-1-数仓分层"><span class="nav-text">5.1.1 数仓分层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-2-数仓分层优点"><span class="nav-text">5.1.2 数仓分层优点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-3-数仓命名"><span class="nav-text">5.1.3 数仓命名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-数仓分层配置"><span class="nav-text">5.2 数仓分层配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-1-建立业务流程"><span class="nav-text">5.2.1 建立业务流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-2-配置表主题"><span class="nav-text">5.2.2 配置表主题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-3-配置表层级"><span class="nav-text">5.2.3 配置表层级</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-原始数据层-（ODS-层）"><span class="nav-text">5.3 原始数据层 （ODS 层）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-1-建表语句"><span class="nav-text">5.3.1 建表语句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-2-配置基本属性"><span class="nav-text">5.3.2 配置基本属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-3-配置物理模型"><span class="nav-text">5.3.3 配置物理模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-4-配置字段"><span class="nav-text">5.3.4 配置字段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-5-配置分区"><span class="nav-text">5.3.5 配置分区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-6-查看建表语句"><span class="nav-text">5.3.6 查看建表语句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-7-提交到生产环境"><span class="nav-text">5.3.7 提交到生产环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-表的基本操作"><span class="nav-text">5.4 表的基本操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-4-1-查看表结构"><span class="nav-text">5.4.1 查看表结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-4-2-在业务流程中导入表"><span class="nav-text">5.4.2 在业务流程中导入表</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-3-临时查询"><span class="nav-text">5.4.3 临时查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-5-DataHub-到-推送数据到-MaxCompute"><span class="nav-text">5.5 DataHub 到 推送数据到 MaxCompute</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-5-1-建-创建-DataConnector"><span class="nav-text">5.5.1 建 创建 DataConnector</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-5-2-发送数据"><span class="nav-text">5.5.2 发送数据</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-5-3-接收数据"><span class="nav-text">5.5.3 接收数据</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-6-明细数据层（DWD-层）"><span class="nav-text">5.6 明细数据层（DWD 层）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-6-1-日志格式分析"><span class="nav-text">5.6.1 日志格式分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-6-2-自定义-UDTF-（解析-具体事件字段）"><span class="nav-text">5.6.2 自定义 UDTF （解析 具体事件字段）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-6-3-DWD-层建表（启动-日志表）"><span class="nav-text">5.6.3 DWD 层建表（启动 日志表）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-6-4-手动将-将-ODS-层数据导入-DWD-层"><span class="nav-text">5.6.4 手动将 将 ODS 层数据导入 DWD 层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-6-5-数据导入脚本-本"><span class="nav-text">5.6.5 数据导入脚本 本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-7-服务数据层（DWS-层）"><span class="nav-text">5.7 服务数据层（DWS 层）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-7-1-建表语句"><span class="nav-text">5.7.1 建表语句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-7-2-手动将-将-DWD-层数据导入-DWS-层"><span class="nav-text">5.7.2 手动将 将 DWD 层数据导入 DWS 层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-7-3-数据导入脚本"><span class="nav-text">5.7.3 数据导入脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-8-应用数据层（ADS-层）"><span class="nav-text">5.8 应用数据层（ADS 层）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-8-1-建表语句"><span class="nav-text">5.8.1 建表语句</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-8-2-数据导入脚本"><span class="nav-text">5.8.2 数据导入脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-9-日活-需求：-全流程-业务调度"><span class="nav-text">5.9 日活 需求： 全流程 业务调度</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lei Nuo</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"> 访客数</i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"> 总浏览量</i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '2VBFDPgV6LRBBVwiuaveQkjp-gzGzoHsz',
+        appKey: 'IslE3DwJ87bnFNc8I8yU7mSm',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2VBFDPgV6LRBBVwiuaveQkjp-gzGzoHsz", "IslE3DwJ87bnFNc8I8yU7mSm");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+  <script type="text/javascript" src="/js/src/js.cookie.js?v=5.1.4"></script>
+  <script type="text/javascript" src="/js/src/scroll-cookie.js?v=5.1.4"></script>
+
+
+  
+
+  
+
+</body>
+</html>
