@@ -285,6 +285,39 @@
       </tags>
   </entry>
   <entry>
+    <title>3.业务数仓理论</title>
+    <url>/2020/04/07/3.%E4%B8%9A%E5%8A%A1%E6%95%B0%E4%BB%93%E7%90%86%E8%AE%BA/</url>
+    <content><![CDATA[<h2 id="第-6-章-业务数仓理论"><a href="#第-6-章-业务数仓理论" class="headerlink" title="第 6 章 业务数仓理论"></a>第 6 章 业务数仓理论</h2><h3 id="6-1-表的-分类"><a href="#6-1-表的-分类" class="headerlink" title="6.1 表的 分类"></a>6.1 表的 分类</h3><h4 id="6-1-1-实体表"><a href="#6-1-1-实体表" class="headerlink" title="6.1.1 实体表"></a>6.1.1 实体表</h4><p>实体表，一般是指一个现实存在的业务对象，比如用户，商品，商家，销售员等等。<br>用户表：</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026026671.png" alt="1594026026671"></p>
+<h4 id="6-1-2-维度表"><a href="#6-1-2-维度表" class="headerlink" title="6.1.2 维度表"></a>6.1.2 维度表</h4><p>维度表，一般是指对应一些业务状态，编号的解释表。也可以称之为码表。<br>比如地区表，订单状态，支付方式，审批状态，商品分类等等。</p>
+<p>订单状态表：</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026051566.png" alt="1594026051566"></p>
+<p>商品分类表：</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026060902.png" alt="1594026060902"></p>
+<h3 id="6-1-3-事务型事实表"><a href="#6-1-3-事务型事实表" class="headerlink" title="6.1.3 事务型事实表"></a>6.1.3 事务型事实表</h3><p>事务型事实表，一般指随着业务发生不断产生的数据。特点是一旦发生不会再变化。一般比如，交易流水，操作日志，出库入库记录等等。</p>
+<p>交易流水表：</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026087576.png" alt="1594026087576"></p>
+<h3 id="6-1-4-周期型事实表"><a href="#6-1-4-周期型事实表" class="headerlink" title="6.1.4 周期型事实表"></a>6.1.4 周期型事实表</h3><p>周期型事实表，一般指随着业务发生不断产生的数据。<br>与事务型不同的是，数据会随着业务周期性的推进而变化。<br>比如订单，其中订单状态会周期性变化。再比如，请假、贷款申请，随着批复状态在周期性变化。</p>
+<p>订单表：</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026116684.png" alt="1594026116684"></p>
+<h3 id="6-2-同步策略"><a href="#6-2-同步策略" class="headerlink" title="6.2 同步策略"></a>6.2 同步策略</h3><p>数据同步策略的类型包括：全量表、增量表、新增及变化表<br> 全量表：存储完整的数据。<br> 增量表：存储新增加的数据。<br> 新增及变化表：存储新增加的数据和变化的数据。</p>
+<h4 id="6-2-1-实体表同步-策略"><a href="#6-2-1-实体表同步-策略" class="headerlink" title="6.2.1 实体表同步 策略"></a>6.2.1 实体表同步 策略</h4><p>实体表：比如用户，商品，商家，销售员等<br>实体表数据量比较小：通常可以做每日全量，就是每天存一份完整数据。即每日全量。</p>
+<h4 id="6-2-2-维度表同步-策略"><a href="#6-2-2-维度表同步-策略" class="headerlink" title="6.2.2 维度表同步 策略"></a>6.2.2 维度表同步 策略</h4><p>维度表：比如订单状态，审批状态，商品分类<br>维度表数据量比较小：通常可以做每日全量，就是每天存一份完整数据。即每日全量。<br>说明：<br>1）针对可能会有变化的状态数据可以存储每日全量。<br>2）没变化的客观世界的维度（比如性别，地区，民族，政治成分，鞋子尺码）可以只存一份固定值。</p>
+<h4 id="6-2-3-事务型事实表同步-策略"><a href="#6-2-3-事务型事实表同步-策略" class="headerlink" title="6.2.3 事务型事实表同步 策略"></a>6.2.3 事务型事实表同步 策略</h4><p>事务型事实表：比如，交易流水，操作日志，出库入库记录等。<br>因为数据不会变化，而且数据量巨大，所以每天只同步新增数据即可，所以可以做成每日增量表，即每日创建一个分区存储。</p>
+<h4 id="6-2-4-周期型事实表同步-策略"><a href="#6-2-4-周期型事实表同步-策略" class="headerlink" title="6.2.4 周期型事实表同步 策略"></a>6.2.4 周期型事实表同步 策略</h4><p>周期型事实表：比如，订单、请假、贷款申请等<br>这类表从数据量的角度，存每日全量的话，数据量太大，冗余也太大。如果用每日增量的话无法反应数据变化。</p>
+<p>每日新增及变化量，包括了当日的新增和修改。</p>
+]]></content>
+      <categories>
+        <category>大数据</category>
+        <category>大数据实战项目</category>
+        <category>阿里云离线数仓</category>
+        <category>3.业务数仓理论</category>
+      </categories>
+      <tags>
+        <tag>大数据</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>2.用户行为数仓搭建</title>
     <url>/2020/04/07/2.%E7%94%A8%E6%88%B7%E8%A1%8C%E4%B8%BA%E6%95%B0%E4%BB%93%E6%90%AD%E5%BB%BA/</url>
     <content><![CDATA[<h2 id="第-5-章-用户行为数仓搭建"><a href="#第-5-章-用户行为数仓搭建" class="headerlink" title="第 5 章 用户行为数仓搭建"></a>第 5 章 用户行为数仓搭建</h2><h3 id="5-1-数仓分层概念"><a href="#5-1-数仓分层概念" class="headerlink" title="5.1 数仓分层概念"></a>5.1 数仓分层概念</h3><h4 id="5-1-1-数仓分层"><a href="#5-1-1-数仓分层" class="headerlink" title="5.1.1 数仓分层"></a>5.1.1 数仓分层</h4><p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023504588.png" alt="1594023504588"></p>
@@ -493,39 +526,6 @@
         <category>大数据实战项目</category>
         <category>阿里云离线数仓</category>
         <category>2.用户行为数仓搭建</category>
-      </categories>
-      <tags>
-        <tag>大数据</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>3.业务数仓理论</title>
-    <url>/2020/04/07/3.%E4%B8%9A%E5%8A%A1%E6%95%B0%E4%BB%93%E7%90%86%E8%AE%BA/</url>
-    <content><![CDATA[<h2 id="第-6-章-业务数仓理论"><a href="#第-6-章-业务数仓理论" class="headerlink" title="第 6 章 业务数仓理论"></a>第 6 章 业务数仓理论</h2><h3 id="6-1-表的-分类"><a href="#6-1-表的-分类" class="headerlink" title="6.1 表的 分类"></a>6.1 表的 分类</h3><h4 id="6-1-1-实体表"><a href="#6-1-1-实体表" class="headerlink" title="6.1.1 实体表"></a>6.1.1 实体表</h4><p>实体表，一般是指一个现实存在的业务对象，比如用户，商品，商家，销售员等等。<br>用户表：</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026026671.png" alt="1594026026671"></p>
-<h4 id="6-1-2-维度表"><a href="#6-1-2-维度表" class="headerlink" title="6.1.2 维度表"></a>6.1.2 维度表</h4><p>维度表，一般是指对应一些业务状态，编号的解释表。也可以称之为码表。<br>比如地区表，订单状态，支付方式，审批状态，商品分类等等。</p>
-<p>订单状态表：</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026051566.png" alt="1594026051566"></p>
-<p>商品分类表：</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026060902.png" alt="1594026060902"></p>
-<h3 id="6-1-3-事务型事实表"><a href="#6-1-3-事务型事实表" class="headerlink" title="6.1.3 事务型事实表"></a>6.1.3 事务型事实表</h3><p>事务型事实表，一般指随着业务发生不断产生的数据。特点是一旦发生不会再变化。一般比如，交易流水，操作日志，出库入库记录等等。</p>
-<p>交易流水表：</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026087576.png" alt="1594026087576"></p>
-<h3 id="6-1-4-周期型事实表"><a href="#6-1-4-周期型事实表" class="headerlink" title="6.1.4 周期型事实表"></a>6.1.4 周期型事实表</h3><p>周期型事实表，一般指随着业务发生不断产生的数据。<br>与事务型不同的是，数据会随着业务周期性的推进而变化。<br>比如订单，其中订单状态会周期性变化。再比如，请假、贷款申请，随着批复状态在周期性变化。</p>
-<p>订单表：</p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026116684.png" alt="1594026116684"></p>
-<h3 id="6-2-同步策略"><a href="#6-2-同步策略" class="headerlink" title="6.2 同步策略"></a>6.2 同步策略</h3><p>数据同步策略的类型包括：全量表、增量表、新增及变化表<br> 全量表：存储完整的数据。<br> 增量表：存储新增加的数据。<br> 新增及变化表：存储新增加的数据和变化的数据。</p>
-<h4 id="6-2-1-实体表同步-策略"><a href="#6-2-1-实体表同步-策略" class="headerlink" title="6.2.1 实体表同步 策略"></a>6.2.1 实体表同步 策略</h4><p>实体表：比如用户，商品，商家，销售员等<br>实体表数据量比较小：通常可以做每日全量，就是每天存一份完整数据。即每日全量。</p>
-<h4 id="6-2-2-维度表同步-策略"><a href="#6-2-2-维度表同步-策略" class="headerlink" title="6.2.2 维度表同步 策略"></a>6.2.2 维度表同步 策略</h4><p>维度表：比如订单状态，审批状态，商品分类<br>维度表数据量比较小：通常可以做每日全量，就是每天存一份完整数据。即每日全量。<br>说明：<br>1）针对可能会有变化的状态数据可以存储每日全量。<br>2）没变化的客观世界的维度（比如性别，地区，民族，政治成分，鞋子尺码）可以只存一份固定值。</p>
-<h4 id="6-2-3-事务型事实表同步-策略"><a href="#6-2-3-事务型事实表同步-策略" class="headerlink" title="6.2.3 事务型事实表同步 策略"></a>6.2.3 事务型事实表同步 策略</h4><p>事务型事实表：比如，交易流水，操作日志，出库入库记录等。<br>因为数据不会变化，而且数据量巨大，所以每天只同步新增数据即可，所以可以做成每日增量表，即每日创建一个分区存储。</p>
-<h4 id="6-2-4-周期型事实表同步-策略"><a href="#6-2-4-周期型事实表同步-策略" class="headerlink" title="6.2.4 周期型事实表同步 策略"></a>6.2.4 周期型事实表同步 策略</h4><p>周期型事实表：比如，订单、请假、贷款申请等<br>这类表从数据量的角度，存每日全量的话，数据量太大，冗余也太大。如果用每日增量的话无法反应数据变化。</p>
-<p>每日新增及变化量，包括了当日的新增和修改。</p>
-]]></content>
-      <categories>
-        <category>大数据</category>
-        <category>大数据实战项目</category>
-        <category>阿里云离线数仓</category>
-        <category>3.业务数仓理论</category>
       </categories>
       <tags>
         <tag>大数据</tag>
@@ -1178,45 +1178,6 @@
       </tags>
   </entry>
   <entry>
-    <title>HDFS基准测试&amp;参数调优</title>
-    <url>/2019/11/23/HDFS%E5%9F%BA%E5%87%86%E6%B5%8B%E8%AF%95%E4%B8%8E%E5%8F%82%E6%95%B0%E8%B0%83%E4%BC%98/</url>
-    <content><![CDATA[<h3 id="基准测试"><a href="#基准测试" class="headerlink" title="基准测试"></a>基准测试</h3><p>1） 测试 HDFS 写性能<br>测试内容：向 HDFS 集群写 10 个 128M 的文件</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop jar /opt/module/hadoop-2.7.6/share/hadoop/mapreduce/hadoop-mapreduce-client-jobclient-2.7.6-tests.jar TestDFSIO -write -nrFiles 10 -fileSize 128MB</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1590064620016.png" alt="1590064620016"></p>
-<p>2）测试 HDFS 读性能<br>测试内容：读取 HDFS 集群 10 个 128M 的文件</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop jar /opt/module/hadoop-2.7.6/share/hadoop/mapreduce/hadoop-mapreduce-client-jobclient-2.7.6-tests.jar TestDFSIO -read -nrFiles 10 -fileSize 128MB</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1590064603377.png" alt="1590064603377"></p>
-<p>可以用top命令查看CUP利用率</p>
-<p>3）删除测试生成数据</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop jar /opt/module/hadoop-2.7.6/share/hadoop/mapreduce/hadoop-mapreduce-client-jobclient-2.7.6-tests.jar TestDFSIO -clean</span><br></pre></td></tr></table></figure>
-
-<p>4）使用 Sort 程序评测 MapReduce（自己玩的话慎用！容易把机子搞崩）</p>
-<p>（1）使用 RandomWriter 来产生随机数，每个节点运行 10 个 Map 任务，每个 Map 产生大约 1G 大小的二进制随机数</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop jar /opt/module/hadoop-2.7.6/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.6.jar randomwriter random-data</span><br></pre></td></tr></table></figure>
-
-<p>（2）执行 Sort 程序</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop jar /opt/module/hadoop-2.7.6/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.6.jar sort random-data  sorted-data</span><br></pre></td></tr></table></figure>
-
-<p>（3）验证数据是否真正排好序了</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop jar /opt/module/hadoop-2.7.6/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.6.jar testmapredsort -sortInput random-data -sortOutput sorted-data</span><br></pre></td></tr></table></figure>
-
-<h3 id="Hadoop-参数-调优"><a href="#Hadoop-参数-调优" class="headerlink" title="Hadoop 参数 调优"></a>Hadoop 参数 调优</h3><p>1）HDFS 参数调优 <strong>hdfs-site.xml</strong><br><strong>dfs.namenode.handler.count=20 * log2(Cluster Size)</strong>，比如集群规模为 8 台时，此参数设置为 60 NameNode 有一个工作线程池，用来处理不同 DataNode 的并发心跳以及客户端并发的元数据操作。对于大集群或者有大量客户端的集群来说，通常需要增大参数dfs.namenode.handler.count 的默认值 10。设置该值的一般原则是将其设置为集群大小的自然对数乘以 20，即 20logN，N 为集群大小。</p>
-<p>2）YARN 参数调优 <strong>yarn-site.xml</strong><br>（1）情景描述：总共 7 台机器，每天几亿条数据，数据源-&gt;Flume-&gt;Kafka-&gt;HDFS-&gt;Hive 面临问题：数据统计主要用 HiveSQL，没有数据倾斜，小文件已经做了合并处理，开启了 JVM 重用，而且 IO 没有阻塞，内存用了不到 50%。但是还是跑的非常慢，而且数据量洪峰过来时，整个集群都会宕掉。基于这种情况有没有优化方案。<br>（2）解决办法：<br>内存利用率不够。这个一般是 Yarn 的 2 个配置造成的，单个任务可以申请的最大内存大小，和Hadoop 单个节点可用内存大小。调节这两个参数能提高系统内存的利用率。<br>（a）<strong>yarn.nodemanager.resource.memory-mb</strong><br>表示<strong>该节点</strong>上 YARN <strong>可使用</strong>的<strong>物理内存总量</strong>，默认是 8192（MB），注意，如果你的节点内存资源不够 8GB，则需要调减小这个值，而 YARN 不会智能的探测节点的物理内存总量。<br>（b）<strong>yarn.scheduler.maximum-allocation-mb</strong><br>单个任务可申请的<strong>最多物理内存量</strong>，默认是 8192（MB）。<br>3）Hadoop 宕机<br>（1）如果 MR 造成系统宕机。此时要<strong>控制 Yarn 同时运行的任务数</strong>，和每个任务申请的最大内存。调整参数：yarn.scheduler.maximum-allocation-mb（单个任务可申请的最多物理内存量，默认是 8192MB）<br>（2）如果<strong>写入文件过量</strong>造成 NameNode 宕机。那么<strong>调高 Kafka 的存储大小</strong>，<strong>控制从 Kafka到 HDFS 的写入速度</strong>。高峰期的时候用 Kafka 进行缓存，高峰期过去数据同步会自动跟上。</p>
-]]></content>
-      <categories>
-        <category>大数据</category>
-        <category>大数据项目经验</category>
-        <category>HDFS</category>
-        <category>HDFS基准测试&amp;参数调优</category>
-      </categories>
-      <tags>
-        <tag>大数据</tag>
-        <tag>HDFS</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Hadoop-lzo压缩配置</title>
     <url>/2019/12/06/Hadoop-lzo%E5%8E%8B%E7%BC%A9%E9%85%8D%E7%BD%AE/</url>
     <content><![CDATA[<h2 id="LZO-压缩配置"><a href="#LZO-压缩配置" class="headerlink" title="LZO 压缩配置"></a>LZO 压缩配置</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>a. LZO本身是不支持分片的，但是我们给LZO压缩的文件加上索引，就支持分片了</p>
@@ -1283,6 +1244,45 @@
       <tags>
         <tag>大数据</tag>
         <tag>LZO</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>HDFS基准测试&amp;参数调优</title>
+    <url>/2019/11/23/HDFS%E5%9F%BA%E5%87%86%E6%B5%8B%E8%AF%95%E4%B8%8E%E5%8F%82%E6%95%B0%E8%B0%83%E4%BC%98/</url>
+    <content><![CDATA[<h3 id="基准测试"><a href="#基准测试" class="headerlink" title="基准测试"></a>基准测试</h3><p>1） 测试 HDFS 写性能<br>测试内容：向 HDFS 集群写 10 个 128M 的文件</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop jar /opt/module/hadoop-2.7.6/share/hadoop/mapreduce/hadoop-mapreduce-client-jobclient-2.7.6-tests.jar TestDFSIO -write -nrFiles 10 -fileSize 128MB</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1590064620016.png" alt="1590064620016"></p>
+<p>2）测试 HDFS 读性能<br>测试内容：读取 HDFS 集群 10 个 128M 的文件</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop jar /opt/module/hadoop-2.7.6/share/hadoop/mapreduce/hadoop-mapreduce-client-jobclient-2.7.6-tests.jar TestDFSIO -read -nrFiles 10 -fileSize 128MB</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1590064603377.png" alt="1590064603377"></p>
+<p>可以用top命令查看CUP利用率</p>
+<p>3）删除测试生成数据</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop jar /opt/module/hadoop-2.7.6/share/hadoop/mapreduce/hadoop-mapreduce-client-jobclient-2.7.6-tests.jar TestDFSIO -clean</span><br></pre></td></tr></table></figure>
+
+<p>4）使用 Sort 程序评测 MapReduce（自己玩的话慎用！容易把机子搞崩）</p>
+<p>（1）使用 RandomWriter 来产生随机数，每个节点运行 10 个 Map 任务，每个 Map 产生大约 1G 大小的二进制随机数</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop jar /opt/module/hadoop-2.7.6/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.6.jar randomwriter random-data</span><br></pre></td></tr></table></figure>
+
+<p>（2）执行 Sort 程序</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop jar /opt/module/hadoop-2.7.6/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.6.jar sort random-data  sorted-data</span><br></pre></td></tr></table></figure>
+
+<p>（3）验证数据是否真正排好序了</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop jar /opt/module/hadoop-2.7.6/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.6.jar testmapredsort -sortInput random-data -sortOutput sorted-data</span><br></pre></td></tr></table></figure>
+
+<h3 id="Hadoop-参数-调优"><a href="#Hadoop-参数-调优" class="headerlink" title="Hadoop 参数 调优"></a>Hadoop 参数 调优</h3><p>1）HDFS 参数调优 <strong>hdfs-site.xml</strong><br><strong>dfs.namenode.handler.count=20 * log2(Cluster Size)</strong>，比如集群规模为 8 台时，此参数设置为 60 NameNode 有一个工作线程池，用来处理不同 DataNode 的并发心跳以及客户端并发的元数据操作。对于大集群或者有大量客户端的集群来说，通常需要增大参数dfs.namenode.handler.count 的默认值 10。设置该值的一般原则是将其设置为集群大小的自然对数乘以 20，即 20logN，N 为集群大小。</p>
+<p>2）YARN 参数调优 <strong>yarn-site.xml</strong><br>（1）情景描述：总共 7 台机器，每天几亿条数据，数据源-&gt;Flume-&gt;Kafka-&gt;HDFS-&gt;Hive 面临问题：数据统计主要用 HiveSQL，没有数据倾斜，小文件已经做了合并处理，开启了 JVM 重用，而且 IO 没有阻塞，内存用了不到 50%。但是还是跑的非常慢，而且数据量洪峰过来时，整个集群都会宕掉。基于这种情况有没有优化方案。<br>（2）解决办法：<br>内存利用率不够。这个一般是 Yarn 的 2 个配置造成的，单个任务可以申请的最大内存大小，和Hadoop 单个节点可用内存大小。调节这两个参数能提高系统内存的利用率。<br>（a）<strong>yarn.nodemanager.resource.memory-mb</strong><br>表示<strong>该节点</strong>上 YARN <strong>可使用</strong>的<strong>物理内存总量</strong>，默认是 8192（MB），注意，如果你的节点内存资源不够 8GB，则需要调减小这个值，而 YARN 不会智能的探测节点的物理内存总量。<br>（b）<strong>yarn.scheduler.maximum-allocation-mb</strong><br>单个任务可申请的<strong>最多物理内存量</strong>，默认是 8192（MB）。<br>3）Hadoop 宕机<br>（1）如果 MR 造成系统宕机。此时要<strong>控制 Yarn 同时运行的任务数</strong>，和每个任务申请的最大内存。调整参数：yarn.scheduler.maximum-allocation-mb（单个任务可申请的最多物理内存量，默认是 8192MB）<br>（2）如果<strong>写入文件过量</strong>造成 NameNode 宕机。那么<strong>调高 Kafka 的存储大小</strong>，<strong>控制从 Kafka到 HDFS 的写入速度</strong>。高峰期的时候用 Kafka 进行缓存，高峰期过去数据同步会自动跟上。</p>
+]]></content>
+      <categories>
+        <category>大数据</category>
+        <category>大数据项目经验</category>
+        <category>HDFS</category>
+        <category>HDFS基准测试&amp;参数调优</category>
+      </categories>
+      <tags>
+        <tag>大数据</tag>
+        <tag>HDFS</tag>
       </tags>
   </entry>
   <entry>
@@ -1391,39 +1391,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Kafka Eagle安装及使用简介</title>
-    <url>/2020/02/10/KafkaEagle%E5%AE%89%E8%A3%85%E5%8F%8A%E4%BD%BF%E7%94%A8%E7%AE%80%E4%BB%8B/</url>
-    <content><![CDATA[<h2 id="Kafka-Eagle安装及使用简介"><a href="#Kafka-Eagle安装及使用简介" class="headerlink" title="Kafka Eagle安装及使用简介"></a>Kafka Eagle安装及使用简介</h2><h3 id="1-安装包拷贝至服务器解压安装包"><a href="#1-安装包拷贝至服务器解压安装包" class="headerlink" title="1.安装包拷贝至服务器解压安装包"></a>1.安装包拷贝至服务器解压安装包</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tar -zxvf kafka-eagle-bin-1.2.4.tar.gz -C /opt/module</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-设置全局变量，设置JDK的全局变量JAVA-HOME和本应用的KE-HOME"><a href="#2-设置全局变量，设置JDK的全局变量JAVA-HOME和本应用的KE-HOME" class="headerlink" title="2. 设置全局变量，设置JDK的全局变量JAVA_HOME和本应用的KE_HOME"></a>2. 设置全局变量，设置JDK的全局变量JAVA_HOME和本应用的KE_HOME</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">--使用root权限编辑环境变量</span><br><span class="line">sudo vi /etc/profile</span><br><span class="line"> </span><br><span class="line">--打开后加上</span><br><span class="line"> </span><br><span class="line">export JAVA_HOME=/opt/module/jdk1.8.0_181</span><br><span class="line">export KE_HOME=/kafka/kafka-eagle-bin-1.2.4/kafka-eagle-web-1.2.4</span><br><span class="line">export PATH=$PATH:$KE_HOME/bin:$JAVA_HOME/bin</span><br><span class="line"></span><br><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
-
-<h3 id="3-进入kafka-eagle的conf目录下修改配置文件，配置基础配置"><a href="#3-进入kafka-eagle的conf目录下修改配置文件，配置基础配置" class="headerlink" title="3.进入kafka-eagle的conf目录下修改配置文件，配置基础配置"></a>3.进入kafka-eagle的conf目录下修改配置文件，配置基础配置</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">修改配置文件</span></span><br><span class="line">vim system-config.properties</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash">配置文件详情介绍</span></span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash"> * kafkazookeeper节点配置属性多个可以添加一个，cluster1 </span></span><br><span class="line">kafka.eagle.zk.cluster.alias=cluster1</span><br><span class="line">cluster1.zk.list=hadoop102:2181 </span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> * zk 线程数量</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line">kafka.zk.limit.size=25</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> * kafka eagle 的端口</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line">kafka.eagle.webui.port=8048</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> kafka offset storage</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line">cluster1.kafka.eagle.offset.storage=kafka</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="built_in">enable</span> kafka 开启图表</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 及开始sql查询</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line">kafka.eagle.metrics.charts=true</span><br><span class="line"> </span><br><span class="line">kafka.eagle.sql.fix.error=true</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 提醒的email</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line">kafka.eagle.mail.enable=true</span><br><span class="line">kafka.eagle.mail.sa=alert_sa</span><br><span class="line">kafka.eagle.mail.username=alert_sa@163.com</span><br><span class="line">kafka.eagle.mail.password=mqslimczkdqabbbh</span><br><span class="line">kafka.eagle.mail.server.host=smtp.163.com</span><br><span class="line">kafka.eagle.mail.server.port=25</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除kafka topic 的token</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line">kafka.eagle.topic.token=keadmin</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> kafka sasl authenticate</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line">kafka.eagle.sasl.enable=false</span><br><span class="line">kafka.eagle.sasl.protocol=SASL_PLAINTEXT</span><br><span class="line">kafka.eagle.sasl.mechanism=PLAIN</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> kafka jdbc 地址注意可以自己安装数据mysql也可以自带的</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line">kafka.eagle.driver=org.sqlite.JDBC</span><br><span class="line">kafka.eagle.url=jdbc:sqlite:/kafka/kafka-eagle-bin-1.2.4/kafka-eagle-web-1.2.4/db/ke.db</span><br><span class="line">kafka.eagle.username=root</span><br><span class="line">kafka.eagle.password=smartloli</span><br></pre></td></tr></table></figure>
-
-<h3 id="4-文件配置完毕后开始启动-，启动要进入bin目录下"><a href="#4-文件配置完毕后开始启动-，启动要进入bin目录下" class="headerlink" title="4.文件配置完毕后开始启动 ，启动要进入bin目录下"></a>4.文件配置完毕后开始启动 ，启动要进入bin目录下</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">进入bin目录后会看到 ke.sh 文件先修改文件的权限</span></span><br><span class="line">sudo chomd 777 ke.sh</span><br><span class="line"><span class="meta">#</span><span class="bash">启动命令</span></span><br><span class="line">./ke.sh start</span><br></pre></td></tr></table></figure>
-
-<p> 启动成功后的控制台输出 </p>
-<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/20180926095313859.png" alt="img"> </p>
-<p> 部署完成结束 </p>
-<p> 我们下面介绍下他的页面功能 </p>
-<p> <img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/20180926095601457.png" alt="img"> </p>
-<p> 功能界面 </p>
-<p> <img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/20180926100006424.png" alt="img"> </p>
-<p> 我们来着重的说下kafkasql查询的功能其他的功能点点就知道什么意思和怎么使用了 </p>
-<p> <img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/20180926100849641.png" alt="img"> </p>
-<p> <img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/2018092610092585.png" alt="img"> </p>
-]]></content>
-      <categories>
-        <category>大数据</category>
-        <category>大数据项目部署</category>
-        <category>Kafka</category>
-        <category>Kafka Eagle安装及使用简介</category>
-      </categories>
-      <tags>
-        <tag>大数据</tag>
-        <tag>Kafka</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Kafka压力测试</title>
     <url>/2020/03/07/Kafka%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95/</url>
     <content><![CDATA[<h2 id="项目经验之-Kafka-压力测试"><a href="#项目经验之-Kafka-压力测试" class="headerlink" title="项目经验之 Kafka 压力测试"></a>项目经验之 Kafka 压力测试</h2><p>1）Kafka 压测<br>用 Kafka 官方自带的脚本，对 Kafka 进行压测。Kafka 压测时，可以查看到哪个地方出现了瓶颈（CPU，内存，网络 IO）。一般都是网络 IO 达到瓶颈。<br>kafka-consumer-perf-test.sh<br>kafka-producer-perf-test.sh</p>
@@ -1462,6 +1429,39 @@
         <category>大数据项目经验</category>
         <category>Kafka</category>
         <category>Kafka压力测试</category>
+      </categories>
+      <tags>
+        <tag>大数据</tag>
+        <tag>Kafka</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Kafka Eagle安装及使用简介</title>
+    <url>/2020/02/10/KafkaEagle%E5%AE%89%E8%A3%85%E5%8F%8A%E4%BD%BF%E7%94%A8%E7%AE%80%E4%BB%8B/</url>
+    <content><![CDATA[<h2 id="Kafka-Eagle安装及使用简介"><a href="#Kafka-Eagle安装及使用简介" class="headerlink" title="Kafka Eagle安装及使用简介"></a>Kafka Eagle安装及使用简介</h2><h3 id="1-安装包拷贝至服务器解压安装包"><a href="#1-安装包拷贝至服务器解压安装包" class="headerlink" title="1.安装包拷贝至服务器解压安装包"></a>1.安装包拷贝至服务器解压安装包</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tar -zxvf kafka-eagle-bin-1.2.4.tar.gz -C /opt/module</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-设置全局变量，设置JDK的全局变量JAVA-HOME和本应用的KE-HOME"><a href="#2-设置全局变量，设置JDK的全局变量JAVA-HOME和本应用的KE-HOME" class="headerlink" title="2. 设置全局变量，设置JDK的全局变量JAVA_HOME和本应用的KE_HOME"></a>2. 设置全局变量，设置JDK的全局变量JAVA_HOME和本应用的KE_HOME</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">--使用root权限编辑环境变量</span><br><span class="line">sudo vi /etc/profile</span><br><span class="line"> </span><br><span class="line">--打开后加上</span><br><span class="line"> </span><br><span class="line">export JAVA_HOME=/opt/module/jdk1.8.0_181</span><br><span class="line">export KE_HOME=/kafka/kafka-eagle-bin-1.2.4/kafka-eagle-web-1.2.4</span><br><span class="line">export PATH=$PATH:$KE_HOME/bin:$JAVA_HOME/bin</span><br><span class="line"></span><br><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-进入kafka-eagle的conf目录下修改配置文件，配置基础配置"><a href="#3-进入kafka-eagle的conf目录下修改配置文件，配置基础配置" class="headerlink" title="3.进入kafka-eagle的conf目录下修改配置文件，配置基础配置"></a>3.进入kafka-eagle的conf目录下修改配置文件，配置基础配置</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">修改配置文件</span></span><br><span class="line">vim system-config.properties</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash">配置文件详情介绍</span></span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash"> * kafkazookeeper节点配置属性多个可以添加一个，cluster1 </span></span><br><span class="line">kafka.eagle.zk.cluster.alias=cluster1</span><br><span class="line">cluster1.zk.list=hadoop102:2181 </span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> * zk 线程数量</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line">kafka.zk.limit.size=25</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> * kafka eagle 的端口</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line">kafka.eagle.webui.port=8048</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> kafka offset storage</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line">cluster1.kafka.eagle.offset.storage=kafka</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="built_in">enable</span> kafka 开启图表</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 及开始sql查询</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line">kafka.eagle.metrics.charts=true</span><br><span class="line"> </span><br><span class="line">kafka.eagle.sql.fix.error=true</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 提醒的email</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line">kafka.eagle.mail.enable=true</span><br><span class="line">kafka.eagle.mail.sa=alert_sa</span><br><span class="line">kafka.eagle.mail.username=alert_sa@163.com</span><br><span class="line">kafka.eagle.mail.password=mqslimczkdqabbbh</span><br><span class="line">kafka.eagle.mail.server.host=smtp.163.com</span><br><span class="line">kafka.eagle.mail.server.port=25</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除kafka topic 的token</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line">kafka.eagle.topic.token=keadmin</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> kafka sasl authenticate</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line">kafka.eagle.sasl.enable=false</span><br><span class="line">kafka.eagle.sasl.protocol=SASL_PLAINTEXT</span><br><span class="line">kafka.eagle.sasl.mechanism=PLAIN</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> kafka jdbc 地址注意可以自己安装数据mysql也可以自带的</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#####################################</span></span></span><br><span class="line">kafka.eagle.driver=org.sqlite.JDBC</span><br><span class="line">kafka.eagle.url=jdbc:sqlite:/kafka/kafka-eagle-bin-1.2.4/kafka-eagle-web-1.2.4/db/ke.db</span><br><span class="line">kafka.eagle.username=root</span><br><span class="line">kafka.eagle.password=smartloli</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-文件配置完毕后开始启动-，启动要进入bin目录下"><a href="#4-文件配置完毕后开始启动-，启动要进入bin目录下" class="headerlink" title="4.文件配置完毕后开始启动 ，启动要进入bin目录下"></a>4.文件配置完毕后开始启动 ，启动要进入bin目录下</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">进入bin目录后会看到 ke.sh 文件先修改文件的权限</span></span><br><span class="line">sudo chomd 777 ke.sh</span><br><span class="line"><span class="meta">#</span><span class="bash">启动命令</span></span><br><span class="line">./ke.sh start</span><br></pre></td></tr></table></figure>
+
+<p> 启动成功后的控制台输出 </p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/20180926095313859.png" alt="img"> </p>
+<p> 部署完成结束 </p>
+<p> 我们下面介绍下他的页面功能 </p>
+<p> <img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/20180926095601457.png" alt="img"> </p>
+<p> 功能界面 </p>
+<p> <img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/20180926100006424.png" alt="img"> </p>
+<p> 我们来着重的说下kafkasql查询的功能其他的功能点点就知道什么意思和怎么使用了 </p>
+<p> <img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/20180926100849641.png" alt="img"> </p>
+<p> <img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/2018092610092585.png" alt="img"> </p>
+]]></content>
+      <categories>
+        <category>大数据</category>
+        <category>大数据项目部署</category>
+        <category>Kafka</category>
+        <category>Kafka Eagle安装及使用简介</category>
       </categories>
       <tags>
         <tag>大数据</tag>
