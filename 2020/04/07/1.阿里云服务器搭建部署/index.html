@@ -1,0 +1,1820 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-flash.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobstar Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="大数据," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="LeiNuo's Note" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="4.1 阿里云 ECS 服务器准备4.1.1 注册阿里云账户1）登录阿里云官方网站：https:&#x2F;&#x2F;cn.aliyun.com&#x2F;  2）点击免费注册，提示支付宝快捷注册和账号密码注册两种方式，任选其一。 4.1.2 购买 ECS 云服务器1） 进入阿里云首页  2）打开侧边栏，点击云服务器 ECS  3）点击立即购买  4）选择计费方式、服务器区域  5）选定服务器配置  6）选定服务器系统  7">
+<meta property="og:type" content="article">
+<meta property="og:title" content="1.阿里云服务器搭建部署">
+<meta property="og:url" content="https://lei-nuo.github.io/2020/04/07/1.%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2/index.html">
+<meta property="og:site_name" content="LeiNuo&#39;s Note">
+<meta property="og:description" content="4.1 阿里云 ECS 服务器准备4.1.1 注册阿里云账户1）登录阿里云官方网站：https:&#x2F;&#x2F;cn.aliyun.com&#x2F;  2）点击免费注册，提示支付宝快捷注册和账号密码注册两种方式，任选其一。 4.1.2 购买 ECS 云服务器1） 进入阿里云首页  2）打开侧边栏，点击云服务器 ECS  3）点击立即购买  4）选择计费方式、服务器区域  5）选定服务器配置  6）选定服务器系统  7">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594018865359.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594019015393.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594019029747.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594019063204.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594019073788.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594019083393.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594019091359.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594019098518.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594019105824.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594020372395.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594020401191.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594020426315.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594020437115.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594020799882.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594020828875.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594020841321.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594020852052.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594020864178.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594020895835.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594020943333.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594020961191.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594020966336.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594020990645.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594020997912.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021001334.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021030824.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021054966.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021063661.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021068225.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021072522.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021083677.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021088414.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021096773.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021122798.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021126315.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021285020.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021569076.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021610044.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021710342.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021915786.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021984920.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594022116513.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594022208858.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594022358005.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594022484565.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594022540580.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594022550545.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594022563425.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594022580170.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594022708310.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594022717013.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594022781189.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594022791332.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594022799132.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594022810459.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594022869175.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594022929089.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023227719.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023233782.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023243497.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023259511.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023272554.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023281234.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023289149.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023306035.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023323493.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023329824.png">
+<meta property="article:published_time" content="2020-04-07T12:50:55.000Z">
+<meta property="article:modified_time" content="2020-07-09T03:33:12.002Z">
+<meta property="article:author" content="Lei Nuo">
+<meta property="article:tag" content="大数据">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594018865359.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lei-nuo.github.io/2020/04/07/1.阿里云服务器搭建部署/"/>
+
+
+
+
+
+  <title>1.阿里云服务器搭建部署 | LeiNuo's Note</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?9590a707452dc873909b62ec25776cff";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<link rel="stylesheet" href="/dist/APlayer.min.css">
+<div id="aplayer"></div>
+<script type="text/javascript" src="/dist/APlayer.min.js"></script>
+<script type="text/javascript" src="/dist/music.js"></script>
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LeiNuo's Note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Stay hungry,Stay foolish</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lei-nuo.github.io/2020/04/07/1.%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lei Nuo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LeiNuo's Note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">1.阿里云服务器搭建部署</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-07T20:50:55+08:00">
+                2020-04-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/" itemprop="url" rel="index">
+                    <span itemprop="name">大数据</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AE%9E%E6%88%98%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index">
+                    <span itemprop="name">大数据实战项目</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AE%9E%E6%88%98%E9%A1%B9%E7%9B%AE/%E9%98%BF%E9%87%8C%E4%BA%91%E7%A6%BB%E7%BA%BF%E6%95%B0%E4%BB%93/" itemprop="url" rel="index">
+                    <span itemprop="name">阿里云离线数仓</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AE%9E%E6%88%98%E9%A1%B9%E7%9B%AE/%E9%98%BF%E9%87%8C%E4%BA%91%E7%A6%BB%E7%BA%BF%E6%95%B0%E4%BB%93/1-%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2/" itemprop="url" rel="index">
+                    <span itemprop="name">1.阿里云服务器搭建部署</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/04/07/1.%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/04/07/1.%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020/04/07/1.%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2/" class="leancloud_visitors" data-flag-title="1.阿里云服务器搭建部署">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3.5k 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  15 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="4-1-阿里云-ECS-服务器准备"><a href="#4-1-阿里云-ECS-服务器准备" class="headerlink" title="4.1 阿里云 ECS 服务器准备"></a>4.1 阿里云 ECS 服务器准备</h2><h3 id="4-1-1-注册阿里云账户"><a href="#4-1-1-注册阿里云账户" class="headerlink" title="4.1.1 注册阿里云账户"></a>4.1.1 注册阿里云账户</h3><p>1）登录阿里云官方网站：<a href="https://cn.aliyun.com/" target="_blank" rel="noopener">https://cn.aliyun.com/</a></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594018865359.png" alt="1594018865359"></p>
+<p>2）点击免费注册，提示支付宝快捷注册和账号密码注册两种方式，任选其一。</p>
+<h3 id="4-1-2-购买-ECS-云服务器"><a href="#4-1-2-购买-ECS-云服务器" class="headerlink" title="4.1.2 购买 ECS 云服务器"></a>4.1.2 购买 ECS 云服务器</h3><p>1） 进入阿里云首页</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594019015393.png" alt="1594019015393"></p>
+<p>2）打开侧边栏，点击云服务器 ECS</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594019029747.png" alt="1594019029747"></p>
+<p>3）点击立即购买</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594019063204.png" alt="1594019063204"></p>
+<p>4）选择计费方式、服务器区域</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594019073788.png" alt="1594019073788"></p>
+<p>5）选定服务器配置</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594019083393.png" alt="1594019083393"></p>
+<p>6）选定服务器系统</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594019091359.png" alt="1594019091359"></p>
+<p>7）选定磁盘类型及大小</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594019098518.png" alt="1594019098518"></p>
+<p>8）网络和安全组配置</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594019105824.png" alt="1594019105824"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594020372395.png" alt="1594020372395"></p>
+<p>9）系统配置</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594020401191.png" alt="1594020401191"></p>
+<p>10）分组设置，默认即可</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594020426315.png" alt="1594020426315"></p>
+<p>11）确认订单</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594020437115.png" alt="1594020437115"></p>
+<p>12）在控制台上查看创建的实例列表</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594020799882.png" alt="1594020799882"></p>
+<h3 id="4-1-3-配置防火墙（可选）"><a href="#4-1-3-配置防火墙（可选）" class="headerlink" title="4.1.3 配置防火墙（可选）"></a>4.1.3 配置防火墙（可选）</h3><p>我们需要将开发程序的端口允许外部访问。比如 HDFS 的 50070 端口、YARN 的 8088<br>端口等</p>
+<p>1）进入设置页面</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594020828875.png" alt="1594020828875"></p>
+<p>2）点击配置规则</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594020841321.png" alt="1594020841321"></p>
+<p>3）点击添加安全组规则</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594020852052.png" alt="1594020852052"></p>
+<p>4）配置规则</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594020864178.png" alt="1594020864178"></p>
+<p>50070：代表允许外部访问 50070 端口。<br>0.0.0.0/0 代表所有主机都可以访问，实际应添加本机 IP。</p>
+<p>5）需要添加的端口如下：</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594020895835.png" alt="1594020895835"></p>
+<p>说明：</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594020943333.png" alt="1594020943333"></p>
+<p>6）配置好后，返回控制台</p>
+<p>点击左侧导航栏的 ECS-&gt;点击实例</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594020961191.png" alt="1594020961191"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594020966336.png" alt="1594020966336"></p>
+<h3 id="4-1-4-ECS-配置升级（可选）"><a href="#4-1-4-ECS-配置升级（可选）" class="headerlink" title="4.1.4 ECS 配置升级（可选）"></a>4.1.4 ECS 配置升级（可选）</h3><p>1）升级 hadoop102 配置（可选，如果配置够，就不需要升级）</p>
+<p>（1）停止实例</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594020990645.png" alt="1594020990645"></p>
+<p>（2）更改实例规格</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594020997912.png" alt="1594020997912"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021001334.png" alt="1594021001334"></p>
+<h3 id="4-1-5-阿里云服务器连接"><a href="#4-1-5-阿里云服务器连接" class="headerlink" title="4.1.5 阿里云服务器连接"></a>4.1.5 阿里云服务器连接</h3><p>打开远程连接工具进行配置，这里以 CRT 为例。</p>
+<p>1）新建一个 Session</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021030824.png" alt="1594021030824"></p>
+<p>2）根据阿里云公网 IP 地址，填写 HostName</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021054966.png" alt="1594021054966"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021063661.png" alt="1594021063661"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021068225.png" alt="1594021068225"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021072522.png" alt="1594021072522"></p>
+<p>3）输入密码，连接阿里云服务器</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021083677.png" alt="1594021083677"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021088414.png" alt="1594021088414"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021096773.png" alt="1594021096773"></p>
+<p>4）重复以上 1-3 步，分别连接 hadoop103 和 hadoop104 两台服务器。<br>5）修改 CecureCRT 的 Session 编码方式（可选）<br>默认 CecureCRT 的 Session 编码方式为 default，当查看中文文件时，会显示乱码。需<br>要将编码方式修改为 UTF-8。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021122798.png" alt="1594021122798"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021126315.png" alt="1594021126315"></p>
+<h3 id="4-2-基础-环境准备"><a href="#4-2-基础-环境准备" class="headerlink" title="4.2 基础 环境准备"></a>4.2 基础 环境准备</h3><h4 id="4-2-1-配置主机名称（可选）"><a href="#4-2-1-配置主机名称（可选）" class="headerlink" title="4.2.1 配置主机名称（可选）"></a>4.2.1 配置主机名称（可选）</h4><p>1）进入 Linux 系统查看本机的主机名。通过 hostname 命令查看</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop102 ~]# hostname</span><br><span class="line">hadoop102</span><br></pre></td></tr></table></figure>
+
+<p>2）如果感觉此主机名不合适，我们可以修改。编辑/etc/sysconfig/network 文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop102 ~]# vi /etc/sysconfig/network</span><br><span class="line">文件中内容</span><br><span class="line">NETWORKING=yes</span><br><span class="line">HOSTNAME= hadoop102</span><br></pre></td></tr></table></figure>
+
+<p>注意：主机名称不要有“_”下划线<br>3）修改此主机名为我们想要修改的主机名，如修改为 hadoop102 后，保存退出。<br>4）修改主机名称后，需要重启服务器，主机名才能生效。</p>
+<h4 id="4-2-2-配置主机名称-映射"><a href="#4-2-2-配置主机名称-映射" class="headerlink" title="4.2.2 配置主机名称 映射"></a>4.2.2 配置主机名称 映射</h4><p>1）查看阿里云分配的私有 IP 地址</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021285020.png" alt="1594021285020"></p>
+<p>2）根据阿里云分配的私有 IP 地址，配置主机名称映射，打开/etc/hosts</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop102 ~]# vim /etc/hosts</span><br></pre></td></tr></table></figure>
+
+<p>添加如下内容后，保存并退出。<br>172.26.74.102 hadoop104 hadoop104<br>172.26.74.103 hadoop102 hadoop102<br>172.26.74.104 hadoop103 hadoop103</p>
+<p>注意：这里每台服务器 IP 不一样，IP 填写的都是私有 IP。</p>
+<p>3）分别在 hadoop103 和 hadoop104 两台服务器上配置主机名称映射</p>
+<p>4.2.3 创建户 普通用户 atguigu<br>1）添加一个用户</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop102 ~]# useradd atguigu</span><br></pre></td></tr></table></figure>
+
+<p>2）设置用户密码</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop102 ~]# passwd atguigu</span><br><span class="line">Changing password for user atguigu.</span><br><span class="line">New password:</span><br><span class="line">Retype new password:</span><br></pre></td></tr></table></figure>
+
+<p>3）配置 atguigu 具有 root 权限</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop102 ~]# vim /etc/sudoers</span><br><span class="line">添加如下内容</span><br><span class="line">atguigu ALL=(ALL) ALL</span><br><span class="line">保存并退出 wq!</span><br></pre></td></tr></table></figure>
+
+<p>4）重复步骤 1-3，分别在 hadoop103 和 hadoop104 服务器上添加新用户 atguigu，并初始化密码和配置 sudoers</p>
+<h4 id="4-2-4-本-集群分发脚本-xsync"><a href="#4-2-4-本-集群分发脚本-xsync" class="headerlink" title="4.2.4 本 集群分发脚本 xsync"></a>4.2.4 本 集群分发脚本 xsync</h4><p>1）在/usr/local/bin 目录下，创建 xsync 文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[atguigu@hadoop102 bin]$ vi xsync</span><br></pre></td></tr></table></figure>
+
+<p>在该文件中编写如下代码</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"><span class="meta">#</span><span class="bash">1 获取输入参数个数，如果没有参数，直接退出</span></span><br><span class="line">pcount=$#</span><br><span class="line">if((pcount==0)); then</span><br><span class="line">echo no args;</span><br><span class="line">exit;</span><br><span class="line">fi</span><br><span class="line"><span class="meta">#</span><span class="bash">2 获取文件名称</span></span><br><span class="line">p1=$1</span><br><span class="line">fname=`basename $p1`</span><br><span class="line">echo fname=$fname</span><br><span class="line"><span class="meta">#</span><span class="bash">3 获取上级目录到绝对路径</span></span><br><span class="line">pdir=`cd -P $(dirname $p1); pwd`</span><br><span class="line">echo pdir=$pdir</span><br><span class="line"><span class="meta">#</span><span class="bash">4 获取当前用户名称</span></span><br><span class="line">user=`whoami`</span><br><span class="line"><span class="meta">#</span><span class="bash">5 循环</span></span><br><span class="line">for i in hadoop103 hadoop104</span><br><span class="line">do</span><br><span class="line">echo ------------------- $i --------------</span><br><span class="line">rsync -rvl $pdir/$fname $user@$i:$pdir</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<p>2）修改脚本 xsync 具有执行权限</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[atguigu@hadoop102 bin]$ chmod 777 xsync</span><br></pre></td></tr></table></figure>
+
+<p>3）修改脚本 xsync 具有所有者和所有者所属组</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop102 bin]# chown atguigu:atguigu xsync</span><br></pre></td></tr></table></figure>
+
+<p>4）调用脚本形式：xsync 文件名称</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop102 bin]# su atguigu</span><br><span class="line">[atguigu@hadoop102 ~]$ vim test.txt</span><br><span class="line">输入任意内容</span><br><span class="line">Hello</span><br><span class="line"></span><br><span class="line">[atguigu@hadoop102 bin]$ xsync test.txt</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-2-5-配置-SSH-无密登录"><a href="#4-2-5-配置-SSH-无密登录" class="headerlink" title="4.2.5 配置 SSH 无密登录"></a>4.2.5 配置 SSH 无密登录</h4><p>1）无密钥配置<br>（1）免密登录原理，如下图所示</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021569076.png" alt="1594021569076"></p>
+<p>（2）生成公钥和私钥</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[atguigu@hadoop102 .ssh]$ ssh-keygen -t rsa</span><br></pre></td></tr></table></figure>
+
+<p>然后敲（三个回车），就会生成两个文件 id_rsa（私钥）、id_rsa.pub（公钥）</p>
+<p>（3）将公钥拷贝到要免密登录的目标机器上</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[atguigu@hadoop102 .ssh]$ ssh-copy-id hadoop102</span><br><span class="line">[atguigu@hadoop102 .ssh]$ ssh-copy-id hadoop103</span><br><span class="line">[atguigu@hadoop102 .ssh]$ ssh-copy-id hadoop104</span><br></pre></td></tr></table></figure>
+
+<p>2）.ssh 文件夹下（~/.ssh）的文件功能解释</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021610044.png" alt="1594021610044"></p>
+<h4 id="4-2-6-集群整体操作-脚本-（可选）"><a href="#4-2-6-集群整体操作-脚本-（可选）" class="headerlink" title="4.2.6 集群整体操作 脚本 （可选）"></a>4.2.6 集群整体操作 脚本 （可选）</h4><p>1）在/usr/local/bin 目录下创建脚本 xcall</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop102 bin]$ vim xcall</span><br></pre></td></tr></table></figure>
+
+<p>2）在脚本中编写如下内容</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">! /bin/bash</span></span><br><span class="line">for i in hadoop102 hadoop103 hadoop104</span><br><span class="line">do</span><br><span class="line">echo --------- $i ----------</span><br><span class="line">ssh $i "source /etc/profile ; $*"</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<p>3）修改脚本执行权限</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop102 bin]$ chmod +x xcall</span><br></pre></td></tr></table></figure>
+
+<p>4）修改脚本 xcall 具有所有者和所有者所属组</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop102 bin]# chown atguigu:atguigu xcall</span><br></pre></td></tr></table></figure>
+
+<p>5）测试</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop102 bin]# xcall ls /home/atguigu</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-3-JDK-安装"><a href="#4-3-JDK-安装" class="headerlink" title="4.3 JDK 安装"></a>4.3 JDK 安装</h3><p>0）集群规划</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021710342.png" alt="1594021710342"></p>
+<p>1）在 hadoop102 的/opt 目录下创建 module 和 software 两个文件夹。software 主要用于存储<br>上传到服务器的 JAR 包，module 主要用来安装项目相关软件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop102 opt]# mkdir software</span><br><span class="line">[root@hadoop102 opt]# mkdir module</span><br><span class="line">[root@hadoop102 opt]# ll</span><br><span class="line">total 8</span><br><span class="line">drwxr-xr-x 2 root root 4096 Sep 29 10:59 module</span><br><span class="line">drwxr-xr-x 2 root root 4096 Sep 29 10:59 software</span><br></pre></td></tr></table></figure>
+
+<p>2）修改 module 和 software 两个文件夹的所有者和所有者的组</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop102 opt]# chown atguigu:atguigu module/ software/</span><br></pre></td></tr></table></figure>
+
+<p>3）切换到 atguigu 用户</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop102 ~]# su atguigu</span><br></pre></td></tr></table></figure>
+
+<p>4）用 SecureCRT 工具将 JDK 导入到/opt/software 文件夹下面</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[atguigu@hadoop102 opt]$ cd software/</span><br><span class="line">[atguigu@hadoop102 software]$ ls</span><br><span class="line">jdk-8u144-linux-x64.tar.gz</span><br></pre></td></tr></table></figure>
+
+<p>5）解压 JDK 到/opt/module 目录下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[atguigu@hadoop102 software]$ tar -zxvf jdk-8u144-linux-</span><br><span class="line">x64.tar.gz -C /opt/module/</span><br></pre></td></tr></table></figure>
+
+<p>6）配置 JDK 环境变量</p>
+<p>（1）先获取 JDK 路径</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[atguigu@hadoop102 jdk1.8.0_144]$ pwd</span><br><span class="line">/opt/module/jdk1.8.0_144</span><br></pre></td></tr></table></figure>
+
+<p>（2）打开/etc/profile 文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[atguigu@hadoop102 software]$ sudo vi /etc/profile</span><br></pre></td></tr></table></figure>
+
+<p>在 profile 文件末尾添加 JDK 路径</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">JAVA_HOME</span></span><br><span class="line">export JAVA_HOME=/opt/module/jdk1.8.0_144</span><br><span class="line">export PATH=$PATH:$JAVA_HOME/bin</span><br></pre></td></tr></table></figure>
+
+<p>（4）让修改后的文件生效</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[atguigu@hadoop102 jdk1.8.0_144]$ source /etc/profile</span><br></pre></td></tr></table></figure>
+
+<p>7）测试 JDK 是否安装成功</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[atguigu@hadoop102 jdk1.8.0_144]# java -version</span><br><span class="line">java version "1.8.0_144"</span><br></pre></td></tr></table></figure>
+
+<p>注意：重启（如果 java -version 可以用就不用重启）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[atguigu@hadoop102 jdk1.8.0_144]$ sync</span><br><span class="line">[atguigu@hadoop102 jdk1.8.0_144]$ sudo reboot</span><br></pre></td></tr></table></figure>
+
+<p>8）分别在 hadoop103 和 hadoop104 上创建 module 文件夹，并修改文件夹的所有者和所有者<br>组为 atguigu。参考步骤 1-2<br>9）同步 jdk1.8.0_144 到 hadoop103 和 hadoop104</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[atguigu@hadoop102 module]$ xsync jdk1.8.0_144/</span><br></pre></td></tr></table></figure>
+
+<p>10）分别在 hadoop103 和 hadoop104 上配置 JDK 的环境变量，并执行 source 命令</p>
+<h4 id="4-4-日志生成"><a href="#4-4-日志生成" class="headerlink" title="4.4 日志生成"></a>4.4 日志生成</h4><p>1）集群规划</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021915786.png" alt="1594021915786"></p>
+<p>2）拷贝 3.4.16 节，打包好的 log-collector-1.0-SNAPSHOT-jar-with-dependencies.jar 程序到<br>hadoop102 的/opt/module/目录下，并执行如下命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[atguigu@hadoop102 module]$ java -jar log-collector-1.0-</span><br><span class="line">SNAPSHOT-jar-with-dependencies.jar &gt; /dev/null 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+
+<p>3）然后进入到/opt/module/logs 目录，观察日志是否写入成功</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[atguigu@hadoop102 logs]$ ls</span><br><span class="line">app-2019-10-07.log</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-5-Flume-安装-及使用"><a href="#4-5-Flume-安装-及使用" class="headerlink" title="4.5 Flume 安装 及使用"></a>4.5 Flume 安装 及使用</h4><p>1）Flume 官网地址：<a href="http://flume.apache.org/" target="_blank" rel="noopener">http://flume.apache.org/</a><br>2）文档查看地址：<a href="http://flume.apache.org/FlumeUserGuide.html" target="_blank" rel="noopener">http://flume.apache.org/FlumeUserGuide.html</a><br>3）下载地址：<a href="http://archive.apache.org/dist/flume/" target="_blank" rel="noopener">http://archive.apache.org/dist/flume/</a></p>
+<h3 id="4-5-2-Flume-安装"><a href="#4-5-2-Flume-安装" class="headerlink" title="4.5.2 Flume 安装"></a>4.5.2 Flume 安装</h3><p>0）集群规划</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594021984920.png" alt="1594021984920"></p>
+<p>1）将 apache-flume-1.7.0-bin.tar.gz 上传到 hadoop102 的/opt/software 目录下<br>2）解压 apache-flume-1.7.0-bin.tar.gz 到/opt/module/目录下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[atguigu@hadoop102 software]$ tar -zxf apache-flume-1.7.0-</span><br><span class="line">bin.tar.gz -C /opt/module/</span><br></pre></td></tr></table></figure>
+
+<p>3）修改 apache-flume-1.7.0-bin 的名称为 flume</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[atguigu@hadoop102 module]$ mv apache-flume-1.7.0-bin flume</span><br></pre></td></tr></table></figure>
+
+<p>4）将 flume/conf 下的 flume-env.sh.template 文件修改为 flume-env.sh，并配置 flume-env.sh 文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[atguigu@hadoop102 conf]$ mv flume-env.sh.template flume-env.sh</span><br><span class="line">[atguigu@hadoop102 conf]$ vi flume-env.sh</span><br><span class="line">export JAVA_HOME=/opt/module/jdk1.8.0_144</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-5-3-Flume-配置"><a href="#4-5-3-Flume-配置" class="headerlink" title="4.5.3 Flume 配置"></a>4.5.3 Flume 配置</h3><p>1）在/opt/module/flume/conf 中添加文件 file-flume-log.conf，该文件是一个 Flume 作业的核<br>心文件，咱们上述的 Source、Channel、Sink 都是通过这个配置文件来实现的。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">[atguigu@hadoop102 conf]$ vim file-flume-log.conf</span><br><span class="line">添加如下内容</span><br><span class="line"><span class="meta">#</span><span class="bash"> 定义组件名称</span></span><br><span class="line">a1.sources = r1</span><br><span class="line">a1.sinks = k1</span><br><span class="line">a1.channels = c1</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">##source 部分</span></span></span><br><span class="line">a1.sources.r1.type = TAILDIR</span><br><span class="line"><span class="meta">#</span><span class="bash">记录偏移量实现断点续传</span></span><br><span class="line">a1.sources.r1.positionFile =/opt/module/flume/test</span><br><span class="line">/taildir_position.json</span><br><span class="line">a1.sources.r1.channels = c1</span><br><span class="line">a1.sources.r1.filegroups=f1</span><br><span class="line">a1.sources.r1.filegroups.f1=/opt/module/logs/app.+</span><br><span class="line">a1.sources.r1.fileHeader = true</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">##channel 部分</span></span></span><br><span class="line">a1.channels.c1.type = memory</span><br><span class="line">a1.channels.c1.capacity = 1000</span><br><span class="line">a1.channels.c1.transactionCapacity = 1000</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">##sink 部分 先输出到控制台中</span></span></span><br><span class="line">a1.sinks.k1.type = logger</span><br><span class="line"><span class="meta">#</span><span class="bash"> 把 <span class="built_in">source</span> 和 sink 绑定到 channel 中</span></span><br><span class="line">a1.sources.r1.channels = c1</span><br><span class="line">a1.sinks.k1.channel = c1</span><br></pre></td></tr></table></figure>
+
+<p>2）启动 Flume 进程</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[atguigu@hadoop102 flume]$ /opt/module/flume/bin/flume-ng agent -n a1 -c /opt/module/flume/conf/ -f /opt/module/flume/conf/file-flume-log.conf -Dflume.root.logger=info,console</span><br></pre></td></tr></table></figure>
+
+<p>说明</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594022116513.png" alt="1594022116513"></p>
+<p>验证，启动 Flume 的同时，运行日志生成程序，观察 Flume 控制台是否滚动打印日志。</p>
+<h3 id="4-6-DataHub-安装-及使用"><a href="#4-6-DataHub-安装-及使用" class="headerlink" title="4.6 DataHub 安装 及使用"></a>4.6 DataHub 安装 及使用</h3><h3 id="4-6-1-DataHub-简介"><a href="#4-6-1-DataHub-简介" class="headerlink" title="4.6.1 DataHub 简介"></a>4.6.1 DataHub 简介</h3><p>​    Flume 部分已经可以输出后，咱们开始搭建真正需要输出的目的地—DataHub，即阿里云数据总线服务。<br>​    通俗来说这个 DataHub 类似于传统大数据解决方案中 Kafka 的角色，提供了一个数据队列功能。</p>
+<p>​    对于 离线计算，DataHub 除了供了一个 缓冲的队列作用。<br>​    同时由于 DataHub 提供了各种与其他阿里云上下游产品的对接功能，所以 DataHub 又扮演了一个 数据的分发枢纽工作。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594022208858.png" alt="1594022208858"></p>
+<p>1）DataHub 输入组件包括<br>Flume：主流的开源日志采集框架<br>DTS：类似 Canal，日志实时监控采集框架<br>Logstash：也是日志采集框架，通常和 Elasticsearch、 Kibana 集合使用<br>Fluentd：Fluentd 是一个实时开源的数据收集器<br>OGG：实时监控 Oracle 中数据变化<br>Java sdk：支持 JavaAPI 方式访问</p>
+<p>2）DataHub 输出组件包括<br>RDS：类似与传统 MySQL 数据库<br>AnalyticDB：面向分析型的分布式数据库<br>MaxCompute：离线分析框架<br>Elasticsearch：数据分析，倒排索引<br>StreamCompute：实时分析框架<br>TableSotre：类似于 Redis，KV 形式存储数据</p>
+<p>OSS：类似于 HDFS，存储图片、视频</p>
+<h3 id="4-6-2-创建-DataHub-与-与-Topic"><a href="#4-6-2-创建-DataHub-与-与-Topic" class="headerlink" title="4.6.2 创建 DataHub 与 与 Topic"></a>4.6.2 创建 DataHub 与 与 Topic</h3><p>阿里云 DataHub 控制台入口：<a href="https://datahub.console.aliyun.com/datahub" target="_blank" rel="noopener">https://datahub.console.aliyun.com/datahub</a></p>
+<p>1）进入到 DataHub 控制台</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594022358005.png" alt="1594022358005"></p>
+<p>2）点击创建 Project</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594022484565.png" alt="1594022484565"></p>
+<p>3）点击查看，准备创建主题</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594022540580.png" alt="1594022540580"></p>
+<p>4）点击创建 Topic</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594022550545.png" alt="1594022550545"></p>
+<p>5）配置 Topic 详情</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594022563425.png" alt="1594022563425"></p>
+<p>说明：<img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594022580170.png" alt="1594022580170"></p>
+<h3 id="4-7-Flume-到-推送数据到-DataHub"><a href="#4-7-Flume-到-推送数据到-DataHub" class="headerlink" title="4.7 Flume 到 推送数据到 DataHub"></a>4.7 Flume 到 推送数据到 DataHub</h3><h4 id="4-7-1-Flume-DataHub-插件安装"><a href="#4-7-1-Flume-DataHub-插件安装" class="headerlink" title="4.7.1 Flume-DataHub 插件安装"></a>4.7.1 Flume-DataHub 插件安装</h4><p>Flume 默认是不支持 DataHub 的，所以要给 Flume 安装 DataHub 的 Sink 插件<br>1）首先在 Flume 安装目录建立插件文件夹</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[atguigu@hadoop102 flume]$ mkdir plugins.d</span><br></pre></td></tr></table></figure>
+
+<p>2 ） 利 用 SecureCRT 工 具 把 aliyun-flume-datahub-sink-2.0.2.tar.gz 拷贝到该/opt/module/flume/plugins.d 目录下，并原地解压缩</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[atguigu@hadoop102 plugins.d]$ ls</span><br><span class="line">aliyun-flume-datahub-sink-2.0.2.tar.gz</span><br><span class="line">[atguigu@hadoop102 plugins.d]$ tar -zxvf aliyun-flume-datahub-sink-2.0.2.tar.gz</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-7-2-Flume-配置文件修改"><a href="#4-7-2-Flume-配置文件修改" class="headerlink" title="4.7.2 Flume 配置文件修改"></a>4.7.2 Flume 配置文件修改</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">[atguigu@hadoop102 conf]$ vim /opt/module/flume/conf/file-</span><br><span class="line">flume-datahub.conf</span><br><span class="line"><span class="meta">#</span><span class="bash"> 定义组件名称</span></span><br><span class="line">a1.sources = r1</span><br><span class="line">a1.sinks = k1</span><br><span class="line">a1.channels = c1</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">## source 部分</span></span></span><br><span class="line">a1.sources.r1.type = TAILDIR</span><br><span class="line">a1.sources.r1.positionFile =</span><br><span class="line">/opt/module/flume/test/taildir_position.json</span><br><span class="line">a1.sources.r1.channels = c1</span><br><span class="line">a1.sources.r1.filegroups = f1</span><br><span class="line">a1.sources.r1.filegroups.f1 = /opt/module/logs/app.+</span><br><span class="line">a1.sources.r1.fileHeader = true</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">## channel 部分</span></span></span><br><span class="line">a1.channels.c1.type = memory</span><br><span class="line">a1.channels.c1.capacity = 1000</span><br><span class="line">a1.channels.c1.transactionCapacity = 1000</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">## sink 部分</span></span></span><br><span class="line">a1.sinks.k1.type = com.aliyun.datahub.flume.sink.DatahubSink</span><br><span class="line">a1.sinks.k1.datahub.accessID = LTAI4FiU71dZAL17SdLBa6Nt</span><br><span class="line">a1.sinks.k1.datahub.accessKey = 63YzSmqMOSjDR5A2ZXEzFLM2tREY6m</span><br><span class="line">a1.sinks.k1.datahub.endPoint = http://dh-cn-hangzhou.aliyun-</span><br><span class="line">inc.com</span><br><span class="line">a1.sinks.k1.datahub.project = gmall_datahub</span><br><span class="line">a1.sinks.k1.datahub.topic = base_log</span><br><span class="line">a1.sinks.k1.batchSize = 100</span><br><span class="line">a1.sinks.k1.serializer = DELIMITED</span><br><span class="line">a1.sinks.k1.serializer.delimiter = "\\u007C"</span><br><span class="line">a1.sinks.k1.serializer.fieldnames = event_time,log_string</span><br><span class="line">a1.sinks.k1.serializer.charset = UTF-8</span><br><span class="line">a1.sinks.k1.shard.number = 1</span><br><span class="line">a1.sinks.k1.shard.maxTimeOut = 60</span><br><span class="line"><span class="meta">#</span><span class="bash"> 把 <span class="built_in">source</span> 和 sink 绑定到 channel 中</span></span><br><span class="line">a1.sources.r1.channels = c1</span><br><span class="line">a1.sinks.k1.channel = c1</span><br></pre></td></tr></table></figure>
+
+<p>说明：</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594022708310.png" alt="1594022708310"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594022717013.png" alt="1594022717013"></p>
+<h3 id="4-7-3-获取-AccessID-和-AccessKey"><a href="#4-7-3-获取-AccessID-和-AccessKey" class="headerlink" title="4.7.3 获取 AccessID 和 AccessKey"></a>4.7.3 获取 AccessID 和 AccessKey</h3><p>DataHub 服务并不是靠 IP 来定位的，而是靠阿里云账号，每个阿里云账号只能有一个DataHub，每个阿里云账号也会有唯一的 AccessID 和 AccessKey。所以通过 AccessId 和AccessKey 就可以直接锁定某个阿里云账号的 DataHub。</p>
+<p>1）悬浮鼠标到阿里云账号头像上-&gt;点击 accesskeys</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594022781189.png" alt="1594022781189"></p>
+<p>2）点击继续使用 AccessKey</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594022791332.png" alt="1594022791332"></p>
+<p>3）新用户需要点击创建 AccessKey</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594022799132.png" alt="1594022799132"></p>
+<p>4）获取到 AccessKeyID 和 AccessKeySecret 值</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594022810459.png" alt="1594022810459"></p>
+<h3 id="4-7-4-查看接收"><a href="#4-7-4-查看接收" class="headerlink" title="4.7.4 查看接收"></a>4.7.4 查看接收</h3><p>1）启动 Flume 进程</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[atguigu@hadoop102 flume]$ /opt/module/flume/bin/flume-ng agent -n a1 -c /opt/module/flume/conf/ -f /opt/module/flume/conf/file-flume-datahub.conf -Dflume.root.logger=info,console</span><br></pre></td></tr></table></figure>
+
+<p>2）启动日志生成程序</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[atguigu@hadoop102 module]$ java -jar log-collector-1.0-SNAPSHOT-jar-with-dependencies.jar &gt; /dev/null 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+
+<p>3）观察 DataHub 中数据量</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594022869175.png" alt="1594022869175"></p>
+<p>应该可以去 DataHub 后台看到对应的数据已经进入主题。</p>
+<h3 id="4-8-DataWorks-和-和-MaxCompute"><a href="#4-8-DataWorks-和-和-MaxCompute" class="headerlink" title="4.8 DataWorks 和 和 MaxCompute"></a>4.8 DataWorks 和 和 MaxCompute</h3><h3 id="4-8-1-简介"><a href="#4-8-1-简介" class="headerlink" title="4.8.1 简介"></a>4.8.1 简介</h3><p>MaxCompute（大数据计算服务）是阿里巴巴自主研发的海量数据处理平台，主要提供数据上传和下载通道，提供 SQL 及 MapReduce 等多种计算分析服务，同时还提供完善的安全解决方案。DataWorks（数据工场，原大数据开发套件）是基于 MaxCompute 计算引擎的一站式大数据工场，它能帮助您快速完成数据集成、开发、治理、服务、质量、安全等全套数据研发工作。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594022929089.png" alt="1594022929089"></p>
+<p>盘古：相当于 Hadoop 中的 HDFS<br>伏羲：相当于 Hadoop 中的 YARN<br>MaxCompute Engine：相当于 MR、Tez 等计算引擎<br>MaxCompute 和 DataWorks 一起向用户提供完善的 ETL 和数仓管理能力，以及 SQL、<br>MR、Graph 等多种经典的分布式计算模型，能够更快速地解决用户海量数据计算问题，有效降低企业成本，保障数据安全。</p>
+<h3 id="4-8-2-创建工作空间"><a href="#4-8-2-创建工作空间" class="headerlink" title="4.8.2 创建工作空间"></a>4.8.2 创建工作空间</h3><p>控制台入口：<a href="https://workbench.data.aliyun.com/consolenew" target="_blank" rel="noopener">https://workbench.data.aliyun.com/consolenew</a></p>
+<p>1）购买 DataWorks</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023227719.png" alt="1594023227719"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023233782.png" alt="1594023233782"></p>
+<p>3）配置工作空间</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023243497.png" alt="1594023243497"></p>
+<p>4）在选择引擎环节，购买 MaxCompute<br>如果没有购买 MaxCompute，可以点击按量付费，右侧的去购买按钮</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023259511.png" alt="1594023259511"></p>
+<p>（1）按量购买 MaxCompute</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023272554.png" alt="1594023272554"></p>
+<p>（2）确认订单</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023281234.png" alt="1594023281234"></p>
+<p>5）引擎详情</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023289149.png" alt="1594023289149"></p>
+<p>6）查看工作空间列表</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023306035.png" alt="1594023306035">7）进入数据开发</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023323493.png" alt="1594023323493"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594023329824.png" alt="1594023329824"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>感谢您的支持和鼓励！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Lei Nuo 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Lei Nuo 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+<div>
+   
+   <div>
+    
+        <div style="text-align:center;" lass="read-over">-------------------本文结束 <i class="fa fa-paw"></i> 感谢您的阅读-------------------</div>
+    
+</div>
+
+ 
+</div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"># 大数据</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/03/07/Kafka%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95/" rel="next" title="Kafka压力测试">
+                <i class="fa fa-chevron-left"></i> Kafka压力测试
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/07/2.%E7%94%A8%E6%88%B7%E8%A1%8C%E4%B8%BA%E6%95%B0%E4%BB%93%E6%90%AD%E5%BB%BA/" rel="prev" title="2.用户行为数仓搭建">
+                2.用户行为数仓搭建 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="Lei Nuo" />
+            
+              <p class="site-author-name" itemprop="name">Lei Nuo</p>
+              <p class="site-description motion-element" itemprop="description">知见立知，即无明本</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Lei-Nuo" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:576111076@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Lei-Nuo | weibo" target="_blank" title="WeiBo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>WeiBo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.zhihu.com/people/Lei-Nuo-2020" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-snapchat"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-阿里云-ECS-服务器准备"><span class="nav-text">4.1 阿里云 ECS 服务器准备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-1-注册阿里云账户"><span class="nav-text">4.1.1 注册阿里云账户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-2-购买-ECS-云服务器"><span class="nav-text">4.1.2 购买 ECS 云服务器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-3-配置防火墙（可选）"><span class="nav-text">4.1.3 配置防火墙（可选）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-4-ECS-配置升级（可选）"><span class="nav-text">4.1.4 ECS 配置升级（可选）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-5-阿里云服务器连接"><span class="nav-text">4.1.5 阿里云服务器连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-基础-环境准备"><span class="nav-text">4.2 基础 环境准备</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-1-配置主机名称（可选）"><span class="nav-text">4.2.1 配置主机名称（可选）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-2-配置主机名称-映射"><span class="nav-text">4.2.2 配置主机名称 映射</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-4-本-集群分发脚本-xsync"><span class="nav-text">4.2.4 本 集群分发脚本 xsync</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-5-配置-SSH-无密登录"><span class="nav-text">4.2.5 配置 SSH 无密登录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-6-集群整体操作-脚本-（可选）"><span class="nav-text">4.2.6 集群整体操作 脚本 （可选）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-JDK-安装"><span class="nav-text">4.3 JDK 安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-4-日志生成"><span class="nav-text">4.4 日志生成</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-5-Flume-安装-及使用"><span class="nav-text">4.5 Flume 安装 及使用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-5-2-Flume-安装"><span class="nav-text">4.5.2 Flume 安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-5-3-Flume-配置"><span class="nav-text">4.5.3 Flume 配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-6-DataHub-安装-及使用"><span class="nav-text">4.6 DataHub 安装 及使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-6-1-DataHub-简介"><span class="nav-text">4.6.1 DataHub 简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-6-2-创建-DataHub-与-与-Topic"><span class="nav-text">4.6.2 创建 DataHub 与 与 Topic</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-7-Flume-到-推送数据到-DataHub"><span class="nav-text">4.7 Flume 到 推送数据到 DataHub</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-7-1-Flume-DataHub-插件安装"><span class="nav-text">4.7.1 Flume-DataHub 插件安装</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-7-2-Flume-配置文件修改"><span class="nav-text">4.7.2 Flume 配置文件修改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-7-3-获取-AccessID-和-AccessKey"><span class="nav-text">4.7.3 获取 AccessID 和 AccessKey</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-7-4-查看接收"><span class="nav-text">4.7.4 查看接收</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-8-DataWorks-和-和-MaxCompute"><span class="nav-text">4.8 DataWorks 和 和 MaxCompute</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-8-1-简介"><span class="nav-text">4.8.1 简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-8-2-创建工作空间"><span class="nav-text">4.8.2 创建工作空间</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lei Nuo</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"> 访客数</i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"> 总浏览量</i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '2VBFDPgV6LRBBVwiuaveQkjp-gzGzoHsz',
+        appKey: 'IslE3DwJ87bnFNc8I8yU7mSm',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2VBFDPgV6LRBBVwiuaveQkjp-gzGzoHsz", "IslE3DwJ87bnFNc8I8yU7mSm");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+  <script type="text/javascript" src="/js/src/js.cookie.js?v=5.1.4"></script>
+  <script type="text/javascript" src="/js/src/scroll-cookie.js?v=5.1.4"></script>
+
+
+  
+
+  
+
+</body>
+</html>

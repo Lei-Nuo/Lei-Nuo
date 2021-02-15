@@ -1,0 +1,1801 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-flash.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobstar Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="大数据," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="LeiNuo's Note" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="第 7 章 业务数仓搭建7.1 业务 数仓 架构图7.1.1 业务数仓系统流程设计7.1.2 业务表结构 7.1.3 业务数仓分层 7.2 RDS 服务器准备7.2.1 RDS 服务器购买阿里云关系型数据库（Relational Database Service，简称 RDS）是一种稳定可靠、可弹性伸缩的在线数据库服务。 购买 RDS for MySQL 服务器：https:&#x2F;&#x2F;www.aliyu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="4.业务数仓搭建">
+<meta property="og:url" content="https://lei-nuo.github.io/2020/04/07/4.%E4%B8%9A%E5%8A%A1%E6%95%B0%E4%BB%93%E6%90%AD%E5%BB%BA/index.html">
+<meta property="og:site_name" content="LeiNuo&#39;s Note">
+<meta property="og:description" content="第 7 章 业务数仓搭建7.1 业务 数仓 架构图7.1.1 业务数仓系统流程设计7.1.2 业务表结构 7.1.3 业务数仓分层 7.2 RDS 服务器准备7.2.1 RDS 服务器购买阿里云关系型数据库（Relational Database Service，简称 RDS）是一种稳定可靠、可弹性伸缩的在线数据库服务。 购买 RDS for MySQL 服务器：https:&#x2F;&#x2F;www.aliyu">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026298145.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026326050.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026360901.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026371006.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026376061.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026383946.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026390486.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026393372.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026399967.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026427418.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026451487.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026461958.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026475008.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026482709.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026487908.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026492788.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026506200.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026510629.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026529858.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026561546.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026568213.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026571437.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026579771.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026618565.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026728423.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026737315.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026746734.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026777737.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026786032.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026794452.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026830355.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026838611.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026856395.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026867775.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026886825.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026911785.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026919614.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027080728.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027089159.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027100397.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027103932.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027123138.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027132095.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027147527.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027150410.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027181753.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027200557.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027215666.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027281383.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027317656.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027331298.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027399374.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027438207.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027445833.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027460259.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027519293.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027522413.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027549710.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027571919.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027604097.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027664281.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027742459.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027749912.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027758281.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027867497.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027876411.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027997199.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594028004174.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594028011747.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594028092781.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594028101712.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594028128339.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594028154652.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594028191795.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594028200199.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594028211201.png">
+<meta property="og:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594028224562.png">
+<meta property="article:published_time" content="2020-04-07T12:50:59.000Z">
+<meta property="article:modified_time" content="2020-07-09T03:33:19.976Z">
+<meta property="article:author" content="Lei Nuo">
+<meta property="article:tag" content="大数据">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026298145.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lei-nuo.github.io/2020/04/07/4.业务数仓搭建/"/>
+
+
+
+
+
+  <title>4.业务数仓搭建 | LeiNuo's Note</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?9590a707452dc873909b62ec25776cff";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<link rel="stylesheet" href="/dist/APlayer.min.css">
+<div id="aplayer"></div>
+<script type="text/javascript" src="/dist/APlayer.min.js"></script>
+<script type="text/javascript" src="/dist/music.js"></script>
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LeiNuo's Note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Stay hungry,Stay foolish</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lei-nuo.github.io/2020/04/07/4.%E4%B8%9A%E5%8A%A1%E6%95%B0%E4%BB%93%E6%90%AD%E5%BB%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lei Nuo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LeiNuo's Note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">4.业务数仓搭建</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-07T20:50:59+08:00">
+                2020-04-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/" itemprop="url" rel="index">
+                    <span itemprop="name">大数据</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AE%9E%E6%88%98%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index">
+                    <span itemprop="name">大数据实战项目</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AE%9E%E6%88%98%E9%A1%B9%E7%9B%AE/%E9%98%BF%E9%87%8C%E4%BA%91%E7%A6%BB%E7%BA%BF%E6%95%B0%E4%BB%93/" itemprop="url" rel="index">
+                    <span itemprop="name">阿里云离线数仓</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AE%9E%E6%88%98%E9%A1%B9%E7%9B%AE/%E9%98%BF%E9%87%8C%E4%BA%91%E7%A6%BB%E7%BA%BF%E6%95%B0%E4%BB%93/4-%E4%B8%9A%E5%8A%A1%E6%95%B0%E4%BB%93%E6%90%AD%E5%BB%BA/" itemprop="url" rel="index">
+                    <span itemprop="name">4.业务数仓搭建</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/04/07/4.%E4%B8%9A%E5%8A%A1%E6%95%B0%E4%BB%93%E6%90%AD%E5%BB%BA/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/04/07/4.%E4%B8%9A%E5%8A%A1%E6%95%B0%E4%BB%93%E6%90%AD%E5%BB%BA/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020/04/07/4.%E4%B8%9A%E5%8A%A1%E6%95%B0%E4%BB%93%E6%90%AD%E5%BB%BA/" class="leancloud_visitors" data-flag-title="4.业务数仓搭建">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  5.2k 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  24 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="第-7-章-业务数仓搭建"><a href="#第-7-章-业务数仓搭建" class="headerlink" title="第 7 章 业务数仓搭建"></a>第 7 章 业务数仓搭建</h2><h3 id="7-1-业务-数仓-架构图"><a href="#7-1-业务-数仓-架构图" class="headerlink" title="7.1 业务 数仓 架构图"></a>7.1 业务 数仓 架构图</h3><h4 id="7-1-1-业务数仓系统流程设计"><a href="#7-1-1-业务数仓系统流程设计" class="headerlink" title="7.1.1 业务数仓系统流程设计"></a>7.1.1 业务数仓系统流程设计</h4><h4 id="7-1-2-业务表结构"><a href="#7-1-2-业务表结构" class="headerlink" title="7.1.2 业务表结构"></a>7.1.2 业务表结构</h4><p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026298145.png" alt="1594026298145"></p>
+<h4 id="7-1-3-业务数仓分层"><a href="#7-1-3-业务数仓分层" class="headerlink" title="7.1.3 业务数仓分层"></a>7.1.3 业务数仓分层</h4><p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026326050.png" alt="1594026326050"></p>
+<h3 id="7-2-RDS-服务器准备"><a href="#7-2-RDS-服务器准备" class="headerlink" title="7.2 RDS 服务器准备"></a>7.2 RDS 服务器准备</h3><h4 id="7-2-1-RDS-服务器购买"><a href="#7-2-1-RDS-服务器购买" class="headerlink" title="7.2.1 RDS 服务器购买"></a>7.2.1 RDS 服务器购买</h4><p>阿里云关系型数据库（Relational Database Service，简称 RDS）是一种稳定可靠、可弹性伸缩的在线数据库服务。</p>
+<p>购买 RDS for MySQL 服务器：<a href="https://www.aliyun.com/product/rds/mysql" target="_blank" rel="noopener">https://www.aliyun.com/product/rds/mysql</a></p>
+<p>1）点击立即购买</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026360901.png" alt="1594026360901"></p>
+<p>2）购买 RDS 服务器配置</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026371006.png" alt="1594026371006"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026376061.png" alt="1594026376061"></p>
+<p>3）点击立即购买</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026383946.png" alt="1594026383946"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026390486.png" alt="1594026390486"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026393372.png" alt="1594026393372"></p>
+<p>4）控制台列表</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026399967.png" alt="1594026399967"></p>
+<p>注意：实例一旦创建，服务开始计费，使用过程中不能停机，只能释放实例。</p>
+<h4 id="7-2-2-RDS-服务器配置"><a href="#7-2-2-RDS-服务器配置" class="headerlink" title="7.2.2 RDS 服务器配置"></a>7.2.2 RDS 服务器配置</h4><p>服务建立好以后，首先要建立连接通道，可以让用户远程操控 RDS 服务器。</p>
+<p>1）从列表中点入实例</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026427418.png" alt="1594026427418"></p>
+<p>2）配置白名单</p>
+<p>白名单：白名单上的 IP 地址，是可以访问该 RDS 服务器，其他 IP 地址都拒绝。<br>白名单的 IP 地址都是本机对外显示的外网地址。获取外面 IP 地址的方法，就是在百度上搜索 IP 查询。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026451487.png" alt="1594026451487"></p>
+<p>（1）点击添加白名单分组</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026461958.png" alt="1594026461958"></p>
+<p>（2）配置白名单详情</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026475008.png" alt="1594026475008"></p>
+<p>3）基本信息-&gt;申请外网地址</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026482709.png" alt="1594026482709"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026487908.png" alt="1594026487908"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026492788.png" alt="1594026492788"></p>
+<p>框住的部分就是，用户可以通过客户端工具直接访问的地址。</p>
+<p>4）账号管理-&gt;创建账号</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026506200.png" alt="1594026506200"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026510629.png" alt="1594026510629"></p>
+<h4 id="7-2-3-RDS-服务器购买"><a href="#7-2-3-RDS-服务器购买" class="headerlink" title="7.2.3 RDS 服务器购买"></a>7.2.3 RDS 服务器购买</h4><p>1）利用客户端工具进行登录<br>注意：SQL 主机地址，一定是 RDS 服务器暴露的外网 IP 地址。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026529858.png" alt="1594026529858"></p>
+<p>一旦登录成功，那么 RDS 服务就和一台本地安装的服务器操作起来基本差不多。</p>
+<h3 id="7-3-创建业务数据库及表"><a href="#7-3-创建业务数据库及表" class="headerlink" title="7.3 创建业务数据库及表"></a>7.3 创建业务数据库及表</h3><p>1）建立业务数据库</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026561546.png" alt="1594026561546"></p>
+<p>2）导入数据库脚本</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026568213.png" alt="1594026568213"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026571437.png" alt="1594026571437"></p>
+<p>3）数据导入后可以看到有表、存储过程和函数（用于生成随机数据）。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026579771.png" alt="1594026579771"></p>
+<p>4）生成数据</p>
+<p>在 MySQL 中执行以下语句<br>作用：调用存储过程生成某天的业务数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CALL init_data(&#39;20191008&#39;,100,30,TRUE)</span><br></pre></td></tr></table></figure>
+
+<p>参数 1：数据生成的日期，比如订单日期。<br>参数 2：生成的订单数。<br>参数 3：生成的用户数。<br>参数 4 ：是否清楚之前的订单及用户信息。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026618565.png" alt="1594026618565"></p>
+<h3 id="7-4-ODS-层数据表创建"><a href="#7-4-ODS-层数据表创建" class="headerlink" title="7.4 ODS 层数据表创建"></a>7.4 ODS 层数据表创建</h3><p>两种方式建表：<br>方式一：一张一张建表，和用户行为数仓中的方式一样；<br>方式二：可以在临时查询中统一执行建表语句。</p>
+<p>本次我们采用第二种方式。</p>
+<p>1）建表脚本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE &#96;ods_order_info_di&#96; (</span><br><span class="line">&#96;id&#96; string COMMENT &#39;订单编号&#39;,</span><br><span class="line">&#96;total_amount&#96; double COMMENT &#39;订单金额&#39;,</span><br><span class="line">&#96;order_status&#96; string COMMENT &#39;订单状态&#39;,</span><br><span class="line">&#96;user_id&#96; string COMMENT &#39;用户 id&#39;,</span><br><span class="line">&#96;payment_way&#96; string COMMENT &#39;支付方式&#39;,</span><br><span class="line">&#96;out_trade_no&#96; string COMMENT &#39;支付流水号&#39;,</span><br><span class="line">&#96;create_time&#96; string COMMENT &#39;创建时间&#39;,</span><br><span class="line">&#96;operate_time&#96; string COMMENT &#39;操作时间&#39;,</span><br><span class="line">&#96;province_id&#96; string COMMENT &#39;省份&#39;</span><br><span class="line">)</span><br><span class="line">COMMENT &#39;订单表&#39;</span><br><span class="line">PARTITIONED BY (ds string);</span><br><span class="line">CREATE TABLE &#96;ods_order_detail_di&#96; (</span><br><span class="line">&#96;id&#96; string COMMENT &#39;明细 id&#39;,</span><br><span class="line">&#96;order_id&#96; string COMMENT &#39;订单 id&#39;,</span><br><span class="line">&#96;sku_id&#96; string COMMENT &#39;商品 id&#39;,</span><br><span class="line">&#96;sku_name&#96; string COMMENT &#39;商品名称&#39;,</span><br><span class="line">&#96;order_price&#96; double COMMENT &#39;购买价格&#39;,</span><br><span class="line">&#96;sku_num&#96; bigint COMMENT &#39;购物数量&#39;,</span><br><span class="line">&#96;create_time&#96; string COMMENT &#39;创建时间&#39;</span><br><span class="line">)</span><br><span class="line">COMMENT &#39;订单明细&#39;</span><br><span class="line">PARTITIONED BY (ds string);</span><br><span class="line">CREATE TABLE &#96;ods_sku_info_df&#96; (</span><br><span class="line">&#96;id&#96; string COMMENT &#39;skuid&#39;,</span><br><span class="line">&#96;spu_id&#96; string COMMENT &#39;spuid&#39;,</span><br><span class="line">&#96;price&#96; double COMMENT &#39;价格&#39;,</span><br><span class="line">&#96;sku_name&#96; string COMMENT &#39;商品名称&#39;,</span><br><span class="line">&#96;sku_desc&#96; string COMMENT &#39;商品描述&#39;,</span><br><span class="line">&#96;weight&#96; double COMMENT &#39;重量(千克)&#39;,</span><br><span class="line">&#96;tm_id&#96; string COMMENT &#39;品牌 id&#39;,</span><br><span class="line">&#96;category3_id&#96; string COMMENT &#39;品类 id&#39;,</span><br><span class="line">&#96;create_time&#96; string COMMENT &#39;创建时间&#39;</span><br><span class="line">)</span><br><span class="line">COMMENT &#39;商品信息&#39;</span><br><span class="line">PARTITIONED BY (ds string);</span><br><span class="line">CREATE TABLE &#96;ods_user_info_df&#96; (</span><br><span class="line">&#96;id&#96; string COMMENT &#39;用户 id&#39;,</span><br><span class="line">&#96;name&#96; string COMMENT &#39;姓名&#39;,</span><br><span class="line">&#96;birthday&#96; string COMMENT &#39;生日&#39;,</span><br><span class="line">&#96;gender&#96; string COMMENT &#39;性别&#39;,</span><br><span class="line">&#96;email&#96; string COMMENT &#39;邮箱&#39;,</span><br><span class="line">&#96;user_level&#96; string COMMENT &#39;用户等级&#39;,</span><br><span class="line">&#96;create_time&#96; string COMMENT &#39;创建时间&#39;</span><br><span class="line">)</span><br><span class="line">COMMENT &#39;用户信息&#39;</span><br><span class="line">PARTITIONED BY (ds string);</span><br><span class="line">CREATE TABLE &#96;ods_base_category3_df&#96; (</span><br><span class="line">&#96;id&#96; string COMMENT &#39;三级品类 id&#39;,</span><br><span class="line">&#96;name&#96; string COMMENT &#39;名称&#39;,</span><br><span class="line">&#96;category2_id&#96; string COMMENT &#39;二级品类 id&#39;</span><br><span class="line">)</span><br><span class="line">COMMENT &#39;三级品类信息&#39;</span><br><span class="line">PARTITIONED BY (ds string);</span><br><span class="line">CREATE TABLE &#96;ods_base_trademark_df&#96; (</span><br><span class="line">&#96;tm_id&#96; string COMMENT &#39;品牌 id&#39;,</span><br><span class="line">&#96;tm_name&#96; string COMMENT &#39;名称&#39;</span><br><span class="line">)</span><br><span class="line">COMMENT &#39;品牌信息&#39;</span><br><span class="line">PARTITIONED BY (ds string);</span><br><span class="line">CREATE TABLE &#96;ods_base_category1_df&#96; (</span><br><span class="line">&#96;id&#96; string COMMENT &#39;一级品类 id&#39;,</span><br><span class="line">&#96;name&#96; string COMMENT &#39;名称&#39;</span><br><span class="line">)</span><br><span class="line">COMMENT &#39;一级品类信息&#39;</span><br><span class="line">PARTITIONED BY (ds string);</span><br><span class="line">CREATE TABLE &#96;ods_base_category2_df&#96; (</span><br><span class="line">&#96;id&#96; string COMMENT &#39;二级品类 id&#39;,</span><br><span class="line">&#96;name&#96; string COMMENT &#39;名称&#39;,</span><br><span class="line">&#96;category1_id&#96; string COMMENT &#39;一级品类 id&#39;</span><br><span class="line">)</span><br><span class="line">COMMENT &#39;二级品类信息&#39;</span><br><span class="line">PARTITIONED BY (ds string);</span><br><span class="line">CREATE TABLE &#96;ods_payment_info_di&#96; (</span><br><span class="line">&#96;id&#96; bigint COMMENT &#39;编号&#39;,</span><br><span class="line">&#96;out_trade_no&#96; string COMMENT &#39;对外业务编号&#39;,</span><br><span class="line">&#96;order_id&#96; string COMMENT &#39;订单编号&#39;,</span><br><span class="line">&#96;user_id&#96; string COMMENT &#39;用户编号&#39;,</span><br><span class="line">&#96;alipay_trade_no&#96; string COMMENT &#39;支付宝交易流水编号&#39;,</span><br><span class="line">&#96;total_amount&#96; double COMMENT &#39;支付金额&#39;,</span><br><span class="line">&#96;subject&#96; string COMMENT &#39;交易内容&#39;,</span><br><span class="line">&#96;payment_type&#96; string COMMENT &#39;支付类型&#39;,</span><br><span class="line">&#96;payment_time&#96; string COMMENT &#39;支付时间&#39;</span><br><span class="line">)</span><br><span class="line">COMMENT &#39;支付流水表&#39;</span><br><span class="line">PARTITIONED BY (ds string);</span><br><span class="line">CREATE TABLE &#96;ods_base_region_df&#96; (</span><br><span class="line">&#96;id&#96; bigint COMMENT &#39;地区 id&#39;,</span><br><span class="line">&#96;region_name&#96; string COMMENT &#39;地区名称&#39;</span><br><span class="line">)</span><br><span class="line">COMMENT &#39;地区&#39;</span><br><span class="line">PARTITIONED BY (ds string);</span><br><span class="line">CREATE TABLE &#96;ods_base_province_df&#96; (</span><br><span class="line">&#96;id&#96; bigint COMMENT &#39;品牌 id&#39;,</span><br><span class="line">&#96;name&#96; string COMMENT &#39;名称&#39;,</span><br><span class="line">&#96;region_id&#96; bigint COMMENT &#39;地区 id&#39;</span><br><span class="line">)</span><br><span class="line">COMMENT &#39;省份&#39;</span><br><span class="line">PARTITIONED BY (ds string);</span><br></pre></td></tr></table></figure>
+
+<p>2）在表管理里面查看创建的表</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026728423.png" alt="1594026728423"></p>
+<p>3）数据开发-&gt;ods-&gt;导入表</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026737315.png" alt="1594026737315"></p>
+<p>4）选择刚创建的所有表</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026746734.png" alt="1594026746734"></p>
+<h3 id="7-5-数据同步"><a href="#7-5-数据同步" class="headerlink" title="7.5 数据同步"></a>7.5 数据同步</h3><p>目前 MySQL 里面的数据已经有了，ODS 层表也已经建好，现在需要创建一个脚本，将MySQL 中数据同步到 ODS 层对应的表。</p>
+<h4 id="7-5-1-建立数据同步节点"><a href="#7-5-1-建立数据同步节点" class="headerlink" title="7.5.1 建立数据同步节点"></a>7.5.1 建立数据同步节点</h4><p>1）数据集成-&gt;新建数据集成节点-&gt;数据同步</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026777737.png" alt="1594026777737"></p>
+<p>2）填写节点名称（表名+后缀，见名知意就好，例如：ods_user_info_sync）</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026786032.png" alt="1594026786032"></p>
+<p>3）鼠标悬浮在选择数据源右侧的问号上-&gt;数据源进行新建操作</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026794452.png" alt="1594026794452"></p>
+<p>4）点击新增数据源-&gt;点击 MySQL</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026830355.png" alt="1594026830355"></p>
+<p>5）配置新增 MySQL 数据源</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026838611.png" alt="1594026838611"></p>
+<p>（1）数据源名称：可以任意取，这里取的 gmall_rds</p>
+<p>（2）RDS 实例 ID：根据问号的提示获取，每个人的不一样。rm-bp1t1li837a1v9gb8</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026856395.png" alt="1594026856395"></p>
+<p>（3）RDS 实例主账号 ID：根据问号提示获取，每个人的不一样。1902761552218725</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026867775.png" alt="1594026867775"></p>
+<p>（4）数据库名：要连接的数据库名称，我这里是 gmall<br>（5）用户名、密码：要连接的数据库的用户名和密码<br>（6）白名单配置：因为要用 MaxCompute 访问 RDS 所以要给 RDS 增加对应的白名单IP 地址。</p>
+<p>a）点击点我查看如何添加白名单按钮</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026886825.png" alt="1594026886825"></p>
+<p>b）根据购买的 RDS 服务器地址，选择对应 IP 地址</p>
+<table>
+<thead>
+<tr>
+<th>区域</th>
+<th>白名单</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>华东 1（杭州）</td>
+<td>100.64.0.0/10,11.193.102.0/24,11.193.215.0/24,11.194.110.0/24,11.194.73.0/24,118.31.157.0/24,47.97.53.0/24,11.196.23.0/24,47.99.12.0/24,47.99.13.0/24,114.55.197.0/24,11.197.246.0/24,11.197.247.0/24</td>
+</tr>
+</tbody></table>
+<p>c）在 RDS 中添加白名单</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026911785.png" alt="1594026911785"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594026919614.png" alt="1594026919614"></p>
+<p>5）配置完新增 MySQL 数据源，就会在数据集成窗口发现增加了一个 gmall_rds 数据源</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027080728.png" alt="1594027080728"></p>
+<p>6）再次回到 DataStudio 工作空间，发现就可以选择数据源了</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027089159.png" alt="1594027089159"></p>
+<p>7）配置数据去向数据源-&gt;鼠标悬浮问号上面-&gt;点击数据源进行新建操作-&gt;新增数据源MaxCompute（ODPS）</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027100397.png" alt="1594027100397"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027103932.png" alt="1594027103932"></p>
+<p>8）配置 MaxCompute 数据源详情</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027123138.png" alt="1594027123138"></p>
+<p>AccessKey ID：LTAI4FiU71dZAL17SdLBa6Nt<br>Access Key Secret：63YzSmqMOSjDR5A2ZXEzFLM2tREY6m</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027132095.png" alt="1594027132095"></p>
+<h4 id="7-5-2-每日全量表同步"><a href="#7-5-2-每日全量表同步" class="headerlink" title="7.5.2 每日全量表同步"></a>7.5.2 每日全量表同步</h4><p>用户表同步策略：每日全量<br>每 日 全 量 导 入 的 表 包 括 ： ods_user_info 、 ods_base_category1 、 ods_base_category2 、<br>ods_base_category3、ods_base_province、ods_base_region、ods_base_trademark、ods_sku_info<br>1）配置完数据源后-&gt;点击运行（点击运行前，检查字段映射关系</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027147527.png" alt="1594027147527"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027150410.png" alt="1594027150410"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027181753.png" alt="1594027181753"></p>
+<p>2）临时查询，验证结果</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> ods_user_info_df <span class="keyword">where</span> ds=<span class="string">'20191008'</span>;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027200557.png" alt="1594027200557"></p>
+<p>3）重复执行步骤 1-2，依次导入：ods_base_category1、ods_base_category2、ods_base_category3、<br>ods_base_province、ods_base_region、ods_base_trademark、ods_sku_info</p>
+<h3 id="7-5-3-每日增量表同步"><a href="#7-5-3-每日增量表同步" class="headerlink" title="7.5.3 每日增量表同步"></a>7.5.3 每日增量表同步</h3><p>1）同步策略：每日增量<br>每日新增的表包括：ods_order_detail</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027215666.png" alt="1594027215666"></p>
+<p>每日增量的区别就是要按照日期进行过滤，只筛选出今天新产生的数据<br>条件：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DATE_FORMAT(create_time,'%Y%m%d')='$&#123;bizdate&#125;'</span><br></pre></td></tr></table></figure>
+
+<p>注意：此处必须是 MySql 的函数语法，不是 Hive 的。</p>
+<p>${bizdate}是系统自带参数用于取前一天的日期。</p>
+<p>2）临时查询，验证结果</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> ods_order_detail_di <span class="keyword">WHERE</span> ds=<span class="string">'20191008'</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-5-4-每日新增及-变化-表同步"><a href="#7-5-4-每日新增及-变化-表同步" class="headerlink" title="7.5.4 每日新增及 变化 表同步"></a>7.5.4 每日新增及 变化 表同步</h3><p>1）同步策略：每日新增及变化<br>每日新增及变化的表包括：ods_order_info</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027281383.png" alt="1594027281383"></p>
+<p>条件</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">DATE_FORMAT(create_time,'%Y%m%d')='$&#123;bizdate&#125;' or</span><br><span class="line">DATE_FORMAT(operate_time,'%Y%m%d')='$&#123;bizdate&#125;'</span><br></pre></td></tr></table></figure>
+
+<p>2）临时查询，验证结果</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> ods_order_info_di <span class="keyword">WHERE</span> ds=<span class="string">'20191008'</span>;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027317656.png" alt="1594027317656"></p>
+<h3 id="7-5-5-ODS-层"><a href="#7-5-5-ODS-层" class="headerlink" title="7.5.5 ODS 层"></a>7.5.5 ODS 层</h3><p>把节点从左侧拖放至右侧，按照上下游的关系用线连接好。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027331298.png" alt="1594027331298"></p>
+<h3 id="7-6-DWD-层"><a href="#7-6-DWD-层" class="headerlink" title="7.6 DWD 层"></a>7.6 DWD 层</h3><p>DWD 层，一般是对 ODS 层数据进行一定的清洗加工，如果是面对关系导入过来的数<br>据表，还要把原本的关系型表结构，进行一定程度的维度退化。作为更易处理的明细数据。<br>比如：</p>
+<p>ODS 地区 + ODS 省份=&gt; DWD 省份地区<br>ODS 商品信息 + ODS 品牌 + ODS 商品一级分类 + ODS 商品二级分类 + ODS 商品三级分类=&gt;DWD 商品信息<br>DWD 层表结构如下图所示</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027399374.png" alt="1594027399374"></p>
+<h3 id="7-6-1-建表语句"><a href="#7-6-1-建表语句" class="headerlink" title="7.6.1 建表语句"></a>7.6.1 建表语句</h3><p>1）临时查询中，执行建表语句</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`dwd_order_info_di`</span> (</span><br><span class="line"><span class="string">`id`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'订单 id'</span>,</span><br><span class="line"><span class="string">`total_amount`</span> <span class="keyword">double</span> <span class="keyword">COMMENT</span> <span class="string">'订单总额'</span>,</span><br><span class="line"><span class="string">`order_status`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">' 1 未支付 2 已支付 3 已发货 4 已</span></span><br><span class="line"><span class="string">收货 5 完成'</span>,</span><br><span class="line"><span class="string">`user_id`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'用户 id'</span>,</span><br><span class="line"><span class="string">`payment_way`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'付款方式'</span>,</span><br><span class="line"><span class="string">`out_trade_no`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'订单流失号'</span>,</span><br><span class="line"><span class="string">`province_id`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'省市 id'</span>,</span><br><span class="line"><span class="string">`create_time`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'创建时间'</span>,</span><br><span class="line"><span class="string">`operate_time`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'修改时间'</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">COMMENT</span> <span class="string">'订单表'</span></span><br><span class="line">PARTITIONED <span class="keyword">BY</span> (ds <span class="keyword">string</span>);</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`dwd_order_detail_di`</span> (</span><br><span class="line"><span class="string">`id`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'明细 id'</span>,</span><br><span class="line"><span class="string">`order_id`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'订单 id'</span>,</span><br><span class="line"><span class="string">`user_id`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'用户 id'</span>,</span><br><span class="line"><span class="string">`sku_id`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'商品 id'</span>,</span><br><span class="line"><span class="string">`sku_name`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'商品名称'</span>,</span><br><span class="line"><span class="string">`order_price`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'购买价格'</span>,</span><br><span class="line"><span class="string">`sku_num`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'购物数量'</span>,</span><br><span class="line"><span class="string">`province_id`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'省市 id'</span>,</span><br><span class="line"><span class="string">`create_time`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'创建时间'</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">COMMENT</span> <span class="string">'订单明细'</span></span><br><span class="line">PARTITIONED <span class="keyword">BY</span> (ds <span class="keyword">string</span>);</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`dim_sku_info_df`</span> (</span><br><span class="line"><span class="string">`id`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'商品 id'</span>,</span><br><span class="line"><span class="string">`spu_id`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'spuid'</span>,</span><br><span class="line"><span class="string">`price`</span> <span class="keyword">double</span> <span class="keyword">COMMENT</span> <span class="string">'商品价格'</span>,</span><br><span class="line"><span class="string">`sku_name`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'商品名称'</span>,</span><br><span class="line"><span class="string">`sku_desc`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'商品描述'</span>,</span><br><span class="line"><span class="string">`weight`</span> <span class="keyword">double</span> <span class="keyword">COMMENT</span> <span class="string">'重量'</span>,</span><br><span class="line"><span class="string">`tm_id`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'品牌 id'</span>,</span><br><span class="line"><span class="string">`tm_name`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'品牌名称'</span>,</span><br><span class="line"><span class="string">`category3_id`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'三级分类 id'</span>,</span><br><span class="line"><span class="string">`category2_id`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'二级分类 id'</span>,</span><br><span class="line"><span class="string">`category1_id`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'一级分类 id'</span>,</span><br><span class="line"><span class="string">`category3_name`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'三级分类名称'</span>,</span><br><span class="line"><span class="string">`category2_name`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'二级分类名称'</span>,</span><br><span class="line"><span class="string">`category1_name`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'一级分类名称'</span>,</span><br><span class="line"><span class="string">`create_time`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'创建时间'</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">COMMENT</span> <span class="string">'商品表信息'</span></span><br><span class="line">PARTITIONED <span class="keyword">BY</span> (ds <span class="keyword">string</span>);</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`dim_user_info_df`</span> (</span><br><span class="line"><span class="string">`id`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'id'</span>,</span><br><span class="line"><span class="string">`name`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'用户名称'</span>,</span><br><span class="line"><span class="string">`birthday`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'生日'</span>,</span><br><span class="line"><span class="string">`gender`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'性别'</span>,</span><br><span class="line"><span class="string">`email`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'邮箱'</span>,</span><br><span class="line"><span class="string">`user_level`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'等级'</span>,</span><br><span class="line"><span class="string">`create_time`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'注册时间'</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">COMMENT</span> <span class="string">'用户信息表'</span></span><br><span class="line">PARTITIONED <span class="keyword">BY</span> (ds <span class="keyword">string</span>);</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`dim_base_province_df`</span> (</span><br><span class="line"><span class="string">`id`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'id'</span>,</span><br><span class="line"><span class="string">`province_name`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'省市名称'</span>,</span><br><span class="line"><span class="string">`region_id`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'地区 id'</span>,</span><br><span class="line"><span class="string">`region_name`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'地区名称'</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">COMMENT</span> <span class="string">'地区省市表'</span></span><br><span class="line">PARTITIONED <span class="keyword">BY</span> (ds <span class="keyword">string</span>);</span><br></pre></td></tr></table></figure>
+
+<p>2）在表管理里面查看创建的表</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027438207.png" alt="1594027438207"></p>
+<p>3）数据开发-&gt;dwd-&gt;导入表</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027445833.png" alt="1594027445833"></p>
+<p>4）选择刚创建的所有表</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027460259.png" alt="1594027460259"></p>
+<h3 id="7-6-2-手动将数据导入-DWD-层"><a href="#7-6-2-手动将数据导入-DWD-层" class="headerlink" title="7.6.2 手动将数据导入 DWD 层"></a>7.6.2 手动将数据导入 DWD 层</h3><p>1）在临时查询中执行</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Insert</span> overwrite <span class="keyword">table</span> dwd_order_info_di <span class="keyword">partition</span>(ds)</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">id</span>,</span><br><span class="line">total_amount,</span><br><span class="line">order_status,</span><br><span class="line">user_id,</span><br><span class="line">payment_way,</span><br><span class="line">out_trade_no,</span><br><span class="line">province_id,</span><br><span class="line">create_time,</span><br><span class="line">operate_time,</span><br><span class="line">ds</span><br><span class="line"><span class="keyword">from</span> ods_order_info_di</span><br><span class="line"><span class="keyword">where</span> ds=<span class="string">'$&#123;bizdate&#125;'</span> <span class="keyword">and</span> <span class="keyword">id</span> <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">insert</span> overwrite <span class="keyword">table</span> dwd_order_detail_di <span class="keyword">partition</span>(ds)</span><br><span class="line"><span class="keyword">select</span> od.id,</span><br><span class="line">order_id,</span><br><span class="line">oi.user_id,</span><br><span class="line">sku_id,</span><br><span class="line">sku_name,</span><br><span class="line">order_price,</span><br><span class="line">sku_num,</span><br><span class="line">oi.province_id,</span><br><span class="line">od.create_time,</span><br><span class="line">od.ds</span><br><span class="line"><span class="keyword">from</span> ods_order_detail_di od <span class="keyword">join</span> ods_order_info_di oi</span><br><span class="line"><span class="keyword">on</span> od.order_id = oi.id <span class="keyword">and</span> oi.ds = <span class="string">'$&#123;bizdate&#125;'</span></span><br><span class="line"><span class="keyword">and</span> od.ds = <span class="string">'$&#123;bizdate&#125;'</span> <span class="keyword">and</span> od.id <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">insert</span> overwrite <span class="keyword">table</span> dim_sku_info_df <span class="keyword">partition</span>(ds)</span><br><span class="line"><span class="keyword">select</span></span><br><span class="line">sku.id,</span><br><span class="line">sku.spu_id,</span><br><span class="line">sku.price,</span><br><span class="line">sku.sku_name,</span><br><span class="line">sku.sku_desc,</span><br><span class="line">sku.weight,</span><br><span class="line">sku.tm_id,</span><br><span class="line">tm.tm_name,</span><br><span class="line">sku.category3_id,</span><br><span class="line">c2.id category2_id ,</span><br><span class="line">c1.id category1_id,</span><br><span class="line">c3.name category3_name,</span><br><span class="line">c2.name category2_name,</span><br><span class="line">c1.name category1_name,</span><br><span class="line">sku.create_time,</span><br><span class="line">sku.ds</span><br><span class="line"><span class="keyword">from</span></span><br><span class="line">(</span><br><span class="line"><span class="keyword">select</span> *</span><br><span class="line"><span class="keyword">from</span> ods_sku_info_df</span><br><span class="line"><span class="keyword">where</span> ds=<span class="string">'$&#123;bizdate&#125;'</span> <span class="keyword">and</span> <span class="keyword">id</span> <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">null</span></span><br><span class="line">) sku</span><br><span class="line"><span class="keyword">join</span> ods_base_category3_df c3 <span class="keyword">on</span> sku.category3_id = c3.id <span class="keyword">and</span></span><br><span class="line">c3.ds = <span class="string">'$&#123;bizdate&#125;'</span></span><br><span class="line"><span class="keyword">join</span> ods_base_category2_df c2 <span class="keyword">on</span> c3.category2_id = c2.id <span class="keyword">and</span></span><br><span class="line">c2.ds = <span class="string">'$&#123;bizdate&#125;'</span></span><br><span class="line"><span class="keyword">join</span> ods_base_category1_df c1 <span class="keyword">on</span> c2.category1_id = c1.id <span class="keyword">and</span></span><br><span class="line">c1.ds = <span class="string">'$&#123;bizdate&#125;'</span></span><br><span class="line"><span class="keyword">join</span> ods_base_trademark_df tm <span class="keyword">on</span> tm.tm_id = sku.tm_id <span class="keyword">and</span> tm.ds</span><br><span class="line">= <span class="string">'$&#123;bizdate&#125;'</span>;</span><br><span class="line"><span class="keyword">insert</span> overwrite <span class="keyword">table</span> dim_user_info_df <span class="keyword">partition</span>(ds)</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">id</span>,</span><br><span class="line"><span class="keyword">name</span> ,</span><br><span class="line">birthday,</span><br><span class="line">gender,</span><br><span class="line">email,</span><br><span class="line">user_level,</span><br><span class="line">create_time,</span><br><span class="line">ds <span class="keyword">from</span> ods_user_info_df</span><br><span class="line"><span class="keyword">where</span> ds=<span class="string">'$&#123;bizdate&#125;'</span> <span class="keyword">and</span> <span class="keyword">id</span> <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">insert</span> overwrite <span class="keyword">table</span> dim_base_province_df <span class="keyword">PARTITION</span> (ds)</span><br><span class="line"><span class="keyword">select</span></span><br><span class="line">p.id,</span><br><span class="line">p.name,</span><br><span class="line">p.region_id,</span><br><span class="line">r.region_name,</span><br><span class="line">p.ds</span><br><span class="line"><span class="keyword">from</span> ods_base_province_df p <span class="keyword">join</span> ods_base_region_df r</span><br><span class="line"><span class="keyword">on</span> p.region_id = r.id <span class="keyword">and</span> p.ds=<span class="string">'$&#123;bizdate&#125;'</span> <span class="keyword">and</span> r.ds =</span><br><span class="line"><span class="string">'$&#123;bizdate&#125;'</span>;</span><br></pre></td></tr></table></figure>
+
+<p>2）在临时查询中查询结果</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> dwd_order_info_di <span class="keyword">where</span> ds=<span class="string">'20191008'</span>;</span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> dwd_order_detail_di <span class="keyword">where</span> ds=<span class="string">'20191008'</span>;</span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> dim_sku_info_df <span class="keyword">where</span> ds=<span class="string">'20191008'</span>;</span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> dim_user_info_df <span class="keyword">where</span> ds=<span class="string">'20191008'</span>;</span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> dim_base_province_df <span class="keyword">where</span> ds=<span class="string">'20191008'</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-6-3-数据导入脚本"><a href="#7-6-3-数据导入脚本" class="headerlink" title="7.6.3 数据导入脚本"></a>7.6.3 数据导入脚本</h3><p>1）编写 dwd_order_info_di 表脚本<br>（1）在流程中加入一个数据开发脚本</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027519293.png" alt="1594027519293"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027522413.png" alt="1594027522413"></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Insert</span> overwrite <span class="keyword">table</span> dwd_order_info_di <span class="keyword">partition</span>(ds)</span><br><span class="line"><span class="keyword">Select</span> <span class="keyword">id</span>,</span><br><span class="line">total_amount,</span><br><span class="line">order_status,</span><br><span class="line">user_id,</span><br><span class="line">payment_way,</span><br><span class="line">out_trade_no,</span><br><span class="line">province_id,</span><br><span class="line">create_time,</span><br><span class="line">operate_time,</span><br><span class="line">ds</span><br><span class="line"><span class="keyword">from</span> ods_order_info_di</span><br><span class="line"><span class="keyword">where</span> ds=<span class="string">'$&#123;bizdate&#125;'</span> <span class="keyword">and</span> <span class="keyword">id</span> <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">null</span>;</span><br></pre></td></tr></table></figure>
+
+<p>（2）配置参数</p>
+<p>点击调度配置-&gt; bizdate=${yyyymmdd}</p>
+<p>2）编写 dwd_order_detail_di 表脚本<br>（1）新建节点 dwd_order_detail_di_sql</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027549710.png" alt="1594027549710"></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> overwrite <span class="keyword">table</span> dwd_order_detail_di <span class="keyword">partition</span>(ds)</span><br><span class="line"><span class="keyword">select</span> od.id,</span><br><span class="line">order_id,</span><br><span class="line">oi.user_id,</span><br><span class="line">sku_id,</span><br><span class="line">sku_name,</span><br><span class="line">order_price,</span><br><span class="line">sku_num,</span><br><span class="line">oi.province_id,</span><br><span class="line">od.create_time,</span><br><span class="line">od.ds</span><br><span class="line"><span class="keyword">from</span> ods_order_detail_di od <span class="keyword">join</span> ods_order_info_di oi</span><br><span class="line"><span class="keyword">on</span> od.order_id = oi.id <span class="keyword">and</span> oi.ds = <span class="string">'$&#123;bizdate&#125;'</span></span><br><span class="line"><span class="keyword">and</span> od.ds = <span class="string">'$&#123;bizdate&#125;'</span> <span class="keyword">and</span> od.id <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">null</span>;</span><br></pre></td></tr></table></figure>
+
+<p>（2）配置参数<br>点击调度配置-&gt; bizdate=${yyyymmdd}<br>3）编写 dim_sku_info_df 表脚本<br>（1）新建节点 dim_sku_info_df_sql</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027571919.png" alt="1594027571919"></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> overwrite <span class="keyword">table</span> dim_sku_info_df <span class="keyword">partition</span>(ds)</span><br><span class="line"><span class="keyword">select</span></span><br><span class="line">sku.id,</span><br><span class="line">sku.spu_id,</span><br><span class="line">sku.price,</span><br><span class="line">sku.sku_name,</span><br><span class="line">sku.sku_desc,</span><br><span class="line">sku.weight,</span><br><span class="line">sku.tm_id,</span><br><span class="line">tm.tm_name,</span><br><span class="line">sku.category3_id,</span><br><span class="line">c2.id category2_id ,</span><br><span class="line">c1.id category1_id,</span><br><span class="line">c3.name category3_name,</span><br><span class="line">c2.name category2_name,</span><br><span class="line">c1.name category1_name,</span><br><span class="line">sku.create_time,</span><br><span class="line">sku.ds</span><br><span class="line"><span class="keyword">from</span></span><br><span class="line">(</span><br><span class="line"><span class="keyword">select</span> *</span><br><span class="line"><span class="keyword">from</span> ods_sku_info_df</span><br><span class="line"><span class="keyword">where</span> ds=<span class="string">'$&#123;bizdate&#125;'</span> <span class="keyword">and</span> <span class="keyword">id</span> <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">null</span></span><br><span class="line">) sku</span><br><span class="line"><span class="keyword">join</span> ods_base_category3_df c3 <span class="keyword">on</span> sku.category3_id = c3.id <span class="keyword">and</span></span><br><span class="line">c3.ds = <span class="string">'$&#123;bizdate&#125;'</span></span><br><span class="line"><span class="keyword">join</span> ods_base_category2_df c2 <span class="keyword">on</span> c3.category2_id = c2.id <span class="keyword">and</span></span><br><span class="line">c2.ds = <span class="string">'$&#123;bizdate&#125;'</span></span><br><span class="line"><span class="keyword">join</span> ods_base_category1_df c1 <span class="keyword">on</span> c2.category1_id = c1.id <span class="keyword">and</span></span><br><span class="line">c1.ds = <span class="string">'$&#123;bizdate&#125;'</span></span><br><span class="line"><span class="keyword">join</span> ods_base_trademark_df tm <span class="keyword">on</span> tm.tm_id = sku.tm_id <span class="keyword">and</span> tm.ds</span><br><span class="line">= <span class="string">'$&#123;bizdate&#125;'</span>;</span><br></pre></td></tr></table></figure>
+
+<p>（2）配置参数<br>点击调度配置-&gt; bizdate=${yyyymmdd}</p>
+<p>4）编写 dim_user_info_df 表脚本<br>（1）新建节点 dim_user_info_df_sql</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027604097.png" alt="1594027604097"></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> overwrite <span class="keyword">table</span> dim_user_info_df <span class="keyword">partition</span>(ds)</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">id</span>,</span><br><span class="line"><span class="keyword">name</span> ,</span><br><span class="line">birthday,</span><br><span class="line">gender,</span><br><span class="line">email,</span><br><span class="line">user_level,</span><br><span class="line">create_time,</span><br><span class="line">ds <span class="keyword">from</span> ods_user_info_df</span><br><span class="line"><span class="keyword">where</span> ds=<span class="string">'$&#123;bizdate&#125;'</span> <span class="keyword">and</span> <span class="keyword">id</span> <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">null</span>;</span><br></pre></td></tr></table></figure>
+
+<p>（2）配置参数<br>点击调度配置-&gt; bizdate=${yyyymmdd}<br>5）编写 dim_base_province_df 表脚本<br>（1）新建节点 dim_base_province_df_sql</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027664281.png" alt="1594027664281"></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> overwrite <span class="keyword">table</span> dim_base_province_df <span class="keyword">PARTITION</span> (ds)</span><br><span class="line"><span class="keyword">select</span></span><br><span class="line">p.id,</span><br><span class="line">p.name,</span><br><span class="line">p.region_id,</span><br><span class="line">r.region_name,</span><br><span class="line">p.ds</span><br><span class="line"><span class="keyword">from</span> ods_base_province_df p <span class="keyword">join</span> ods_base_region_df r</span><br><span class="line"><span class="keyword">on</span> p.region_id = r.id <span class="keyword">and</span> p.ds=<span class="string">'$&#123;bizdate&#125;'</span> <span class="keyword">and</span> r.ds =</span><br><span class="line"><span class="string">'$&#123;bizdate&#125;'</span>;</span><br></pre></td></tr></table></figure>
+
+<p>（2）配置参数<br>点击调度配置-&gt; bizdate=${yyyymmdd}</p>
+<h3 id="7-7-DWS-层"><a href="#7-7-DWS-层" class="headerlink" title="7.7 DWS 层"></a>7.7 DWS 层</h3><p>​    DWS 层主要指针对明细粒度的数据进行短周期的汇总。DWS 公共汇总层是面向分析对<br>象的主题聚集建模。<br>​    在本教程中，最终的分析目标为：最近一天某个类目、某个地区、某类人群购买商品的<br>销售总额、购买力分布。因此，我们可以以最终交易成功的商品、买家、地区等角度对最近<br>一天的数据进行组合，组合成为涵盖多个维度的事实宽表。</p>
+<h3 id="7-7-1-建表语句"><a href="#7-7-1-建表语句" class="headerlink" title="7.7.1 建表语句"></a>7.7.1 建表语句</h3><p>1）临时查询中，执行建表语句</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`dws_trade_detail_di`</span> (</span><br><span class="line"><span class="string">`user_id`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'用户 id'</span>,</span><br><span class="line"><span class="string">`sku_id`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'商品 Id'</span>,</span><br><span class="line"><span class="string">`user_gender`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'用户性别'</span>,</span><br><span class="line"><span class="string">`user_age`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'用户年龄'</span>,</span><br><span class="line"><span class="string">`user_level`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'用户等级'</span>,</span><br><span class="line"><span class="string">`sku_price`</span> <span class="keyword">double</span> <span class="keyword">COMMENT</span> <span class="string">'商品当日价格'</span>,</span><br><span class="line"><span class="string">`sku_name`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'商品名称'</span>,</span><br><span class="line"><span class="string">`sku_category3_id`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'商品三级品类 id'</span>,</span><br><span class="line"><span class="string">`sku_category2_id`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'商品二级品类 id'</span>,</span><br><span class="line"><span class="string">`sku_category1_id`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'商品一级品类 id'</span>,</span><br><span class="line"><span class="string">`sku_category3_name`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'商品三级品类名称'</span>,</span><br><span class="line"><span class="string">`sku_category2_name`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'商品二级品类名称'</span>,</span><br><span class="line"><span class="string">`sku_category1_name`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'商品一级品类名称'</span>,</span><br><span class="line"><span class="string">`spu_id`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'商品 spu'</span>,</span><br><span class="line"><span class="string">`tm_id`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'品牌 id'</span>,</span><br><span class="line"><span class="string">`tm_name`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'品牌名称'</span>,</span><br><span class="line"><span class="string">`province_id`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'省市 id'</span>,</span><br><span class="line"><span class="string">`province_name`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'省市名称'</span>,</span><br><span class="line"><span class="string">`region_id`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'地区 id'</span>,</span><br><span class="line"><span class="string">`region_name`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'地区名称'</span>,</span><br><span class="line"><span class="string">`sku_num`</span> <span class="built_in">bigint</span> <span class="keyword">COMMENT</span> <span class="string">'购买个数'</span>,</span><br><span class="line"><span class="string">`order_count`</span> <span class="built_in">bigint</span> <span class="keyword">COMMENT</span> <span class="string">'当日下单单数'</span>,</span><br><span class="line"><span class="string">`order_amount`</span> <span class="keyword">double</span> <span class="keyword">COMMENT</span> <span class="string">'当日下单金额'</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">COMMENT</span> <span class="string">'用户单日交易行为宽表'</span></span><br><span class="line">PARTITIONED <span class="keyword">BY</span> (ds <span class="keyword">string</span>);</span><br></pre></td></tr></table></figure>
+
+<p>2）在表管理里面查看创建的表</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027742459.png" alt="1594027742459"></p>
+<p>3）数据开发-&gt;dws-&gt;导入表</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027749912.png" alt="1594027749912"></p>
+<p>4）选择刚创建的所有表</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027758281.png" alt="1594027758281"></p>
+<h3 id="7-7-2-手动将数据导入-DWS-层"><a href="#7-7-2-手动将数据导入-DWS-层" class="headerlink" title="7.7.2 手动将数据导入 DWS 层"></a>7.7.2 手动将数据导入 DWS 层</h3><p>1）在临时查询中执行</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> tmp_trade <span class="keyword">AS</span></span><br><span class="line">(</span><br><span class="line"><span class="keyword">select</span></span><br><span class="line">od.user_id,od.sku_id,od.province_id,</span><br><span class="line"><span class="keyword">sum</span>(sku_num) sku_num,</span><br><span class="line"><span class="keyword">count</span>(*) order_count,</span><br><span class="line"><span class="keyword">sum</span>(od.order_price*sku_num) order_amount</span><br><span class="line"><span class="keyword">from</span> dwd_order_detail_di od</span><br><span class="line"><span class="keyword">where</span> od.ds=<span class="string">'$&#123;bizdate&#125;'</span></span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> od.user_id, od.sku_id, od.province_id</span><br><span class="line">)</span><br><span class="line"><span class="keyword">insert</span> OVERWRITE <span class="keyword">TABLE</span> dws_trade_detail_di <span class="keyword">PARTITION</span> (ds=<span class="string">'$&#123;bizdate&#125;'</span>)</span><br><span class="line"><span class="keyword">select</span></span><br><span class="line">tmp_trade.user_id,</span><br><span class="line">tmp_trade.sku_id,</span><br><span class="line">u.gender,</span><br><span class="line">months_between(to_char(<span class="keyword">to_date</span>(<span class="string">'$&#123;bizdate&#125;'</span>,<span class="string">'yyyymmdd'</span>),<span class="string">'yyyy-mm-dd'</span>), u.birthday)/<span class="number">12</span> age,</span><br><span class="line">u.user_level,</span><br><span class="line">price,</span><br><span class="line">sku_name,</span><br><span class="line">category3_id,</span><br><span class="line">category2_id,</span><br><span class="line">category1_id,</span><br><span class="line">category3_name,</span><br><span class="line">category2_name,</span><br><span class="line">category1_name,</span><br><span class="line">spu_id,</span><br><span class="line">tm_id,</span><br><span class="line">tm_name,</span><br><span class="line">p.id,</span><br><span class="line">p.province_name,</span><br><span class="line">p.region_id,</span><br><span class="line">p.region_name,</span><br><span class="line">tmp_trade.sku_num,</span><br><span class="line">tmp_trade.order_count,</span><br><span class="line">tmp_trade.order_amount</span><br><span class="line"><span class="keyword">from</span> tmp_trade</span><br><span class="line"><span class="keyword">left</span> <span class="keyword">join</span> dim_user_info_df u <span class="keyword">on</span> u.id = tmp_trade.user_id <span class="keyword">and</span> u.ds = <span class="string">'$&#123;bizdate&#125;'</span></span><br><span class="line"><span class="keyword">left</span> <span class="keyword">join</span> dim_sku_info_df s <span class="keyword">on</span> tmp_trade.sku_id = s.id <span class="keyword">and</span> s.ds = <span class="string">'$&#123;bizdate&#125;'</span></span><br><span class="line"><span class="keyword">left</span> <span class="keyword">join</span> dim_base_province_df p <span class="keyword">on</span> tmp_trade.province_id = p.id <span class="keyword">and</span> p.ds=<span class="string">'$&#123;bizdate&#125;'</span>;</span><br></pre></td></tr></table></figure>
+
+<p>2）查看结果</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">from</span> dws_trade_detail_di <span class="keyword">WHERE</span> ds=<span class="string">'20191008'</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="7-7-3-数据导入脚本"><a href="#7-7-3-数据导入脚本" class="headerlink" title="7.7.3 数据导入脚本"></a>7.7.3 数据导入脚本</h4><p>1）编写 dws_trade_detail_di 表脚本<br>（1）在流程中加入一个数据开发脚本</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027867497.png" alt="1594027867497"></p>
+<p>（2）新建节点 dws_trade_detail_di_sql</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027876411.png" alt="1594027876411"></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> tmp_trade <span class="keyword">AS</span></span><br><span class="line">(</span><br><span class="line"><span class="keyword">select</span></span><br><span class="line">od.user_id,od.sku_id,od.province_id,</span><br><span class="line"><span class="keyword">sum</span>(sku_num) sku_num,</span><br><span class="line"><span class="keyword">count</span>(*) order_count,</span><br><span class="line"><span class="keyword">sum</span>(od.order_price*sku_num) order_amount</span><br><span class="line"><span class="keyword">from</span> dwd_order_detail_di od</span><br><span class="line"><span class="keyword">where</span> od.ds=<span class="string">'$&#123;bizdate&#125;'</span></span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> od.user_id, od.sku_id, od.province_id</span><br><span class="line">)</span><br><span class="line"><span class="keyword">insert</span> OVERWRITE <span class="keyword">TABLE</span> dws_trade_detail_di <span class="keyword">PARTITION</span> (ds=<span class="string">'$&#123;bizdate&#125;'</span>)</span><br><span class="line"><span class="keyword">select</span></span><br><span class="line">tmp_trade.user_id,</span><br><span class="line">tmp_trade.sku_id,</span><br><span class="line">u.gender,</span><br><span class="line">months_between(<span class="string">'$&#123;bizdate&#125;'</span>, u.birthday)/<span class="number">12</span> age,</span><br><span class="line">u.user_level,</span><br><span class="line">price,</span><br><span class="line">sku_name,</span><br><span class="line">category3_id,</span><br><span class="line">category2_id,</span><br><span class="line">category1_id,</span><br><span class="line">category3_name,</span><br><span class="line">category2_name,</span><br><span class="line">category1_name,</span><br><span class="line">spu_id,</span><br><span class="line">tm_id,</span><br><span class="line">tm_name,</span><br><span class="line">p.id,</span><br><span class="line">p.province_name,</span><br><span class="line">p.region_id,</span><br><span class="line">p.region_name,</span><br><span class="line">tmp_trade.sku_num,</span><br><span class="line">tmp_trade.order_count,</span><br><span class="line">tmp_trade.order_amount</span><br><span class="line"><span class="keyword">from</span> tmp_trade</span><br><span class="line"><span class="keyword">left</span> <span class="keyword">join</span> dim_user_info_df u <span class="keyword">on</span> u.id = tmp_trade.user_id <span class="keyword">and</span> u.ds = <span class="string">'$&#123;bizdate&#125;'</span></span><br><span class="line"><span class="keyword">left</span> <span class="keyword">join</span> dim_sku_info_df s <span class="keyword">on</span> tmp_trade.sku_id = s.id <span class="keyword">and</span> s.ds = <span class="string">'$&#123;bizdate&#125;'</span></span><br><span class="line"><span class="keyword">left</span> <span class="keyword">join</span> dim_base_province_df p <span class="keyword">on</span> tmp_trade.province_id = p.id <span class="keyword">and</span> p.ds=<span class="string">'$&#123;bizdate&#125;'</span>;</span><br></pre></td></tr></table></figure>
+
+<p>（2）配置参数<br>点击调度配置-&gt; bizdate=${yyyymmdd}</p>
+<h3 id="7-8-ADS-层"><a href="#7-8-ADS-层" class="headerlink" title="7.8 ADS 层"></a>7.8 ADS 层</h3><p>ADS 层主要指针对某一个特定的维度进行的汇总。<br>在本课程中，主要分析三个需求：用户各个年龄段统计、地区销售统计、热门商品排行<br>所以主要是针对年龄、地区、商品进行汇总统计，统计四个指标下单数、购买商品个数、<br>销售额、平均客单价。</p>
+<h4 id="7-8-1-建表语句"><a href="#7-8-1-建表语句" class="headerlink" title="7.8.1 建表语句"></a>7.8.1 建表语句</h4><p>1）临时查询中，执行建表语句</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`ads_trade_age_d`</span> (</span><br><span class="line"><span class="string">`age`</span> <span class="built_in">bigint</span> <span class="keyword">COMMENT</span> <span class="string">'年龄'</span>,</span><br><span class="line"><span class="string">`sku_num`</span> <span class="built_in">bigint</span> <span class="keyword">COMMENT</span> <span class="string">'购买商品个数'</span>,</span><br><span class="line"><span class="string">`order_count`</span> <span class="built_in">bigint</span> <span class="keyword">COMMENT</span> <span class="string">'订单个数'</span>,</span><br><span class="line"><span class="string">`order_amount`</span> <span class="keyword">double</span> <span class="keyword">COMMENT</span> <span class="string">'销售额'</span>,</span><br><span class="line"><span class="string">`avg_amount`</span> <span class="keyword">double</span> <span class="keyword">COMMENT</span> <span class="string">'平均客单价'</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">COMMENT</span> <span class="string">'年龄销售统计'</span></span><br><span class="line">PARTITIONED <span class="keyword">BY</span> (ds <span class="keyword">string</span>);</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`ads_trade_province_d`</span> (</span><br><span class="line"><span class="string">`province`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'省份 id'</span>,</span><br><span class="line"><span class="string">`province_name`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'省市名称'</span>,</span><br><span class="line"><span class="string">`region_id`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'地区 ID'</span>,</span><br><span class="line"><span class="string">`region_name`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'地区名称'</span>,</span><br><span class="line"><span class="string">`sku_num`</span> <span class="built_in">bigint</span> <span class="keyword">COMMENT</span> <span class="string">'购买商品个数'</span>,</span><br><span class="line"><span class="string">`order_count`</span> <span class="built_in">bigint</span> <span class="keyword">COMMENT</span> <span class="string">'订单个数'</span>,</span><br><span class="line"><span class="string">`order_amount`</span> <span class="keyword">double</span> <span class="keyword">COMMENT</span> <span class="string">'销售额'</span>,</span><br><span class="line"><span class="string">`avg_amount`</span> <span class="keyword">double</span> <span class="keyword">COMMENT</span> <span class="string">'平均客单价'</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">COMMENT</span> <span class="string">'地区销售统计'</span></span><br><span class="line">PARTITIONED <span class="keyword">BY</span> (ds <span class="keyword">string</span>);</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`ads_trade_sku_d`</span> (</span><br><span class="line"><span class="string">`sku_id`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'商品 id'</span>,</span><br><span class="line"><span class="string">`sku_name`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'商品名称'</span>,</span><br><span class="line"><span class="string">`sku_num`</span> <span class="built_in">bigint</span> <span class="keyword">COMMENT</span> <span class="string">'购买商品个数'</span>,</span><br><span class="line"><span class="string">`category3_id`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'三级分类 id'</span>,</span><br><span class="line"><span class="string">`category2_id`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'二级分类 id'</span>,</span><br><span class="line"><span class="string">`category1_id`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'一级分类 id'</span>,</span><br><span class="line"><span class="string">`category3_name`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'三级分类名称'</span>,</span><br><span class="line"><span class="string">`category2_name`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'二级分类名称'</span>,</span><br><span class="line"><span class="string">`category1_name`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'一级分类名称'</span>,</span><br><span class="line"><span class="string">`order_count`</span> <span class="built_in">bigint</span> <span class="keyword">COMMENT</span> <span class="string">'订单个数'</span>,</span><br><span class="line"><span class="string">`order_amount`</span> <span class="keyword">double</span> <span class="keyword">COMMENT</span> <span class="string">'销售额'</span>,</span><br><span class="line"><span class="string">`avg_amount`</span> <span class="keyword">double</span> <span class="keyword">COMMENT</span> <span class="string">'平均客单价'</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">COMMENT</span> <span class="string">'商品销售统计'</span></span><br><span class="line">PARTITIONED <span class="keyword">BY</span> (ds <span class="keyword">string</span>);</span><br></pre></td></tr></table></figure>
+
+<p>2）在表管理里面查看创建的表</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594027997199.png" alt="1594027997199"></p>
+<p>3）数据开发-&gt;ads-&gt;导入表</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594028004174.png" alt="1594028004174"></p>
+<p>4）选择刚创建的所有表</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594028011747.png" alt="1594028011747"></p>
+<h3 id="7-8-2-手动将数据导入-ADS-层"><a href="#7-8-2-手动将数据导入-ADS-层" class="headerlink" title="7.8.2 手动将数据导入 ADS 层"></a>7.8.2 手动将数据导入 ADS 层</h3><p>1）在临时查询中执行</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> OVERWRITE <span class="keyword">table</span> ads_trade_age_d <span class="keyword">PARTITION</span> (ds = <span class="string">'$&#123;bizdate&#125;'</span>)</span><br><span class="line"><span class="keyword">select</span></span><br><span class="line"><span class="keyword">round</span>(td.user_age) age,</span><br><span class="line"><span class="keyword">sum</span>(sku_num) sku_num,</span><br><span class="line"><span class="keyword">sum</span>(order_count) order_count,</span><br><span class="line"><span class="keyword">sum</span>(order_amount) order_amount,</span><br><span class="line"><span class="keyword">round</span>(<span class="keyword">avg</span>(order_amount),<span class="number">2</span>) avg_amount</span><br><span class="line"><span class="keyword">from</span> dws_trade_detail_di td</span><br><span class="line"><span class="keyword">where</span> ds = <span class="string">'$&#123;bizdate&#125;'</span></span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> <span class="keyword">round</span>(td.user_age);</span><br><span class="line"><span class="keyword">insert</span> OVERWRITE <span class="keyword">table</span> ads_trade_province_d <span class="keyword">PARTITION</span> (ds =<span class="string">'$&#123;bizdate&#125;'</span>)</span><br><span class="line"><span class="keyword">select</span></span><br><span class="line">td.province_id,td.province_name,td.region_id,td.region_name,</span><br><span class="line"><span class="keyword">sum</span>(sku_num) sku_num,</span><br><span class="line"><span class="keyword">sum</span>(order_count) order_count,</span><br><span class="line"><span class="keyword">sum</span>(order_amount) order_amount,</span><br><span class="line"><span class="keyword">round</span>(<span class="keyword">avg</span>(order_amount),<span class="number">2</span>) avg_amount</span><br><span class="line"><span class="keyword">from</span> dws_trade_detail_di td</span><br><span class="line"><span class="keyword">where</span> ds=<span class="string">'$&#123;bizdate&#125;'</span></span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span></span><br><span class="line">td.province_id,td.province_name,td.region_id,td.region_name;</span><br><span class="line"><span class="keyword">insert</span> OVERWRITE <span class="keyword">table</span> ads_trade_sku_d <span class="keyword">PARTITION</span> (ds = <span class="string">'$&#123;bizdate&#125;'</span>)</span><br><span class="line"><span class="keyword">select</span></span><br><span class="line">td.sku_id,td.sku_name,</span><br><span class="line">td.sku_category3_id,</span><br><span class="line">td.sku_category2_id,</span><br><span class="line">td.sku_category1_id,</span><br><span class="line">td.sku_category3_name,</span><br><span class="line">td.sku_category2_name,</span><br><span class="line">td.sku_category1_name,</span><br><span class="line"><span class="keyword">sum</span>(sku_num) sku_num,</span><br><span class="line"><span class="keyword">sum</span>(order_count) order_count,</span><br><span class="line"><span class="keyword">sum</span>(order_amount) order_amount,</span><br><span class="line"><span class="keyword">round</span>(<span class="keyword">avg</span>(order_amount),<span class="number">2</span>) avg_amount</span><br><span class="line"><span class="keyword">from</span> dws_trade_detail_di td</span><br><span class="line"><span class="keyword">where</span> ds = <span class="string">'$&#123;bizdate&#125;'</span></span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span></span><br><span class="line">td.sku_id, td.sku_name, td.sku_category3_id,</span><br><span class="line">td.sku_category2_id, td.sku_category1_id,</span><br><span class="line">td.sku_category3_name, td.sku_category2_name,</span><br><span class="line">td.sku_category1_name;</span><br></pre></td></tr></table></figure>
+
+<p>2）在临时查询中查询结果</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> ads_trade_age_d <span class="keyword">WHERE</span> ds=<span class="string">'20191008'</span>;</span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> ads_trade_province_d <span class="keyword">WHERE</span> ds=<span class="string">'20191008'</span>;</span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> ads_trade_sku_d <span class="keyword">WHERE</span> ds=<span class="string">'20191008'</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-8-3-数据导入脚本"><a href="#7-8-3-数据导入脚本" class="headerlink" title="7.8.3 数据导入脚本"></a>7.8.3 数据导入脚本</h3><p>1）编写 ads_trade_age_d 表脚本<br>（1）在流程中加入一个数据开发脚本</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594028092781.png" alt="1594028092781"></p>
+<p>（2）新建节点 ads_trade_age_d_sql</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594028101712.png" alt="1594028101712"></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> OVERWRITE <span class="keyword">table</span> ads_trade_age_d <span class="keyword">PARTITION</span> (ds =</span><br><span class="line"><span class="string">'$&#123;bizdate&#125;'</span>)</span><br><span class="line"><span class="keyword">select</span></span><br><span class="line"><span class="keyword">round</span>(td.user_age) age,</span><br><span class="line"><span class="keyword">sum</span>(sku_num) sku_num,</span><br><span class="line"><span class="keyword">sum</span>(order_count) order_count,</span><br><span class="line"><span class="keyword">sum</span>(order_amount) order_amount,</span><br><span class="line"><span class="keyword">round</span>(<span class="keyword">avg</span>(order_amount),<span class="number">2</span>) avg_amount</span><br><span class="line"><span class="keyword">from</span> dws_trade_detail_di td</span><br><span class="line"><span class="keyword">where</span> ds = <span class="string">'$&#123;bizdate&#125;'</span></span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> <span class="keyword">round</span>(td.user_age)</span><br></pre></td></tr></table></figure>
+
+<p>（2）配置参数<br>点击调度配置-&gt; bizdate=${yyyymmdd}<br>2）编写 ads_trade_province_d 表脚本<br>（1）新建节点 ads_trade_province_d_sql</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594028128339.png" alt="1594028128339"></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> OVERWRITE <span class="keyword">table</span> ads_trade_province_d <span class="keyword">PARTITION</span> (ds = <span class="string">'$&#123;bizdate&#125;'</span>)</span><br><span class="line"><span class="keyword">select</span></span><br><span class="line">td.province_id,td.province_name,td.region_id,td.region_name,</span><br><span class="line"><span class="keyword">sum</span>(sku_num) sku_num,</span><br><span class="line"><span class="keyword">sum</span>(order_count) order_count,</span><br><span class="line"><span class="keyword">sum</span>(order_amount) order_amount,</span><br><span class="line"><span class="keyword">round</span>(<span class="keyword">avg</span>(order_amount),<span class="number">2</span>) avg_amount</span><br><span class="line"><span class="keyword">from</span> dws_trade_detail_di td</span><br><span class="line"><span class="keyword">where</span> ds=<span class="string">'$&#123;bizdate&#125;'</span></span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span></span><br><span class="line">td.province_id,td.province_name,td.region_id,td.region_name;</span><br></pre></td></tr></table></figure>
+
+<p>（2）配置参数<br>点击调度配置-&gt; bizdate=${yyyymmdd}<br>3）编写 ads_trade_sku_d 表脚本<br>（1）新建节点 ads_trade_sku_d_sql</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594028154652.png" alt="1594028154652"></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> OVERWRITE <span class="keyword">table</span> ads_trade_sku_d <span class="keyword">PARTITION</span> (ds = <span class="string">'$&#123;bizdate&#125;'</span>)</span><br><span class="line"><span class="keyword">select</span></span><br><span class="line">td.sku_id,td.sku_name,</span><br><span class="line">td.sku_category3_id,</span><br><span class="line">td.sku_category2_id,</span><br><span class="line">td.sku_category1_id,</span><br><span class="line">td.sku_category3_name,</span><br><span class="line">td.sku_category2_name,</span><br><span class="line">td.sku_category1_name,</span><br><span class="line"><span class="keyword">sum</span>(sku_num) sku_num,</span><br><span class="line"><span class="keyword">sum</span>(order_count) order_count,</span><br><span class="line"><span class="keyword">sum</span>(order_amount) order_amount,</span><br><span class="line"><span class="keyword">round</span>(<span class="keyword">avg</span>(order_amount),<span class="number">2</span>) avg_amount</span><br><span class="line"><span class="keyword">from</span> dws_trade_detail_di td</span><br><span class="line"><span class="keyword">where</span> ds = <span class="string">'$&#123;bizdate&#125;'</span></span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span></span><br><span class="line">td.sku_id, td.sku_name, td.sku_category3_id,</span><br><span class="line">td.sku_category2_id, td.sku_category1_id,</span><br><span class="line">td.sku_category3_name, td.sku_category2_name,</span><br><span class="line">td.sku_category1_name;</span><br></pre></td></tr></table></figure>
+
+<p>（2）配置参数<br>点击调度配置-&gt; bizdate=${yyyymmdd}</p>
+<h3 id="7-9-作业调度"><a href="#7-9-作业调度" class="headerlink" title="7.9 作业调度"></a>7.9 作业调度</h3><p>1）整个业务部分的数仓任务应该包括如下图：</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594028191795.png" alt="1594028191795"></p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594028200199.png" alt="1594028200199"></p>
+<p>2）在原理 ODS 层的基础上继续增加 DWD 层、DWS 层业务、ADS 层业务。</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594028211201.png" alt="1594028211201"></p>
+<p>3）在公共表中预览执行结果</p>
+<p><img src="https://leinuo-blog.oss-cn-beijing.aliyuncs.com/images/typora/1594028224562.png" alt="1594028224562"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>感谢您的支持和鼓励！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Lei Nuo 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Lei Nuo 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+<div>
+   
+   <div>
+    
+        <div style="text-align:center;" lass="read-over">-------------------本文结束 <i class="fa fa-paw"></i> 感谢您的阅读-------------------</div>
+    
+</div>
+
+ 
+</div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"># 大数据</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/07/3.%E4%B8%9A%E5%8A%A1%E6%95%B0%E4%BB%93%E7%90%86%E8%AE%BA/" rel="next" title="3.业务数仓理论">
+                <i class="fa fa-chevron-left"></i> 3.业务数仓理论
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/07/5.%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%87%BA%E4%B8%8E%E4%BD%9C%E4%B8%9A%E8%B0%83%E5%BA%A6/" rel="prev" title="5.数据导出与作业调度">
+                5.数据导出与作业调度 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="Lei Nuo" />
+            
+              <p class="site-author-name" itemprop="name">Lei Nuo</p>
+              <p class="site-description motion-element" itemprop="description">知见立知，即无明本</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Lei-Nuo" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:576111076@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Lei-Nuo | weibo" target="_blank" title="WeiBo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>WeiBo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.zhihu.com/people/Lei-Nuo-2020" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-snapchat"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#第-7-章-业务数仓搭建"><span class="nav-text">第 7 章 业务数仓搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-业务-数仓-架构图"><span class="nav-text">7.1 业务 数仓 架构图</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#7-1-1-业务数仓系统流程设计"><span class="nav-text">7.1.1 业务数仓系统流程设计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-1-2-业务表结构"><span class="nav-text">7.1.2 业务表结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-1-3-业务数仓分层"><span class="nav-text">7.1.3 业务数仓分层</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-RDS-服务器准备"><span class="nav-text">7.2 RDS 服务器准备</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#7-2-1-RDS-服务器购买"><span class="nav-text">7.2.1 RDS 服务器购买</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-2-2-RDS-服务器配置"><span class="nav-text">7.2.2 RDS 服务器配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-2-3-RDS-服务器购买"><span class="nav-text">7.2.3 RDS 服务器购买</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3-创建业务数据库及表"><span class="nav-text">7.3 创建业务数据库及表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-4-ODS-层数据表创建"><span class="nav-text">7.4 ODS 层数据表创建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-5-数据同步"><span class="nav-text">7.5 数据同步</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#7-5-1-建立数据同步节点"><span class="nav-text">7.5.1 建立数据同步节点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-5-2-每日全量表同步"><span class="nav-text">7.5.2 每日全量表同步</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-5-3-每日增量表同步"><span class="nav-text">7.5.3 每日增量表同步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-5-4-每日新增及-变化-表同步"><span class="nav-text">7.5.4 每日新增及 变化 表同步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-5-5-ODS-层"><span class="nav-text">7.5.5 ODS 层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-6-DWD-层"><span class="nav-text">7.6 DWD 层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-6-1-建表语句"><span class="nav-text">7.6.1 建表语句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-6-2-手动将数据导入-DWD-层"><span class="nav-text">7.6.2 手动将数据导入 DWD 层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-6-3-数据导入脚本"><span class="nav-text">7.6.3 数据导入脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-7-DWS-层"><span class="nav-text">7.7 DWS 层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-7-1-建表语句"><span class="nav-text">7.7.1 建表语句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-7-2-手动将数据导入-DWS-层"><span class="nav-text">7.7.2 手动将数据导入 DWS 层</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#7-7-3-数据导入脚本"><span class="nav-text">7.7.3 数据导入脚本</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-8-ADS-层"><span class="nav-text">7.8 ADS 层</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#7-8-1-建表语句"><span class="nav-text">7.8.1 建表语句</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-8-2-手动将数据导入-ADS-层"><span class="nav-text">7.8.2 手动将数据导入 ADS 层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-8-3-数据导入脚本"><span class="nav-text">7.8.3 数据导入脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-9-作业调度"><span class="nav-text">7.9 作业调度</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lei Nuo</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"> 访客数</i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"> 总浏览量</i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '2VBFDPgV6LRBBVwiuaveQkjp-gzGzoHsz',
+        appKey: 'IslE3DwJ87bnFNc8I8yU7mSm',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2VBFDPgV6LRBBVwiuaveQkjp-gzGzoHsz", "IslE3DwJ87bnFNc8I8yU7mSm");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+  <script type="text/javascript" src="/js/src/js.cookie.js?v=5.1.4"></script>
+  <script type="text/javascript" src="/js/src/scroll-cookie.js?v=5.1.4"></script>
+
+
+  
+
+  
+
+</body>
+</html>
